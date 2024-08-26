@@ -1,0 +1,15 @@
+import mongoose from "mongoose";
+import { ocelAttributeTypeSchema } from "./ocelAttributeType";
+
+const ocelEventTypeSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    attributes: [ocelAttributeTypeSchema]
+});
+
+const OcelEventType = mongoose.model('User', ocelEventTypeSchema);
+
+export default OcelEventType;
