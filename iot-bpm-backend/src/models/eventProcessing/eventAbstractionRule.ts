@@ -8,10 +8,15 @@ const eventAbstractionRuleSchema = new mongoose.Schema({
         unique: true
     },
     eventName: {
-        
+        type: String,
+        required: true
     },
     field: {
         type: String,
         required: true
     },
 });
+
+const EventAbstractionRule = mongoose.model('event_abstraction_rules', eventAbstractionRuleSchema);
+
+export default EventAbstractionRule;

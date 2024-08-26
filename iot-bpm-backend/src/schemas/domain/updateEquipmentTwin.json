@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "machineName": { "type": "string" },
+    "versionCsiStd": { "type": "string" },
+    "versionCsiSpecific": { "type": "string" },
+    "machineSoftwareVersion": { "type": "string" },
+    "machineMasterSoftwareVersion": { "type": "string" },
+    "statusFields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "machineName",
+    "versionCsiStd",
+    "versionCsiSpecific",
+    "machineSoftwareVersion",
+    "machineMasterSoftwareVersion",
+    "statusFields"
+  ],
+  "additionalProperties": false
+}

@@ -1,5 +1,5 @@
 import express from 'express';
-import { producer } from './config/kafkaClient';
+import { producer } from '../config/kafkaClient';
 
 const router = express.Router();
 
