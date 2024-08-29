@@ -1,23 +1,28 @@
 import mongoose, { Schema } from 'mongoose';
 
-const triggerSchema = new mongoose.Schema({
+// const triggerSchema = new mongoose.Schema({
+//     triggerCategory: {
+//         type: String,
+//         required: true,
+//         enum: ["SCALAR_TRIGGER", "RANGE_TRIGGER"]
+//     }
+// }, { discriminatorKey: "triggerCategory" });
+
+const eventDescriptionSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    field: {
+        type: String,
+        required: true,
+    },
     triggerCategory: {
         type: String,
         required: true,
         enum: ["SCALAR_TRIGGER", "RANGE_TRIGGER"]
     }
 }, { discriminatorKey: "triggerCategory" });
-
-const eventDescriptionSchema = new mongoose.Schema({
-    field: {
-        type: String,
-        required: true,
-    },
-    trigger: {
-        type: triggerSchema,
-        required: true
-    },
-});
 
 const scalarTriggerSchema = new mongoose.Schema({
     triggerType: {
@@ -55,8 +60,8 @@ const rangeTriggerSchema = new mongoose.Schema({
     },
 });
 
-eventDescriptionSchema.path<Schema.Types.Subdocument>("trigger").discriminator("SCALAR_TRIGGER", scalarTriggerSchema);
-eventDescriptionSchema.path<Schema.Types.Subdocument>("trigger").discriminator("RANGE_TRIGGER", rangeTriggerSchema);
+eventDescriptionSchema.discriminator("SCALAR_TRIGGER", scalarTriggerSchema);
+eventDescriptionSchema.discriminator("RANGE_TRIGGER", rangeTriggerSchema);
 
 const EventDescription = mongoose.model("EventDescription", eventDescriptionSchema, "event_descriptions");
 

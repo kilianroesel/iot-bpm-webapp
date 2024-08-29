@@ -9,14 +9,14 @@ export class NotFoundError extends Error {
 
 
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.error(err.stack);
+
     if (err instanceof NotFoundError) {
         return res.status(404).json({
             error: "error",
             message: err.message,
         });
     }
-
-    console.error(err.stack); // Log the error stack
     res.status(400).json({
         error: "error",
         message: err.message

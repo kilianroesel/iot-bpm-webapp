@@ -6,7 +6,7 @@ import { NotFoundError } from "../../middleware/errorhandling";
 
 export const router = express.Router();
 
-router.get("/machineDescriptions", async (req, res, next) => {
+router.get("", async (req, res, next) => {
     try {
         const result = await MachineDescription.find();
         res.send(result);
@@ -15,7 +15,7 @@ router.get("/machineDescriptions", async (req, res, next) => {
     }
 });
 
-router.get("/machineDescriptions/:id", async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
     try {
         const descriptionId = req.params.id;
         if (!mongoose.Types.ObjectId.isValid(descriptionId))
@@ -31,18 +31,16 @@ router.get("/machineDescriptions/:id", async (req, res, next) => {
     }
 });
 
-router.post("/machineDescriptions", validateSchema("createMachineDescription"), async (req, res, next) => {
+router.post("", validateSchema("createMachineDescription"), async (req, res, next) => {
     try {
-        const body = req.body;
-        const newMachineDescription = new MachineDescription(body);
-        await newMachineDescription.save();
+        const newMachineDescription = await MachineDescription.create(req.body);
         res.status(201).send(newMachineDescription);
     } catch (err) {
         next(err);
     }
 });
 
-router.post("/machineDescriptions/:objectId", validateSchema("updateMachineDescription"), async (req, res, next) => {
+router.post("/:objectId", validateSchema("updateMachineDescription"), async (req, res, next) => {
     try {
         const descriptionId = req.params.objectId;
         if (!mongoose.Types.ObjectId.isValid(descriptionId))

@@ -1,12 +1,19 @@
 import Ajv from "ajv";
 import { Request, Response, NextFunction } from "express";
-import { createMachineDescription, updateMachineDescription } from "../interfaces/domainSchemas";
+import { createMachineDescription, updateMachineDescription } from "../schemas/domain/machineDescriptions";
+import { createEquipmentDescription, updateEquipmentDescription } from "../schemas/domain/equipmentDescriptions";
+import { createEventDescription, updateEventDescription } from "../schemas/domain/eventDescriptions";
 
 const ajv = new Ajv();
 
 ajv.addSchema(createMachineDescription, "createMachineDescription");
 ajv.addSchema(updateMachineDescription, "updateMachineDescription");
 
+ajv.addSchema(createEquipmentDescription, "createEquipmentDescription");
+ajv.addSchema(updateEquipmentDescription, "updateEquipmentDescription");
+
+ajv.addSchema(createEventDescription, "createEventDescription");
+ajv.addSchema(updateEventDescription, "updateEventDescription");
 
 export default function validateSchema(schema: string) {
     return (req: Request, res: Response, next: NextFunction) => {
