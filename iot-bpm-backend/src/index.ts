@@ -1,28 +1,37 @@
 import "dotenv/config";
 import express from "express";
-import domainRouter from "./routes/domainRouter";
+import domainRouter from "./routes/domain/domainRouter";
 import rulesRouter from "./routes/rulesRouter";
 import { appConfig } from "./config/appConfig";
-import wsServer from "./webSocketServer";
-import { connectConsumer, connectProducer } from "./config/kafkaClient";
+import { WebSocketTopicServer } from "./webSocketTopicServer";
 import "./config/mongoose";
+import { KafkaConsumer } from "./config/kafkaClient";
+import cors from "cors";
+import { errorHandler } from "./middleware/errorhandling";
 
 const port = appConfig.port;
 const host = appConfig.host;
 const app = express();
+const topics = ["event-abstraction-rules"];
+const kafkaConsumer = new KafkaConsumer(topics);
+const webSocketTopicServer = new WebSocketTopicServer(topics);
 
+kafkaConsumer.on("message", (topic: string, message: any) => {
+    webSocketTopicServer.sendMessageToTopic(topic, message);
+});
+
+app.use(cors(appConfig.corsOptions));
 app.use(express.json());
 app.use("/domain", domainRouter);
 app.use("/rules", rulesRouter);
 
+app.use(errorHandler)
+
 const server = app.listen(port, host, async () => {
-  console.log(`Server is running on port ${port} and host ${host}`);
-  await connectProducer();
-  await connectConsumer();
+    console.log(`Server is running on port ${port} and host ${host}`);
+    // await kafkaConsumer.connectConsumer();
 });
 
 server.on("upgrade", (request, socket, head) => {
-  wsServer.handleUpgrade(request, socket as any, head, (ws) => {
-    wsServer.emit("connection", ws, request);
-  });
+    webSocketTopicServer.handleUpgrade(request, socket as any, head);
 });

@@ -1,22 +1,25 @@
 import mongoose from "mongoose";
 
-
 const eventAbstractionRuleSchema = new mongoose.Schema({
     ruleId: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     eventName: {
         type: String,
-        required: true
+        required: true,
     },
     field: {
         type: String,
-        required: true
+        required: true,
     },
 });
 
-const EventAbstractionRule = mongoose.model('event_abstraction_rules', eventAbstractionRuleSchema);
+const EventAbstractionRule = mongoose.model(
+    "EventAbstractionRule",
+    eventAbstractionRuleSchema,
+    "event_abstraction_rules"
+);
 
 export default EventAbstractionRule;

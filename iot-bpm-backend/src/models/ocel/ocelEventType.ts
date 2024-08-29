@@ -5,11 +5,15 @@ const ocelEventTypeSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
-    attributes: [ocelAttributeTypeSchema]
+    attributes: [ocelAttributeTypeSchema],
 });
 
-const OcelEventType = mongoose.model('User', ocelEventTypeSchema);
+const OcelEventType = mongoose.model(
+    "OcelEventType",
+    ocelEventTypeSchema,
+    "ocel_event_types"
+);
 
 export default OcelEventType;

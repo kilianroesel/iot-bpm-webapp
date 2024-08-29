@@ -5,11 +5,15 @@ const ocelObjectTypeSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
-    attributes: [ocelAttributeTypeSchema]
+    attributes: [ocelAttributeTypeSchema],
 });
 
-const OcelObjectType = mongoose.model('User', ocelObjectTypeSchema);
+const OcelObjectType = mongoose.model(
+    "OcelObjectType",
+    ocelObjectTypeSchema,
+    "ocel_object_types"
+);
 
 export default OcelObjectType;

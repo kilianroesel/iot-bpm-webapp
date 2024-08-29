@@ -1,43 +1,40 @@
-import { Kafka } from 'kafkajs';
-import wss from '../webSocketServer';
+import { Consumer, Kafka } from "kafkajs";
+import EventEmitter from "events";
 
 const kafkaClientId = process.env.KAFKA_CLIENTID || "";
 const kafkaBroker = process.env.KAFKA_BROKER || "";
 const kafkaUsername = process.env.KAFKA_USERNAME || "";
 const kafkaPassword = process.env.KAFKA_PASSWORD || "";
-const kafkaTopic = process.env.KAFKA_TOPIC || "";
 
-const kafka = new Kafka({
-  clientId: kafkaClientId,
-  brokers: [kafkaBroker],
-  ssl: true,
-  sasl: {
-    mechanism: 'plain',
-    username: kafkaUsername,
-    password: kafkaPassword
+export class KafkaConsumer extends EventEmitter {
+  private kafka: Kafka;
+  private consumer: Consumer;
+  private topics: string[];
+
+  constructor(topics: string[]) {
+    super();
+    this.kafka = new Kafka({
+      clientId: kafkaClientId,
+      brokers: [kafkaBroker],
+      ssl: true,
+      sasl: {
+        mechanism: "plain",
+        username: kafkaUsername,
+        password: kafkaPassword,
+      },
+    });
+    this.consumer = this.kafka.consumer({ groupId: "$Default" });
+    this.topics = topics;
   }
-});
 
-const producer = kafka.producer();
-const consumer = kafka.consumer({ groupId: 'express-group' });
+  async connectConsumer() {
+    await this.consumer.connect();
+    await this.consumer.subscribe({ topics: this.topics, fromBeginning: true });
 
-const connectProducer = async () => {
-  await producer.connect();
-};
-
-const connectConsumer = async () => {
-  await consumer.connect();
-  await consumer.subscribe({ topic: kafkaTopic, fromBeginning: true });
-
-  consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(message.value?.toString() || "Undefined");
-        }
-      });
-    },
-  });
-};
-
-export { producer, connectProducer, connectConsumer };
+    this.consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        this.emit("message", topic, message.value?.toString());
+      },
+    });
+  }
+}

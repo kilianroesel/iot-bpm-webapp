@@ -6,7 +6,7 @@ const ocelEventSchema = new mongoose.Schema({
     id: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     type: {
         type: String,
@@ -14,12 +14,16 @@ const ocelEventSchema = new mongoose.Schema({
     },
     time: {
         type: String,
-        required: true
+        required: true,
     },
     attributes: [ocelAttributeSchema],
-    relationships: [ocelRelationshipSchema]
+    relationships: [ocelRelationshipSchema],
 });
 
-const OcelEventType = mongoose.model('User', ocelEventSchema);
+const OcelEvent = mongoose.model(
+    "OcelEvent",
+    ocelEventSchema,
+    "ocel_events"
+);
 
-export default OcelEventType;
+export default OcelEvent;
