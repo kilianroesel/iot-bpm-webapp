@@ -20,14 +20,14 @@ model MachineDescription {
     machineMasterSoftwareVersion String
 
     equipment   EquipmentDescription @relation(fields: [equipmentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
-    equipmentId String              @unique
+    equipmentId String               @unique
 }
 
 model EquipmentDescription {
     id   String @id @default(uuid())
     name String
 
-    machineDescription MachineDescription?
+    machineId MachineDescription?
 
     statusFields StatusField[]
 
@@ -39,18 +39,18 @@ model EquipmentDescription {
 }
 
 model StatusField {
-    id          String              @id @default(uuid())
+    id          String               @id @default(uuid())
     equipment   EquipmentDescription @relation(fields: [equipmentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
     equipmentId String
 }
 
 model EventDescription {
-    id                    String              @id @default(uuid())
-    equipmentDescrption   EquipmentDescription @relation(fields: [equipmentDescrptionId], references: [id], onDelete: Cascade, onUpdate: Restrict)
-    equipmentDescrptionId String
-    type                  TriggerCategory
-    scalarTrigger         ScalarTrigger?
-    rangeTrigger          RangeTrigger?
+    id            String               @id @default(uuid())
+    equipment     EquipmentDescription @relation(fields: [equipmentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+    equipmentId   String
+    type          TriggerCategory
+    scalarTrigger ScalarTrigger?
+    rangeTrigger  RangeTrigger?
 }
 
 model ScalarTrigger {

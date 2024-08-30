@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GetMachineDescription, UpsertMachineDescription } from "./interfaces";
+import { PopulatedGetMachineDescription, PopulatedGetEquipmentDescription } from "./interfaces";
 import { queryOptions } from "@tanstack/react-query";
 
 const baseUrl = import.meta.env.VITE_IOT_BPM_BACKEND;
@@ -8,24 +8,35 @@ const apiInstance = axios.create({
   baseURL: baseUrl,
 });
 
-export const domainModelsQuery = () =>
+export const machineDescriptionsQuery = () =>
   queryOptions({
-    queryKey: ["domain", "domainModels"],
+    queryKey: ["domain", "machineDescriptions"],
     queryFn: async () => {
-      const response = await apiInstance.get<GetMachineDescription[]>(
+      const response = await apiInstance.get<PopulatedGetMachineDescription[]>(
         "/domain/machineDescriptions",
       );
       return response.data;
     },
   });
 
-export const domainModelQuery = (id: string) =>
+export const machineDescriptionQuery = (id: string) =>
   queryOptions({
-    queryKey: ["domain", "domainModel", id],
+    queryKey: ["domain", "machineDescription", id],
     queryFn: async () => {
-      const response = await apiInstance.get<UpsertMachineDescription>(
+      const response = await apiInstance.get<PopulatedGetMachineDescription>(
         `/domain/machineDescriptions/${id}`,
       );
       return response.data;
     },
   });
+
+  export const equipmentDescriptionQuery = (id: string) =>
+    queryOptions({
+      queryKey: ["domain", "equipmentDescription", id],
+      queryFn: async () => {
+        const response = await apiInstance.get<PopulatedGetEquipmentDescription>(
+          `/domain/equipmentDescriptions/${id}`,
+        );
+        return response.data;
+      },
+    });

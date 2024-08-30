@@ -1,10 +1,10 @@
 import { QueryClient } from "@tanstack/react-query";
-import { domainModelsQuery } from "../../iotBpmBackend/api";
+import { machineDescriptionsQuery } from "../../iotBpmBackend/api";
 import { Link, useLoaderData } from "react-router-dom";
 
 export const loader = (queryClient: QueryClient) => async () => {
-  const hu = await queryClient.ensureQueryData(domainModelsQuery());
-  return hu;
+  const domaimModel = await queryClient.ensureQueryData(machineDescriptionsQuery());
+  return domaimModel;
 };
 
 export default function DomainModelList() {
@@ -33,23 +33,23 @@ export default function DomainModelList() {
       </thead>
       <tbody className="divide-y divide-blue-300 divide-gray-200">
         {domainModels.map((domainModel) => (
-          <tr key={domainModel._id} className="hover:bg-gray-100">
+          <tr key={domainModel.id} className="hover:bg-gray-100">
             <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-black">
-              <Link to={domainModel._id} className="after:content-['_↗']">
-                {domainModel.scope.machineName}
+              <Link to={domainModel.id} className="after:content-['_↗']">
+                {domainModel.machineName}
               </Link>
             </td>
             <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-black">
-              {domainModel.scope.versionCsiStd}
+              {domainModel.versionCsiStd}
             </td>
             <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-black">
-              {domainModel.scope.versionCsiSpecific}
+              {domainModel.versionCsiSpecific}
             </td>
             <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-black">
-              {domainModel.scope.machineSoftwareVersion}
+              {domainModel.machineSoftwareVersion}
             </td>
             <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-black">
-              {domainModel.scope.machineMasterSoftwareVersion}
+              {domainModel.machineMasterSoftwareVersion}
             </td>
           </tr>
         ))}

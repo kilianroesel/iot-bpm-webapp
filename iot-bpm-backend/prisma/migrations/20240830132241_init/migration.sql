@@ -40,7 +40,7 @@ CREATE TABLE "StatusField" (
 -- CreateTable
 CREATE TABLE "EventDescription" (
     "id" TEXT NOT NULL,
-    "equipmentDescrptionId" TEXT NOT NULL,
+    "equipmentId" TEXT NOT NULL,
     "type" "TriggerCategory" NOT NULL,
 
     CONSTRAINT "EventDescription_pkey" PRIMARY KEY ("id")
@@ -86,7 +86,7 @@ ALTER TABLE "EquipmentDescription" ADD CONSTRAINT "EquipmentDescription_parentId
 ALTER TABLE "StatusField" ADD CONSTRAINT "StatusField_equipmentId_fkey" FOREIGN KEY ("equipmentId") REFERENCES "EquipmentDescription"("id") ON DELETE CASCADE ON UPDATE RESTRICT;
 
 -- AddForeignKey
-ALTER TABLE "EventDescription" ADD CONSTRAINT "EventDescription_equipmentDescrptionId_fkey" FOREIGN KEY ("equipmentDescrptionId") REFERENCES "EquipmentDescription"("id") ON DELETE CASCADE ON UPDATE RESTRICT;
+ALTER TABLE "EventDescription" ADD CONSTRAINT "EventDescription_equipmentId_fkey" FOREIGN KEY ("equipmentId") REFERENCES "EquipmentDescription"("id") ON DELETE CASCADE ON UPDATE RESTRICT;
 
 -- AddForeignKey
 ALTER TABLE "ScalarTrigger" ADD CONSTRAINT "ScalarTrigger_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "EventDescription"("id") ON DELETE CASCADE ON UPDATE RESTRICT;

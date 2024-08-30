@@ -1,56 +1,38 @@
 import { QueryClient } from "@tanstack/react-query";
 import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
-import { domainModelQuery } from "../../iotBpmBackend/api";
-import { SubEquipment } from "../../iotBpmBackend/interfaces";
+import { equipmentDescriptionQuery, machineDescriptionQuery } from "../../iotBpmBackend/api";
 
 export const loader =
   (queryClient: QueryClient) =>
   async ({ params }: LoaderFunctionArgs) => {
-    if (!params.id)
-      throw new Error("No domain model ID provided");   
-    const equipment: any = await queryClient.ensureQueryData(domainModelQuery(params.id));
-    if (!params["*"])
-      return equipment;
-    const subEquipment: SubEquipment = params["*"]
-      .split("/")
-      .flatMap((subEquipment) => ["subEquipment", subEquipment])
-      .reduce((acc, path) => acc && acc[path], equipment);
-    if (!subEquipment)
-      throw new Error("Not found 404");
-    return subEquipment;
+    if (!params.id) throw new Error("No machine description Id provided");
+    if (!params["*"]) return (await queryClient.ensureQueryData(machineDescriptionQuery(params.id))).equipment;
+    const id = params["*"].split("/").filter(Boolean).pop() || "";
+    // If sub then retrieve equipment by equipmentId
+    const equipment = await queryClient.ensureQueryData(equipmentDescriptionQuery(id));
+    if (!equipment) throw new Error("Equipment not found");
+    return equipment;
   };
 
 export default function EquipmentDetail() {
-  const equipment: SubEquipment = useLoaderData() as Awaited<ReturnType<ReturnType<typeof loader>>>;
+  const equipment = useLoaderData() as Awaited<ReturnType<ReturnType<typeof loader>>>;
+  console.log(equipment);
+
   return (
     <div className="bg-red-100">
       <div className="font-medium">{equipment.name}</div>
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-md bg-blue-700 p-4">
           <div className="font-medium">Status Fields</div>
-          <ul>
-            {equipment.statusFields
-              ? Object.entries(equipment.statusFields).map(([key, status]) => (
-                  <li key={key} className="flex gap-4">
-                    <div>{key}</div>
-                    <div>{status}</div>
-                  </li>
-                ))
-              : "No status defined for this equipment."}
-          </ul>
+          {equipment.statusFields.map((statusField) => (
+            <div>{statusField}</div>
+          ))}
         </div>
         <div className="rounded-md bg-blue-700 p-4">
           <div className="font-medium">Events</div>
-          <ul>
-            {equipment.events
-              ? Object.entries(equipment.events).map(([key, event]) => (
-                  <li key={key} className="flex gap-4">
-                    <div>{key}</div>
-                    <div>{event.field}</div>
-                  </li>
-                ))
-              : "No events defined for this equipment."}
-          </ul>
+          {equipment.events.map((event) => (
+            <div>{event}</div>
+          ))}
         </div>
       </div>
     </div>

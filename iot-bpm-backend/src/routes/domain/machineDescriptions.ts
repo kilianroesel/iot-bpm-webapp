@@ -9,7 +9,13 @@ router.get("", async (req, res, next) => {
     try {
         const result = await prisma.machineDescription.findMany({
             include: {
-                equipment: true
+                equipment: {
+                    include: {
+                        statusFields: true,
+                        events: true,
+                        childEquipment: true
+                    }
+                }
             }
         });
         res.send(result);
@@ -26,7 +32,13 @@ router.get("/:id", async (req, res, next) => {
                 id: descriptionId,
             },
             include: {
-                equipment: true
+                equipment: {
+                    include: {
+                        statusFields: true,
+                        events: true,
+                        childEquipment: true
+                    }
+                }
             }
         });
         if (!machineDescription)

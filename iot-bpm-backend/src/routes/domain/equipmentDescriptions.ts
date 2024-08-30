@@ -1,6 +1,7 @@
 import express from "express";
 import validateSchema from "../../middleware/schemaValidation";
 import prisma from "../../config/prisma";
+import { NotFoundError } from "../../middleware/errorhandling";
 
 export const router = express.Router();
 
@@ -20,10 +21,12 @@ router.get("/:id", async (req, res, next) => {
                 id: req.params.id,
             },
             include: {
+                statusFields: true,
+                events: true,
                 childEquipment: true
             }
         });
-
+        if (!equipmentDescription) throw new NotFoundError("Equipment description not found");
         res.send(equipmentDescription);
     } catch (err) {
         next(err);
@@ -38,14 +41,14 @@ router.post("/:id", validateSchema("updateEquipmentDescription"), async (req, re
             },
             data: req.body,
         });
-
+        if (!updatedDescription) throw new NotFoundError("Equipment description not found");
         res.send(updatedDescription);
     } catch (err) {
         next(err);
     }
 });
 
-router.post("/:id/createSubequipment", validateSchema("createEquipmentDescription"), async (req, res, next) => {
+router.post("/:id/createChildEquipment", validateSchema("createEquipmentDescription"), async (req, res, next) => {
     try {
         const newDescription = await prisma.equipmentDescription.create({
             data: {
@@ -59,12 +62,26 @@ router.post("/:id/createSubequipment", validateSchema("createEquipmentDescriptio
     }
 });
 
+router.post("/:id/createStatusField", validateSchema("createStatusField"), async (req, res, next) => {
+    try {
+        const newDescription = await prisma.statusField.create({
+            data: {
+                ...req.body,
+                equipmentId: req.params.id,
+            }
+        });
+        res.send(newDescription)
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.post("/:id/createEventDescription", validateSchema("createEventDescription"), async (req, res, next) => {
     try {
         const newDescription = await prisma.eventDescription.create({
             data: {
                 ...req.body,
-                equipmentDescrptionId: req.params.id,
+                equipmentDescriptionId: req.params.id,
             }
         });
         res.send(newDescription)
