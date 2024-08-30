@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model MachineDescription {
+    id String @id @default(uuid())
+
+    machineName                  String
+    versionCsiStd                String
+    versionCsiSpecific           String
+    machineSoftwareVersion       String
+    machineMasterSoftwareVersion String
+
+    equipment   EquipmentDescription @relation(fields: [equipmentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+    equipmentId String              @unique
+}
+
+model EquipmentDescription {
+    id   String @id @default(uuid())
+    name String
+
+    machineDescription MachineDescription?
+
+    statusFields StatusField[]
+
+    events EventDescription[]
+
+    parentId        String?
+    parentEquipment EquipmentDescription?  @relation("EquipmentToEquipment", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+    childEquipment  EquipmentDescription[] @relation("EquipmentToEquipment")
+}
+
+model StatusField {
+    id          String              @id @default(uuid())
+    equipment   EquipmentDescription @relation(fields: [equipmentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+    equipmentId String
+}
+
+model EventDescription {
+    id                    String              @id @default(uuid())
+    equipmentDescrption   EquipmentDescription @relation(fields: [equipmentDescrptionId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+    equipmentDescrptionId String
+    type                  TriggerCategory
+    scalarTrigger         ScalarTrigger?
+    rangeTrigger          RangeTrigger?
+}
+
+model ScalarTrigger {
+    id          String            @id @default(uuid())
+    triggerType ScalarTriggerType
+    value       Float
+
+    eventId String           @unique
+    event   EventDescription @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+}
+
+model RangeTrigger {
+    id          String           @id @default(uuid())
+    triggerType RangeTriggerType
+    from        Float
+    to          Float
+
+    eventId String           @unique
+    event   EventDescription @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+}
+
+enum ScalarTriggerType {
+    CHANGES_TO
+    CHANGES_FROM
+    INCREASES_BY
+    DECREASES_BY
+    ABSOLUTE_CHANGE_IS_EQUAL
+    ABSOLUTE_CHANGE_IS_GREATER_EQUAL
+    CHANGE_IS_GREATER_EQUAL
+}
+
+enum RangeTriggerType {
+    ENTERS_RANGE_FROM_TO
+    LEAVES_RANGE_FROM_TO
+}
+
+enum TriggerCategory {
+    SCALAR_TRIGGER
+    RANGE_TRIGGER
+}

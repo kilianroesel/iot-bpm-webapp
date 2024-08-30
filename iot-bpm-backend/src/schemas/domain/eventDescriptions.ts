@@ -83,8 +83,7 @@ interface UpdateScalarTriggerDescription extends ScalarTrigger {
 }
 
 interface UpdateRangeTriggerDescription extends RangeTrigger {
-    _id: string;
-    __v: number;
+    id: string;
 }
 
 export const updateEventDescription: JSONSchemaType<UpdateScalarTriggerDescription | UpdateRangeTriggerDescription> = {
@@ -93,10 +92,9 @@ export const updateEventDescription: JSONSchemaType<UpdateScalarTriggerDescripti
         {
             type: "object",
             properties: {
+                id: { type: "string" },
                 name: { type: "string" },
                 field: { type: "string" },
-                _id: { type: "string" },
-                __v: { type: "number" },
                 triggerCategory: {
                     type: "string",
                     const: "SCALAR_TRIGGER",
@@ -121,10 +119,9 @@ export const updateEventDescription: JSONSchemaType<UpdateScalarTriggerDescripti
         {
             type: "object",
             properties: {
+                id: { type: "string" },
                 name: { type: "string" },
                 field: { type: "string" },
-                _id: { type: "string" },
-                __v: { type: "number" },
                 triggerCategory: {
                     type: "string",
                     const: "RANGE_TRIGGER",
@@ -140,5 +137,5 @@ export const updateEventDescription: JSONSchemaType<UpdateScalarTriggerDescripti
             additionalProperties: false,
         },
     ],
-    required: ["name", "field", "_id", "__v", "triggerCategory"],
+    required: ["name", "field", "id", "triggerCategory"],
 };

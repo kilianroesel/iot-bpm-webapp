@@ -1,14 +1,13 @@
 import express from 'express';
-import EventDescription from '../../models/domain/eventDescription';
-import mongoose from 'mongoose';
 import { NotFoundError } from '../../middleware/errorhandling';
 import validateSchema from '../../middleware/schemaValidation';
+import prisma from '../../config/prisma';
 
 export const router = express.Router();
 
 router.get("", async (req, res, next) => {
     try {
-        const result = await EventDescription.find();
+        const result = await prisma.eventDescription.findMany();
         res.send(result);
     } catch (err) {
         next(err);
@@ -17,11 +16,11 @@ router.get("", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
     try {
-        const descriptionId = req.params.id;
-        if (!mongoose.Types.ObjectId.isValid(descriptionId))
-            throw new NotFoundError("Event Description not found");
-
-        const eventDescription = await EventDescription.findById(descriptionId);
+        const eventDescription = await prisma.eventDescription.findUnique({
+            where: {
+                id: req.params.id
+            }
+        });
         if (!eventDescription)
             throw new NotFoundError("Event Description not found");
 
@@ -33,14 +32,14 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/:id", validateSchema("updateEventDescription"), async (req, res, next) => {
     try {
-        const id = req.params.id;
-        if (!mongoose.Types.ObjectId.isValid(id)) throw new NotFoundError("Event Description not found");
-
-        const updatedDescription = await EventDescription.findByIdAndUpdate(id, req.body, {
-            new: true,
-            runValidators: true,
+        const updatedDescription = await prisma.eventDescription.update({
+            where: {
+                id: req.params.id
+            },
+            data: req.body,
         });
-        if (!updatedDescription) throw new NotFoundError("Event Description not found");
+        if (!updatedDescription)
+            throw new NotFoundError("Event Description not found");
 
         res.send(updatedDescription);
     } catch (err) {

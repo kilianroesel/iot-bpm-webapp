@@ -14,23 +14,17 @@ export const createEquipmentDescription: JSONSchemaType<CreateEquipmentDescripti
 };
 
 interface UpdateEquipmentDescription extends CreateEquipmentDescription {
-    statusFields: string[];
-    events: string[];
-    subEquipment: string[];
-    _id: string;
-    __v: number;
+    id: string;
+    parentId?: string;
 }
 
 export const updateEquipmentDescription: JSONSchemaType<UpdateEquipmentDescription> = {
     type: "object",
     properties: {
+        id: { type: "string" },
         name: { type: "string" },
-        statusFields: { type: "array", items: { type: "string" } },
-        events: { type: "array", items: { type: "string" } },
-        subEquipment: { type: "array", items: { type: "string" } },
-        _id: { type: "string" },
-        __v: { type: "number" },
+        parentId: { type: "string", nullable: true }
     },
-    required: ["name", "statusFields", "events", "subEquipment", "_id", "__v"],
+    required: ["id", "name"],
     additionalProperties: false,
 };

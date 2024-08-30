@@ -1,14 +1,17 @@
 import express from "express";
 import validateSchema from "../../middleware/schemaValidation";
-import MachineDescription from "../../models/domain/machineDescription";
-import mongoose from "mongoose";
 import { NotFoundError } from "../../middleware/errorhandling";
+import prisma from "../../config/prisma";
 
 export const router = express.Router();
 
 router.get("", async (req, res, next) => {
     try {
-        const result = await MachineDescription.find();
+        const result = await prisma.machineDescription.findMany({
+            include: {
+                equipment: true
+            }
+        });
         res.send(result);
     } catch (err) {
         next(err);
@@ -18,13 +21,16 @@ router.get("", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
     try {
         const descriptionId = req.params.id;
-        if (!mongoose.Types.ObjectId.isValid(descriptionId))
-            throw new NotFoundError("Machine Description not found");
-        
-        const machineDescription = await MachineDescription.findById(descriptionId);
+        const machineDescription = await prisma.machineDescription.findUnique({
+            where: {
+                id: descriptionId,
+            },
+            include: {
+                equipment: true
+            }
+        });
         if (!machineDescription)
             throw new NotFoundError("Machine Description not found");
-        
         res.send(machineDescription);
     } catch (err) {
         next(err);
@@ -33,28 +39,41 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("", validateSchema("createMachineDescription"), async (req, res, next) => {
     try {
-        const newMachineDescription = await MachineDescription.create(req.body);
+        const body = req.body;
+        body.equipment = {
+            create: {
+                name: body.machineName,
+            },
+        };
+        const newMachineDescription = await prisma.machineDescription.create({ data: body });
         res.status(201).send(newMachineDescription);
     } catch (err) {
         next(err);
     }
 });
 
-router.post("/:objectId", validateSchema("updateMachineDescription"), async (req, res, next) => {
+router.post("/:id", validateSchema("updateMachineDescription"), async (req, res, next) => {
     try {
-        const descriptionId = req.params.objectId;
-        if (!mongoose.Types.ObjectId.isValid(descriptionId))
-            throw new NotFoundError("Machine Description not found");
-        
-        const body = req.body;
-        const updatedDescription = await MachineDescription.findByIdAndUpdate(descriptionId, body, {
-            new: true,
-            runValidators: true,
+        const updatedDescription = await prisma.machineDescription.update({
+            where: {
+                id: req.params.id
+            },
+            data: req.body,
         });
-        if (!updatedDescription)
-            throw new NotFoundError("Machine Description not found");
-        
         res.send(updatedDescription);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete("/:id", async (req, res, next) => {
+    try {
+        await prisma.machineDescription.delete({
+            where: {
+                id: req.params.id
+            }
+        });
+        res.status(204).send();
     } catch (err) {
         next(err);
     }

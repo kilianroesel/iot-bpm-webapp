@@ -28,32 +28,29 @@ export const createMachineDescription: JSONSchemaType<CreateMachineDescription> 
 };
 
 interface UpdateMachineDescription extends CreateMachineDescription {
-    equipment: string;
-    _id: string;
-    __v: number
+    id: string;
+    equipmentId: string;
 }
 
 export const updateMachineDescription: JSONSchemaType<UpdateMachineDescription> = {
     type: "object",
     properties: {
+        id: { type: "string" },
         machineName: { type: "string" },
         versionCsiStd: { type: "string" },
         versionCsiSpecific: { type: "string" },
         machineSoftwareVersion: { type: "string" },
         machineMasterSoftwareVersion: { type: "string" },
-        equipment: { type: "string" },
-        _id: {type: "string"},
-        __v: {type: "number"}
+        equipmentId: { type: "string" }
     },
     required: [
+        "id",
         "machineName",
         "versionCsiStd",
         "versionCsiSpecific",
         "machineSoftwareVersion",
         "machineMasterSoftwareVersion",
-        "equipment",
-        "_id",
-        "__v"
+        "equipmentId"
     ],
-    additionalProperties: false,
+    additionalProperties: true,
 };

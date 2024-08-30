@@ -4,10 +4,10 @@ import domainRouter from "./routes/domain/domainRouter";
 import rulesRouter from "./routes/rulesRouter";
 import { appConfig } from "./config/appConfig";
 import { WebSocketTopicServer } from "./webSocketTopicServer";
-import "./config/mongoose";
 import { KafkaConsumer } from "./config/kafkaClient";
 import cors from "cors";
 import { errorHandler } from "./middleware/errorhandling";
+import prisma from "./config/prisma";
 
 const port = appConfig.port;
 const host = appConfig.host;
@@ -25,13 +25,29 @@ app.use(express.json());
 app.use("/domain", domainRouter);
 app.use("/rules", rulesRouter);
 
-app.use(errorHandler)
+app.use(errorHandler);
 
 const server = app.listen(port, host, async () => {
     console.log(`Server is running on port ${port} and host ${host}`);
+    await prisma.$connect()
     // await kafkaConsumer.connectConsumer();
 });
 
 server.on("upgrade", (request, socket, head) => {
     webSocketTopicServer.handleUpgrade(request, socket as any, head);
 });
+
+function exitHandler(signal: any) {
+    server.close(async () => {
+        try {
+            await prisma.$disconnect();
+            process.exit(0)
+        } catch (err) {
+            process.exit(1);
+        }
+    });
+}
+
+process.on("SIGTERM", exitHandler);
+process.on("SIGINT", exitHandler);
+process.on('SIGUSR2', exitHandler)
