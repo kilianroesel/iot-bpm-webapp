@@ -10,3 +10,9 @@ ALTER TABLE "StatusField" ALTER COLUMN "id" SET DEFAULT gen_random_uuid();
 
 ALTER TABLE "EventDescription" ALTER COLUMN "id" SET DEFAULT gen_random_uuid();
 
+ALTER TABLE "EventScopingRule" ALTER COLUMN "id" SET DEFAULT gen_random_uuid();
+
+ALTER TABLE "EventAbstractionRule" ALTER COLUMN "id" SET DEFAULT gen_random_uuid();
+
+ALTER TABLE "EventEnrichmentRule" ALTER COLUMN "id" SET DEFAULT gen_random_uuid();
+

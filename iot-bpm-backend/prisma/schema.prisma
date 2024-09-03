@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
@@ -24,7 +25,7 @@ model MachineDescription {
   mainEquipment   EquipmentDescription @relation(name: "mainEquipment", fields: [mainEquipmentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
   // Rule
-  eventScopeRule EventScopeRule?
+  eventScopingRule EventScopingRule?
 }
 
 model EquipmentDescription {
@@ -42,14 +43,14 @@ model EquipmentDescription {
 }
 
 model StatusField {
-  id          String               @id @default(uuid())
-  name        String
-  field       String
-  equipment   EquipmentDescription @relation(fields: [equipmentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  equipmentId String
+  id                  String               @id @default(uuid())
+  name                String
+  field               String
+  equipment           EquipmentDescription @relation(fields: [equipmentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  equipmentId         String
 
-  //Rule
-  eventEnrichmentRule EventEnrichmentRule?
+  // Rule
+  EventEnrichmentRule EventEnrichmentRule?
 }
 
 model EventDescription {
@@ -65,13 +66,14 @@ model EventDescription {
   from            Float?
   to              Float?
 
-  //Rule
+  // Rule
   eventAbstractionRule EventAbstractionRule?
 }
 
-// Rules
-model EventScopeRule {
-  id String @id @default(uuid())
+
+// Rules 
+model EventScopingRule {
+  id String @id
 
   machineName                  String
   versionCsiStd                String
@@ -79,31 +81,32 @@ model EventScopeRule {
   machineSoftwareVersion       String
   machineMasterSoftwareVersion String
 
-  machineDescription MachineDescription @relation(fields: [scopeId], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  scopeId            String             @unique
+  machineDescription MachineDescription @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 }
 
 model EventAbstractionRule {
-  id String @id @default(uuid())
+  id String @id
 
-  eventDescription EventDescription @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  name             String
-  field            String
-  triggerCategory  String
-  triggerType      String
-  value            Float?
-  from             Float?
-  to               Float?
-  equipmentId      String
+  name            String
+  field           String
+  triggerCategory String
+  triggerType     String
+  value           Float?
+  from            Float?
+  to              Float?
 
-  scopeId String
+  equipmentId String
+
+  scopeId            String
+  eventDescription   EventDescription @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 }
 
 model EventEnrichmentRule {
-  id String @id @default(uuid())
+  id String @id
 
-  statusField StatusField @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Restrict)
-  scopeId     String
-  equipmentId String
+  name        String
   field       String
+  equipmentId String
+
+  statusField   StatusField @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Restrict)
 }

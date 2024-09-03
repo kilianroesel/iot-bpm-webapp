@@ -13,10 +13,10 @@ router.get("", async (req, res, next) => {
                     include: {
                         statusFields: true,
                         events: true,
-                        childEquipment: true
-                    }
-                }
-            }
+                        childEquipment: true,
+                    },
+                },
+            },
         });
         res.send(result);
     } catch (err) {
@@ -37,14 +37,49 @@ router.get("/:id", async (req, res, next) => {
                         statusFields: true,
                         events: true,
                         childEquipment: true,
-                    }
+                    },
                 },
-
-            }
+            },
         });
-        if (!machineDescription)
-            throw new NotFoundError("Machine Description not found");
+        if (!machineDescription) throw new NotFoundError("Machine Description not found");
         res.send(machineDescription);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.post("/:id/dispatch", async (req, res, next) => {
+    try {
+        const descriptionId = req.params.id;
+        const machineDescription = await prisma.machineDescription.findUnique({
+            where: {
+                id: descriptionId,
+            },
+        });
+        if (!machineDescription) throw new NotFoundError("Machine Description not found");
+
+        const newEventScopingRule = await prisma.eventScopingRule.upsert({
+            where: {
+                id: machineDescription.id
+            },
+            update: {
+                id: machineDescription.id,
+                machineName: machineDescription.machineName,
+                versionCsiStd: machineDescription.versionCsiStd,
+                versionCsiSpecific: machineDescription.versionCsiSpecific,
+                machineSoftwareVersion: machineDescription.machineSoftwareVersion,
+                machineMasterSoftwareVersion: machineDescription.machineMasterSoftwareVersion
+            },
+            create: {
+                id: machineDescription.id,
+                machineName: machineDescription.machineName,
+                versionCsiStd: machineDescription.versionCsiStd,
+                versionCsiSpecific: machineDescription.versionCsiSpecific,
+                machineSoftwareVersion: machineDescription.machineSoftwareVersion,
+                machineMasterSoftwareVersion: machineDescription.machineMasterSoftwareVersion
+            },
+        });
+        res.status(202).send(newEventScopingRule);
     } catch (err) {
         next(err);
     }
@@ -63,7 +98,7 @@ router.post("/:id", validateSchema("updateMachineDescription"), async (req, res,
     try {
         const updatedDescription = await prisma.machineDescription.update({
             where: {
-                id: req.params.id
+                id: req.params.id,
             },
             data: req.body,
         });
@@ -77,8 +112,8 @@ router.delete("/:id", async (req, res, next) => {
     try {
         await prisma.machineDescription.delete({
             where: {
-                id: req.params.id
-            }
+                id: req.params.id,
+            },
         });
         res.status(204).send();
     } catch (err) {

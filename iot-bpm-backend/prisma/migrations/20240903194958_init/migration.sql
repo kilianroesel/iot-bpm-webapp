@@ -46,15 +46,15 @@ CREATE TABLE "EventDescription" (
 );
 
 -- CreateTable
-CREATE TABLE "EventScopeRule" (
-    "scopeId" TEXT NOT NULL,
+CREATE TABLE "EventScopingRule" (
+    "id" TEXT NOT NULL,
     "machineName" TEXT NOT NULL,
     "versionCsiStd" TEXT NOT NULL,
     "versionCsiSpecific" TEXT NOT NULL,
     "machineSoftwareVersion" TEXT NOT NULL,
     "machineMasterSoftwareVersion" TEXT NOT NULL,
 
-    CONSTRAINT "EventScopeRule_pkey" PRIMARY KEY ("scopeId")
+    CONSTRAINT "EventScopingRule_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -76,9 +76,9 @@ CREATE TABLE "EventAbstractionRule" (
 -- CreateTable
 CREATE TABLE "EventEnrichmentRule" (
     "id" TEXT NOT NULL,
-    "scopeId" TEXT NOT NULL,
-    "equipmentId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "field" TEXT NOT NULL,
+    "equipmentId" TEXT NOT NULL,
 
     CONSTRAINT "EventEnrichmentRule_pkey" PRIMARY KEY ("id")
 );
@@ -99,7 +99,7 @@ ALTER TABLE "StatusField" ADD CONSTRAINT "StatusField_equipmentId_fkey" FOREIGN 
 ALTER TABLE "EventDescription" ADD CONSTRAINT "EventDescription_equipmentId_fkey" FOREIGN KEY ("equipmentId") REFERENCES "EquipmentDescription"("id") ON DELETE CASCADE ON UPDATE RESTRICT;
 
 -- AddForeignKey
-ALTER TABLE "EventScopeRule" ADD CONSTRAINT "EventScopeRule_scopeId_fkey" FOREIGN KEY ("scopeId") REFERENCES "MachineDescription"("id") ON DELETE CASCADE ON UPDATE RESTRICT;
+ALTER TABLE "EventScopingRule" ADD CONSTRAINT "EventScopingRule_id_fkey" FOREIGN KEY ("id") REFERENCES "MachineDescription"("id") ON DELETE CASCADE ON UPDATE RESTRICT;
 
 -- AddForeignKey
 ALTER TABLE "EventAbstractionRule" ADD CONSTRAINT "EventAbstractionRule_id_fkey" FOREIGN KEY ("id") REFERENCES "EventDescription"("id") ON DELETE CASCADE ON UPDATE RESTRICT;
