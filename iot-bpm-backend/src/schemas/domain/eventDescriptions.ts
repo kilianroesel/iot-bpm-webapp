@@ -78,8 +78,7 @@ export const createEventDescription: JSONSchemaType<ScalarTrigger | RangeTrigger
 };
 
 interface UpdateScalarTriggerDescription extends ScalarTrigger {
-    _id: string;
-    __v: number;
+    id: string;
 }
 
 interface UpdateRangeTriggerDescription extends RangeTrigger {

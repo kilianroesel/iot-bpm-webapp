@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 
 export default function SideBar() {
   return (
-    <div className="flex h-screen w-16 shrink-0 flex-col space-y-4 bg-blue-900 p-2 text-white shadow-lg lg:w-64">
+    <div className="w-16 h-full shrink-0 flex-col space-y-4 bg-blue-900 p-4 text-white shadow-lg lg:w-64">
       <SideBarElement
         to={"/"}
         icon={<HiOutlineChartPie size="26" />}
@@ -39,7 +39,7 @@ function SideBarElement({
   return (
     <NavLink
       to={to}
-      className="group relative flex items-center space-x-2 rounded-md p-2 text-gray-100 shadow-lg transition-all duration-300 ease-linear hover:bg-gray-500 hover:text-white"
+      className="group relative flex items-center space-x-4 rounded-md p-2 text-gray-100 shadow-lg transition-all duration-300 ease-linear hover:bg-gray-500 hover:text-white"
     >
       <div>{icon}</div>
       <div className="hidden lg:block">{text}</div>

@@ -46,3 +46,19 @@ router.post("/:id", validateSchema("updateEventDescription"), async (req, res, n
         next(err);
     }
 });
+
+router.delete("/:id", async (req, res, next) => {
+    try {
+        const deletedDescription = await prisma.eventDescription.delete({
+            where: {
+                id: req.params.id
+            }
+        });
+        if (!deletedDescription)
+            throw new NotFoundError("Event Description not found");
+
+        res.status(204).send();
+    } catch (err) {
+        next(err);
+    }
+});

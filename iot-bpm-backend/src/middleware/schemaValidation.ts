@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { createMachineDescription, updateMachineDescription } from "../schemas/domain/machineDescriptions";
 import { createEquipmentDescription, updateEquipmentDescription } from "../schemas/domain/equipmentDescriptions";
 import { createEventDescription, updateEventDescription } from "../schemas/domain/eventDescriptions";
+import { createStatusField, updateStatusField } from "../schemas/domain/statusField";
 
 const ajv = new Ajv();
 
@@ -14,6 +15,9 @@ ajv.addSchema(updateEquipmentDescription, "updateEquipmentDescription");
 
 ajv.addSchema(createEventDescription, "createEventDescription");
 ajv.addSchema(updateEventDescription, "updateEventDescription");
+
+ajv.addSchema(createStatusField, "createStatusField");
+ajv.addSchema(updateStatusField, "updateStatusField");
 
 export default function validateSchema(schema: string) {
     return (req: Request, res: Response, next: NextFunction) => {

@@ -9,7 +9,7 @@ router.get("", async (req, res, next) => {
     try {
         const result = await prisma.machineDescription.findMany({
             include: {
-                equipment: {
+                mainEquipment: {
                     include: {
                         statusFields: true,
                         events: true,
@@ -32,13 +32,14 @@ router.get("/:id", async (req, res, next) => {
                 id: descriptionId,
             },
             include: {
-                equipment: {
+                mainEquipment: {
                     include: {
                         statusFields: true,
                         events: true,
-                        childEquipment: true
+                        childEquipment: true,
                     }
-                }
+                },
+
             }
         });
         if (!machineDescription)
@@ -51,13 +52,7 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("", validateSchema("createMachineDescription"), async (req, res, next) => {
     try {
-        const body = req.body;
-        body.equipment = {
-            create: {
-                name: body.machineName,
-            },
-        };
-        const newMachineDescription = await prisma.machineDescription.create({ data: body });
+        const newMachineDescription = await prisma.machineDescription.create({ data: req.body });
         res.status(201).send(newMachineDescription);
     } catch (err) {
         next(err);

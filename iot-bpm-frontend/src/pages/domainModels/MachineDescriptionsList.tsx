@@ -1,14 +1,9 @@
-import { QueryClient } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { machineDescriptionsQuery } from "../../iotBpmBackend/api";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export const loader = (queryClient: QueryClient) => async () => {
-  const domaimModel = await queryClient.ensureQueryData(machineDescriptionsQuery());
-  return domaimModel;
-};
-
-export default function DomainModelList() {
-  const domainModels = useLoaderData() as Awaited<ReturnType<ReturnType<typeof loader>>>;
+export default function MachineDescriptionsList() {
+  const { data: machineDescriptions } = useSuspenseQuery(machineDescriptionsQuery());
 
   return (
     <table className="min-w-full table-fixed divide-y divide-blue-400">
@@ -32,24 +27,24 @@ export default function DomainModelList() {
         </tr>
       </thead>
       <tbody className="divide-y divide-blue-300 divide-gray-200">
-        {domainModels.map((domainModel) => (
-          <tr key={domainModel.id} className="hover:bg-gray-100">
+        {machineDescriptions.map((machineDescription) => (
+          <tr key={machineDescription.id} className="hover:bg-gray-100">
             <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-black">
-              <Link to={domainModel.id} className="after:content-['_↗']">
-                {domainModel.machineName}
+              <Link to={machineDescription.id} className="after:content-['_↗']">
+                {machineDescription.machineName}
               </Link>
             </td>
             <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-black">
-              {domainModel.versionCsiStd}
+              {machineDescription.versionCsiStd}
             </td>
             <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-black">
-              {domainModel.versionCsiSpecific}
+              {machineDescription.versionCsiSpecific}
             </td>
             <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-black">
-              {domainModel.machineSoftwareVersion}
+              {machineDescription.machineSoftwareVersion}
             </td>
             <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-black">
-              {domainModel.machineMasterSoftwareVersion}
+              {machineDescription.machineMasterSoftwareVersion}
             </td>
           </tr>
         ))}

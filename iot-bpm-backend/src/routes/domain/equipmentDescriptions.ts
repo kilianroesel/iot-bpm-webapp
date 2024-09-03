@@ -7,7 +7,11 @@ export const router = express.Router();
 
 router.get("", async (req, res, next) => {
     try {
-        const result = await prisma.equipmentDescription.findMany();
+        const result = await prisma.equipmentDescription.findMany({
+            include: {
+                mainMachineDescription: true
+            }
+        });
         res.send(result);
     } catch (err) {
         next(err);
@@ -24,10 +28,24 @@ router.get("/:id", async (req, res, next) => {
                 statusFields: true,
                 events: true,
                 childEquipment: true
-            }
+            },
         });
         if (!equipmentDescription) throw new NotFoundError("Equipment description not found");
         res.send(equipmentDescription);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete("/:id", async (req, res, next) => {
+    try {
+        const equipmentDescription = await prisma.equipmentDescription.delete({
+            where: {
+                id: req.params.id,
+            }
+        });
+        if (!equipmentDescription) throw new NotFoundError("Equipment description not found");
+        res.status(204).send();
     } catch (err) {
         next(err);
     }
@@ -37,7 +55,7 @@ router.post("/:id", validateSchema("updateEquipmentDescription"), async (req, re
     try {
         const updatedDescription = await prisma.equipmentDescription.update({
             where: {
-                id: req.params.id
+                id: req.params.id,
             },
             data: req.body,
         });
@@ -54,9 +72,9 @@ router.post("/:id/createChildEquipment", validateSchema("createEquipmentDescript
             data: {
                 ...req.body,
                 parentId: req.params.id,
-            }
+            },
         });
-        res.send(newDescription)
+        res.send(newDescription);
     } catch (err) {
         next(err);
     }
@@ -68,9 +86,9 @@ router.post("/:id/createStatusField", validateSchema("createStatusField"), async
             data: {
                 ...req.body,
                 equipmentId: req.params.id,
-            }
+            },
         });
-        res.send(newDescription)
+        res.send(newDescription);
     } catch (err) {
         next(err);
     }
@@ -81,11 +99,14 @@ router.post("/:id/createEventDescription", validateSchema("createEventDescriptio
         const newDescription = await prisma.eventDescription.create({
             data: {
                 ...req.body,
-                equipmentDescriptionId: req.params.id,
-            }
+                equipmentId: req.params.id,
+            },
         });
-        res.send(newDescription)
+        if (!newDescription) throw new Error("Invalid triggerCategory");
+        res.send(newDescription);
     } catch (err) {
         next(err);
     }
 });
+
+
