@@ -16,6 +16,7 @@ router.get("", async (req, res, next) => {
                         childEquipment: true,
                     },
                 },
+                eventScopingRule: true,
             },
         });
         res.send(result);
@@ -39,6 +40,7 @@ router.get("/:id", async (req, res, next) => {
                         childEquipment: true,
                     },
                 },
+                eventScopingRule: true,
             },
         });
         if (!machineDescription) throw new NotFoundError("Machine Description not found");

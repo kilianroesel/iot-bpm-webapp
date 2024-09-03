@@ -8,7 +8,11 @@ export const router = express.Router();
 
 router.get("", async (req, res, next) => {
     try {
-        const result = await prisma.statusField.findMany();
+        const result = await prisma.statusField.findMany({
+            include: {
+                eventEnrichmentRule: true,
+            }
+        });
         res.send(result);
     } catch (err) {
         next(err);
@@ -21,6 +25,9 @@ router.get("/:id", async (req, res, next) => {
             where: {
                 id: req.params.id,
             },
+            include: {
+                eventEnrichmentRule: true,
+            }
         });
         if (!statusFieldDescription) throw new NotFoundError("Status Field not found");
 

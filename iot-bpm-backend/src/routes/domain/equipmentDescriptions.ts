@@ -9,7 +9,7 @@ router.get("", async (req, res, next) => {
     try {
         const result = await prisma.equipmentDescription.findMany({
             include: {
-                mainMachineDescription: true
+                mainMachineDescription: true,
             }
         });
         res.send(result);

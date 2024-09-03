@@ -50,7 +50,7 @@ model StatusField {
   equipmentId         String
 
   // Rule
-  EventEnrichmentRule EventEnrichmentRule?
+  eventEnrichmentRule EventEnrichmentRule?
 }
 
 model EventDescription {
