@@ -10,7 +10,10 @@ router.get("", async (req, res, next) => {
         const result = await prisma.equipmentDescription.findMany({
             include: {
                 mainMachineDescription: true,
-            }
+                statusFields: true,
+                events: true,
+                childEquipment: true,
+            },
         });
         res.send(result);
     } catch (err) {
@@ -25,9 +28,10 @@ router.get("/:id", async (req, res, next) => {
                 id: req.params.id,
             },
             include: {
+                mainMachineDescription: true,
                 statusFields: true,
                 events: true,
-                childEquipment: true
+                childEquipment: true,
             },
         });
         if (!equipmentDescription) throw new NotFoundError("Equipment description not found");
@@ -42,7 +46,7 @@ router.delete("/:id", async (req, res, next) => {
         const equipmentDescription = await prisma.equipmentDescription.delete({
             where: {
                 id: req.params.id,
-            }
+            },
         });
         if (!equipmentDescription) throw new NotFoundError("Equipment description not found");
         res.status(204).send();
@@ -108,5 +112,3 @@ router.post("/:id/createEventDescription", validateSchema("createEventDescriptio
         next(err);
     }
 });
-
-

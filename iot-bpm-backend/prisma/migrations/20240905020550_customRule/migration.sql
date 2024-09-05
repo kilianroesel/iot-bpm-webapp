@@ -8,8 +8,8 @@ BEGIN
 
     -- Insert the Equipment Description --
     IF NOT EXISTS (SELECT 1 FROM public."EquipmentDescription" WHERE "id" = NEW."mainEquipmentId") THEN
-        INSERT INTO public."EquipmentDescription" ("id", "name")
-        VALUES (NEW."mainEquipmentId", NEW."machineName");
+        INSERT INTO public."EquipmentDescription" ("id", "name", "updatedAt")
+        VALUES (NEW."mainEquipmentId", NEW."machineName", NEW."updatedAt");
     END IF;
 
     RETURN NEW;

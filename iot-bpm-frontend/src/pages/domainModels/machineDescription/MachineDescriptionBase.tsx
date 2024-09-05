@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { machineDescriptionQuery } from "../../iotBpmBackend/api";
 import { Outlet, useParams } from "react-router-dom";
+import { machineDescriptionQuery } from "../../../modelApi/machineModel";
 
 export default function MachineDescriptionBase() {
   const params = useParams();
@@ -11,10 +11,10 @@ export default function MachineDescriptionBase() {
     <>
       <div className="space-y-4 p-4">
         <div className="grid grid-cols-3 gap-4">
-          <div className="rounded-md bg-blue-700 p-4">
-            <h3 className="font-medium">Scope</h3>
+          <div className="rounded-md bg-slate-900 p-4 space-y-4">
+            <h3 className="font-medium text-3xl">Scope</h3>
             <div className="grid grid-cols-2">
-              <div>Machine Name</div>
+              <div className="">Machine Name</div>
               <div>{machineDescription.machineName}</div>
               <div>Version Csi Standard</div>
               <div>{machineDescription.versionCsiStd}</div>
@@ -26,8 +26,8 @@ export default function MachineDescriptionBase() {
               <div>{machineDescription.machineMasterSoftwareVersion}</div>
             </div>
           </div>
-          <div className="col-span-2 rounded-md bg-blue-700 p-4">
-            <h3 className="font-medium">Topology</h3>
+          <div className="col-span-2 rounded-md bg-slate-900 p-4">
+          <h3 className="font-medium text-3xl">Topology</h3>
           </div>
         </div>
         <Outlet />

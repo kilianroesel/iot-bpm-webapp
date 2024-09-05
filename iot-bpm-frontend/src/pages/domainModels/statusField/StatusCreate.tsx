@@ -1,10 +1,9 @@
 import { RefObject, useState, FormEvent } from "react";
-import { useCreateStatusField } from "../../../iotBpmBackend/api";
-import { CreateStatusField } from "../../../iotBpmBackend/interfaces";
 import { Dialog } from "../../../components/forms/Dialog";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
-import { Input } from "../../../components/links/Input";
+import { Input } from "../../../components/forms/Input";
+import { CreateStatusField, useCreateStatusField } from "../../../modelApi/statusModelApi";
 
 export default function StatusCreate({
   dialogRef,

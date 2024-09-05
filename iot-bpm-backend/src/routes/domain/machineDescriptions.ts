@@ -33,13 +33,7 @@ router.get("/:id", async (req, res, next) => {
                 id: descriptionId,
             },
             include: {
-                mainEquipment: {
-                    include: {
-                        statusFields: true,
-                        events: true,
-                        childEquipment: true,
-                    },
-                },
+                mainEquipment: true,
                 eventScopingRule: true,
             },
         });

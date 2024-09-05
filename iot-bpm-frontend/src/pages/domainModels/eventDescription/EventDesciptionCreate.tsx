@@ -1,39 +1,9 @@
 import { RefObject, useState, FormEvent, Dispatch, SetStateAction } from "react";
-import {
-  CreateRangeTriggerEventDescription,
-  CreateScalarTriggerEventDescription,
-} from "../../../iotBpmBackend/interfaces";
-import { useCreateEventDescription } from "../../../iotBpmBackend/api";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
-import { Input, Select } from "../../../components/links/Input";
+import { Input, Select } from "../../../components/forms/Input";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
-
-interface EventDescriptionBase {
-  field: string;
-  name: string;
-  triggerCategory: "RANGE_TRIGGER" | "SCALAR_TRIGGER";
-}
-
-interface ScalarTriggerDescription {
-  triggerCategory: "SCALAR_TRIGGER";
-  triggerType:
-    | "CHANGES_TO"
-    | "CHANGES_FROM"
-    | "INCREASES_BY"
-    | "DECREASES_BY"
-    | "ABSOLUTE_CHANGE_IS_EQUAL"
-    | "ABSOLUTE_CHANGE_IS_GREATER_EQUAL"
-    | "CHANGE_IS_GREATER_EQUAL";
-  value: string;
-}
-
-interface RangeTriggerDescription {
-  triggerCategory: "RANGE_TRIGGER";
-  triggerType: "ENTERS_RANGE_FROM_TO" | "LEAVES_RANGE_FROM_TO";
-  from: string;
-  to: string;
-}
+import { CreateRangeTriggerEventDescription, CreateScalarTriggerEventDescription, RangeTriggerEventExtension, ScalarTriggerEventExtension, useCreateEventDescription } from "../../../modelApi/eventModelApi";
 
 export default function EventDescriptionCreate({
   dialogRef,
@@ -42,21 +12,23 @@ export default function EventDescriptionCreate({
   dialogRef: RefObject<HTMLDialogElement>;
   equipmentId: string;
 }) {
-  const [newEventDescription, setNewEventDescription] = useState<EventDescriptionBase>({
+  const [newEventDescription, setNewEventDescription] = useState<CreateScalarTriggerEventDescription | CreateRangeTriggerEventDescription>({
     name: "",
     field: "",
     triggerCategory: "SCALAR_TRIGGER",
+    triggerType: "ABSOLUTE_CHANGE_IS_GREATER_EQUAL",
+    value: 0
   });
-  const [scalarTrigger, setScalarTrigger] = useState<ScalarTriggerDescription>({
+  const [scalarTrigger, setScalarTrigger] = useState<ScalarTriggerEventExtension>({
     triggerCategory: "SCALAR_TRIGGER",
     triggerType: "CHANGES_TO",
-    value: "",
+    value: 0,
   });
-  const [rangeTrigger, setRangeTrigger] = useState<RangeTriggerDescription>({
+  const [rangeTrigger, setRangeTrigger] = useState<RangeTriggerEventExtension>({
     triggerCategory: "RANGE_TRIGGER",
     triggerType: "ENTERS_RANGE_FROM_TO",
-    from: "",
-    to: "",
+    from: 0,
+    to: 0,
   });
   const mutate = useCreateEventDescription(equipmentId);
 
@@ -70,12 +42,14 @@ export default function EventDescriptionCreate({
 
   const stopCreating = () => {
     if (dialogRef.current) {
-      dialogRef.current.close();
       setNewEventDescription({
         name: "",
         field: "",
-        triggerCategory: "RANGE_TRIGGER",
+        triggerCategory: "SCALAR_TRIGGER",
+        triggerType: "ABSOLUTE_CHANGE_IS_GREATER_EQUAL",
+        value: 0
       });
+      dialogRef.current.close();
     }
   };
 
@@ -106,7 +80,7 @@ export default function EventDescriptionCreate({
   };
 
   return (
-    <Dialog ref={dialogRef} className="w-full max-w-3xl rounded-md p-4">
+    <Dialog ref={dialogRef}>
       <Form onSubmit={submit}>
         <FormHeader>Add Event Description</FormHeader>
         <FormLabel>
@@ -145,8 +119,8 @@ function ScalarTriggerCreate({
   scalarTrigger,
   setScalarTrigger,
 }: {
-  scalarTrigger: ScalarTriggerDescription;
-  setScalarTrigger: Dispatch<SetStateAction<ScalarTriggerDescription>>;
+  scalarTrigger: ScalarTriggerEventExtension;
+  setScalarTrigger: Dispatch<SetStateAction<ScalarTriggerEventExtension>>;
 }) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -164,7 +138,6 @@ function ScalarTriggerCreate({
           name="triggerType"
           value={scalarTrigger.triggerType}
           onChange={handleChange}
-          className="w-full rounded-md"
         >
           <option value="CHANGES_TO">Changes To</option>
           <option value="CHANGES_FROM">Changes From</option>
@@ -187,8 +160,8 @@ function RangeTriggerCreate({
   rangeTrigger,
   setRangeTrigger,
 }: {
-  rangeTrigger: RangeTriggerDescription;
-  setRangeTrigger: Dispatch<SetStateAction<RangeTriggerDescription>>;
+  rangeTrigger: RangeTriggerEventExtension;
+  setRangeTrigger: Dispatch<SetStateAction<RangeTriggerEventExtension>>;
 }) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = event.target;

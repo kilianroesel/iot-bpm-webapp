@@ -1,12 +1,14 @@
 import { useRef } from "react";
-import { GetStatusField, PopulatedGetEquipmentDescription } from "../../../iotBpmBackend/interfaces";
 import StatusCreate from "./StatusCreate";
 import StatusDelete from "./StatusDelete";
 import StatusEdit from "./StatusEdit";
-import { IconButton } from "../../../components/forms/Buttons";
-import { HiOutlinePencil, HiOutlineTrash, HiPlus } from "react-icons/hi2";
+import { IconAddButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
+import { GetPopulatedEquipmentDescription } from "../../../modelApi/equipmentModelApi";
+import { GetStatusField, statusModelFieldQuery } from "../../../modelApi/statusModelApi";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { HiExclamationCircle } from "react-icons/hi2";
 
-export function StatusFields({ equipment }: { equipment: PopulatedGetEquipmentDescription }) {
+export function StatusFields({ equipment }: { equipment: GetPopulatedEquipmentDescription }) {
   const createDialogRef = useRef<HTMLDialogElement>(null);
 
   const startCreate = () => {
@@ -16,13 +18,11 @@ export function StatusFields({ equipment }: { equipment: PopulatedGetEquipmentDe
   };
 
   return (
-    <div className="space-y-4 rounded-md bg-blue-200 p-4">
-      <div className="grid grid-cols-12">
-        <h3 className="col-span-11 font-medium">Status Fields</h3>
+    <div className="space-y-4 rounded-md bg-slate-900 p-4">
+      <div className="flex">
+        <h3 className="flex-grow font-medium">Status Fields</h3>
         <div className="justify-self-center">
-          <IconButton onClick={startCreate}>
-            <HiPlus size="18" />
-          </IconButton>
+          <IconAddButton onClick={startCreate} />
         </div>
         <StatusCreate dialogRef={createDialogRef} equipmentId={equipment.id} />
       </div>
@@ -40,6 +40,7 @@ export function StatusFields({ equipment }: { equipment: PopulatedGetEquipmentDe
 }
 
 function StatusField({ statusField }: { statusField: GetStatusField }) {
+  const { data: populatedStatusField } = useSuspenseQuery(statusModelFieldQuery(statusField.id));
   const editDialogRef = useRef<HTMLDialogElement>(null);
   const deleteDialogRef = useRef<HTMLDialogElement>(null);
 
@@ -54,20 +55,26 @@ function StatusField({ statusField }: { statusField: GetStatusField }) {
       deleteDialogRef.current.showModal();
     }
   };
+
   return (
     <>
-      <div className="grid grid-cols-12">
-        <div className="col-span-3 truncate">{statusField.name}</div>
-        <div className="col-span-7 truncate">{statusField.field}</div>
-        <div className="col-span-1 justify-self-center">
-          <IconButton onClick={() => startEditStatus()}>
-            <HiOutlinePencil size="18" />
-          </IconButton>
+      <div className="flex">
+        <div className="flex-grow">
+          <div className="grid grid-cols-5">
+            <div className="col-span-2">
+              {populatedStatusField.eventEnrichmentRule && (
+                <span>
+                  <HiExclamationCircle className="text-blue-500" size="24" />
+                </span>
+              )}
+              <span>{statusField.name}</span>
+            </div>
+            <div className="col-span-3 truncate">{statusField.field}</div>
+          </div>
         </div>
-        <div className="col-span-1 justify-self-center">
-          <IconButton onClick={() => startDeletingStatus()}>
-            <HiOutlineTrash size="18" />
-          </IconButton>
+        <div className="col-span-1 space-x-4 items-center">
+          <IconEditButton onClick={() => startEditStatus()} />
+          <IconDeleteButton onClick={() => startDeletingStatus()} />
         </div>
       </div>
       <StatusEdit dialogRef={editDialogRef} statusField={statusField} />

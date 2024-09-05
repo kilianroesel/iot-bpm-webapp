@@ -24,6 +24,9 @@ model MachineDescription {
   mainEquipmentId String               @unique @default(uuid())
   mainEquipment   EquipmentDescription @relation(name: "mainEquipment", fields: [mainEquipmentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
   // Rule
   eventScopingRule EventScopingRule?
 }
@@ -40,6 +43,9 @@ model EquipmentDescription {
   parentId        String?
   parentEquipment EquipmentDescription?  @relation("EquipmentToEquipment", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Restrict)
   childEquipment  EquipmentDescription[] @relation("EquipmentToEquipment")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }
 
 model StatusField {
@@ -51,6 +57,9 @@ model StatusField {
 
   // Rule
   eventEnrichmentRule EventEnrichmentRule?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }
 
 model EventDescription {
@@ -68,6 +77,9 @@ model EventDescription {
 
   // Rule
   eventAbstractionRule EventAbstractionRule?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }
 
 
@@ -82,6 +94,9 @@ model EventScopingRule {
   machineMasterSoftwareVersion String
 
   machineDescription MachineDescription @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }
 
 model EventAbstractionRule {
@@ -99,6 +114,9 @@ model EventAbstractionRule {
 
   scopeId            String
   eventDescription   EventDescription @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }
 
 model EventEnrichmentRule {
@@ -109,4 +127,7 @@ model EventEnrichmentRule {
   equipmentId String
 
   statusField   StatusField @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @db.Timestamptz()
 }

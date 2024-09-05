@@ -1,9 +1,8 @@
 import { RefObject, FormEvent } from "react";
-import { useDeleteStatusField } from "../../../iotBpmBackend/api";
-import { GetStatusField } from "../../../iotBpmBackend/interfaces";
 import { Dialog } from "../../../components/forms/Dialog";
 import { CancelButton, DeleteButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader } from "../../../components/forms/Form";
+import { GetStatusField, useDeleteStatusField } from "../../../modelApi/statusModelApi";
 
 export default function StatusDelete({
   dialogRef,

@@ -1,9 +1,8 @@
 import { RefObject, FormEvent } from "react";
-import { useDeleteEventDescription } from "../../../iotBpmBackend/api";
-import { BaseGetEventDescription } from "../../../iotBpmBackend/interfaces";
-import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
+import { CancelButton, DeleteButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
+import { BaseGetEventDescription, useDeleteEventDescription } from "../../../modelApi/eventModelApi";
 
 export default function EventDelete({
   dialogRef,
@@ -36,7 +35,7 @@ export default function EventDelete({
           <div>{eventDescription.name}</div>
         </FormLabel>
         <div className="space-x-4">
-          <SubmitButton type="submit">Delete</SubmitButton>
+          <DeleteButton type="submit" />
           <CancelButton type="button" onClick={stopDeleting}>
             Cancel
           </CancelButton>

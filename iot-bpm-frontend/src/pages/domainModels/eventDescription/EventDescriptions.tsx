@@ -1,16 +1,13 @@
 import { useRef } from "react";
-import {
-  GetRangeTriggerEventDescription,
-  GetScalarTriggerEventDescription,
-  PopulatedGetEquipmentDescription,
-} from "../../../iotBpmBackend/interfaces";
 import EventDescriptionDelete from "./EventDescriptionDelete";
 import EventDescriptionCreate from "./EventDesciptionCreate";
 import EventDescriptionEdit from "./EventDescriptionEdit";
-import { IconButton } from "../../../components/forms/Buttons";
-import { HiOutlinePencil, HiOutlineTrash, HiPlus } from "react-icons/hi2";
+import { IconAddButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
+import { HiExclamationCircle } from "react-icons/hi2";
+import { GetPopulatedEquipmentDescription } from "../../../modelApi/equipmentModelApi";
+import { GetRangeTriggerEventDescription, GetScalarTriggerEventDescription } from "../../../modelApi/eventModelApi";
 
-export function EventDescriptions({ equipment }: { equipment: PopulatedGetEquipmentDescription }) {
+export function EventDescriptions({ equipment }: { equipment: GetPopulatedEquipmentDescription }) {
   const createDialogRef = useRef<HTMLDialogElement>(null);
   const startCreate = () => {
     if (createDialogRef.current) {
@@ -19,13 +16,11 @@ export function EventDescriptions({ equipment }: { equipment: PopulatedGetEquipm
   };
 
   return (
-    <div className="space-y-4 rounded-md bg-blue-200 p-4">
-      <div className="grid grid-cols-12">
-        <h3 className="col-span-11 font-medium">Event Descriptions Fields</h3>
-        <div className="justify-self-center">
-          <IconButton onClick={startCreate}>
-            <HiPlus size="18" />
-          </IconButton>
+    <div className="space-y-4 rounded-md bg-slate-900 p-4">
+      <div className="flex">
+        <h3 className="flex-grow font-medium">Event Descriptions Fields</h3>
+        <div>
+          <IconAddButton onClick={startCreate} />
         </div>
         <EventDescriptionCreate dialogRef={createDialogRef} equipmentId={equipment.id} />
       </div>
@@ -61,20 +56,22 @@ function EventDescription({
       deleteDialogRef.current.showModal();
     }
   };
+  
   return (
     <>
-      <div className="grid grid-cols-12">
-        <div className="col-span-3 truncate">{eventDescription.name}</div>
-        <div className="col-span-7 truncate">{eventDescription.field}</div>
-        <div className="col-span-1 justify-self-center">
-          <IconButton onClick={() => startEdit()}>
-            <HiOutlinePencil size="18" />
-          </IconButton>
+      <div className="flex items-center">
+        <div className="grid grid-cols-7 flex-grow">
+          <div className="col-span-3 truncate">
+            <div className="flex items-center space-x-2">
+              {<HiExclamationCircle className="text-blue-500" size="24" />}
+              <span>{eventDescription.name}</span>
+            </div>
+          </div>
+          <div className="col-span-4 truncate">{eventDescription.field}</div>
         </div>
-        <div className="col-span-1 justify-self-center">
-          <IconButton onClick={() => startDelete()}>
-            <HiOutlineTrash size="18" />
-          </IconButton>
+        <div className="flex space-x-4 items-center">
+          <IconEditButton onClick={() => startEdit()} />
+          <IconDeleteButton onClick={() => startDelete()} />
         </div>
       </div>
       <EventDescriptionEdit dialogRef={editDialogRef} eventDescription={eventDescription} />

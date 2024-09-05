@@ -3,7 +3,7 @@ import { DetailedHTMLProps, InputHTMLAttributes, SelectHTMLAttributes } from "re
 export function Input(props: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>) {
   return (
     <input
-      className="w-full rounded-md block"
+      className="w-full rounded-md block text-black"
       {...props}
     />
   );
@@ -12,7 +12,7 @@ export function Input(props: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElem
 export function Select(props: DetailedHTMLProps<SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>) {
     return (
       <select
-        className="w-full rounded-md"
+        className="w-full rounded-md text-black"
         {...props}
       />
     );

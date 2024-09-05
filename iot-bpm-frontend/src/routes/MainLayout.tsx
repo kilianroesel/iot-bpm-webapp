@@ -5,7 +5,7 @@ import { Suspense } from "react";
 
 export default function MainLayout() {
   return (
-    <div className="flex h-dvh flex-col overflow-y-scroll">
+    <div className="flex h-dvh flex-col overflow-y-scroll text-slate-200">
       <NavigationBar />
       <div className="flex grow">
         <SideBar />
@@ -13,9 +13,9 @@ export default function MainLayout() {
         <Suspense
           fallback={
             <div className="flex h-screen items-center justify-center space-x-2 transition">
-              <div className="h-4 w-4 animate-bounce rounded-full bg-blue-500"></div>
-              <div className="h-4 w-4 animate-bounce rounded-full bg-blue-500 delay-500"></div>
-              <div className="h-4 w-4 animate-bounce rounded-full bg-blue-500 delay-1000"></div>
+              <div className="h-4 w-4 animate-bounce rounded-full bg-cyan-500"></div>
+              <div className="h-4 w-4 animate-bounce rounded-full bg-cyan-500 delay-500"></div>
+              <div className="h-4 w-4 animate-bounce rounded-full bg-cyan-500 delay-1000"></div>
             </div>
           }
         >

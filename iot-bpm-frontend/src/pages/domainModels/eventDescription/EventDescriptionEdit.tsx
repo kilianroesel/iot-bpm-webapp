@@ -1,15 +1,9 @@
 import { RefObject, useState, FormEvent, Dispatch, SetStateAction } from "react";
-import {
-  RangeTriggerEventExtension,
-  ScalarTriggerEventExtension,
-  UpdateRangeTriggerEventDescription,
-  UpdateScalarTriggerEventDescription,
-} from "../../../iotBpmBackend/interfaces";
-import { useUpdateEventDescription } from "../../../iotBpmBackend/api";
-import { Input, Select } from "../../../components/links/Input";
+import { Input, Select } from "../../../components/forms/Input";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
+import { RangeTriggerEventExtension, ScalarTriggerEventExtension, UpdateRangeTriggerEventDescription, UpdateScalarTriggerEventDescription, useUpdateEventDescription } from "../../../modelApi/eventModelApi";
 
 export default function EventDescriptionEdit({
   dialogRef,

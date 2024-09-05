@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { machineDescriptionQuery } from "../../iotBpmBackend/api";
-import { BreadCrumbLink } from "../../components/links/BreadCrumb";
+import { BreadCrumbLink } from "../../../components/links/BreadCrumb";
+import { machineDescriptionQuery } from "../../../modelApi/machineModel";
 
 export default function MachineDescriptionDetail() {
   const params = useParams();
@@ -11,7 +11,7 @@ export default function MachineDescriptionDetail() {
   return (
     <>
       <BreadCrumbLink to={machineDescription.mainEquipment.id}>Machines and Components</BreadCrumbLink>
-      <div className="bg-blue-900 p-4">TODO</div>
+      <div className="bg-slate-900 p-4">TODO</div>
     </>
   );
 }

@@ -4,11 +4,11 @@ import "./index.css";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import MainLayout from "./routes/MainLayout";
 import { QueryClientProvider } from "@tanstack/react-query";
-import MachineDescriptionsList from "./pages/domainModels/MachineDescriptionsList";
-import MachineDescriptionBase from "./pages/domainModels/MachineDescriptionBase";
+import MachineDescriptionsList from "./pages/domainModels/machineDescription/MachineDescriptionsList";
+import MachineDescriptionBase from "./pages/domainModels/machineDescription/MachineDescriptionBase";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import MachineDescriptionDetail from "./pages/domainModels/MachineDescriptionDetail";
-import { queryClient } from "./config/queryConfig";
+import MachineDescriptionDetail from "./pages/domainModels/machineDescription/MachineDescriptionDetail";
+import { queryClient } from "./config/queryClientConfig";
 import { RecursiveEquipmentRouter } from "./routes/RecursiveEquipmentRouter";
 
 createRoot(document.getElementById("root")!).render(

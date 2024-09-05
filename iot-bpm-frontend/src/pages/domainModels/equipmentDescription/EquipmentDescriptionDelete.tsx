@@ -1,10 +1,9 @@
 import { RefObject, FormEvent } from "react";
-import { useDeleteEquipment } from "../../../iotBpmBackend/api";
-import { GetEquipmentDescription } from "../../../iotBpmBackend/interfaces";
 import { CancelButton, DeleteButton } from "../../../components/forms/Buttons";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { useNavigate } from "react-router-dom";
+import { GetEquipmentDescription, useDeleteEquipment } from "../../../modelApi/equipmentModelApi";
 
 export default function EquipmentDescriptionDelete({
   dialogRef,

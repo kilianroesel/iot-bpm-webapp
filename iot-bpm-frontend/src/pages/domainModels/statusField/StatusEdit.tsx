@@ -1,10 +1,9 @@
 import { RefObject, useState, FormEvent } from "react";
-import { useUpdateStatusField } from "../../../iotBpmBackend/api";
-import { GetStatusField } from "../../../iotBpmBackend/interfaces";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
-import { Input } from "../../../components/links/Input";
+import { Input } from "../../../components/forms/Input";
+import { GetStatusField, UpdateStatusField, useUpdateStatusField } from "../../../modelApi/statusModelApi";
 
 export default function StatusEdit({
   dialogRef,
@@ -13,7 +12,12 @@ export default function StatusEdit({
   dialogRef: RefObject<HTMLDialogElement>;
   statusField: GetStatusField;
 }) {
-  const [updatedStatusField, setUpdatedStatusField] = useState(statusField);
+  const [updatedStatusField, setUpdatedStatusField] = useState<UpdateStatusField>({
+    name: statusField.name,
+    id: statusField.id,
+    equipmentId: statusField.equipmentId,
+    field: statusField.field
+  });
   const mutate = useUpdateStatusField(statusField.id);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

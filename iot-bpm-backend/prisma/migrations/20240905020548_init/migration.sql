@@ -7,6 +7,8 @@ CREATE TABLE "MachineDescription" (
     "machineSoftwareVersion" TEXT NOT NULL,
     "machineMasterSoftwareVersion" TEXT NOT NULL,
     "mainEquipmentId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT "MachineDescription_pkey" PRIMARY KEY ("id")
 );
@@ -16,6 +18,8 @@ CREATE TABLE "EquipmentDescription" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "parentId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT "EquipmentDescription_pkey" PRIMARY KEY ("id")
 );
@@ -26,6 +30,8 @@ CREATE TABLE "StatusField" (
     "name" TEXT NOT NULL,
     "field" TEXT NOT NULL,
     "equipmentId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT "StatusField_pkey" PRIMARY KEY ("id")
 );
@@ -41,6 +47,8 @@ CREATE TABLE "EventDescription" (
     "value" DOUBLE PRECISION,
     "from" DOUBLE PRECISION,
     "to" DOUBLE PRECISION,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT "EventDescription_pkey" PRIMARY KEY ("id")
 );
@@ -53,6 +61,8 @@ CREATE TABLE "EventScopingRule" (
     "versionCsiSpecific" TEXT NOT NULL,
     "machineSoftwareVersion" TEXT NOT NULL,
     "machineMasterSoftwareVersion" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT "EventScopingRule_pkey" PRIMARY KEY ("id")
 );
@@ -69,6 +79,8 @@ CREATE TABLE "EventAbstractionRule" (
     "to" DOUBLE PRECISION,
     "equipmentId" TEXT NOT NULL,
     "scopeId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT "EventAbstractionRule_pkey" PRIMARY KEY ("id")
 );
@@ -79,6 +91,8 @@ CREATE TABLE "EventEnrichmentRule" (
     "name" TEXT NOT NULL,
     "field" TEXT NOT NULL,
     "equipmentId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT "EventEnrichmentRule_pkey" PRIMARY KEY ("id")
 );

@@ -5,7 +5,7 @@ export function Form(props: DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement
 }
 
 export function FormLabel(props: DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>) {
-    return <label className="block" {...props} />
+    return <label className="block space-y-1" {...props} />
 }
 
 export function FormHeader(props: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>) {
