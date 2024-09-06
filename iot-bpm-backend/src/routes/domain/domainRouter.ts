@@ -1,14 +1,14 @@
 import express from "express";
-import { router as machineDescriptionsRouter } from "./machineDescriptions";
-import { router as equipmentDescriptionsRouter } from "./equipmentDescriptions";
-import { router as eventDescriptionsRouter } from "./eventDescriptions";
-import { router as statusFieldRouter } from "./statusFields";
+import { router as machineModelsRouter } from "./machineModels";
+import { router as equipmentModelsRouter } from "./equipmentModels/equipmentModels";
+import { router as eventModelsRouter } from "./equipmentModels/eventModels";
+import { router as statusModelRouter } from "./equipmentModels/statusModels";
 
 const router = express.Router();
 
-router.use("/machineDescriptions", machineDescriptionsRouter);
-router.use("/equipmentDescriptions", equipmentDescriptionsRouter);
-router.use("/eventDescriptions", eventDescriptionsRouter);
-router.use("/statusFields", statusFieldRouter);
+router.use("/machineModels", machineModelsRouter);
+router.use("/equipmentModels", equipmentModelsRouter);
+router.use("/eventModels", eventModelsRouter);
+router.use("/statusModels", statusModelRouter);
 
 export default router;

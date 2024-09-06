@@ -1,23 +1,23 @@
 import Ajv from "ajv";
 import { Request, Response, NextFunction } from "express";
-import { createMachineDescription, updateMachineDescription } from "../schemas/domain/machineDescriptions";
-import { createEquipmentDescription, updateEquipmentDescription } from "../schemas/domain/equipmentDescriptions";
-import { createEventDescription, updateEventDescription } from "../schemas/domain/eventDescriptions";
-import { createStatusField, updateStatusField } from "../schemas/domain/statusField";
+import { createMachineModel, updateMachineModel } from "../schemas/domain/machineModelSchema";
+import { createEquipmentModel, updateEquipmentModel } from "../schemas/domain/equipmentModelSchema";
+import { createEventModel, updateEventModel } from "../schemas/domain/eventModelSchema";
+import { createStatusModel, updateStatusModel } from "../schemas/domain/statusModelSchema";
 
 const ajv = new Ajv();
 
-ajv.addSchema(createMachineDescription, "createMachineDescription");
-ajv.addSchema(updateMachineDescription, "updateMachineDescription");
+ajv.addSchema(createMachineModel, "createMachineModel");
+ajv.addSchema(updateMachineModel, "updateMachineModel");
 
-ajv.addSchema(createEquipmentDescription, "createEquipmentDescription");
-ajv.addSchema(updateEquipmentDescription, "updateEquipmentDescription");
+ajv.addSchema(createEquipmentModel, "createEquipmentModel");
+ajv.addSchema(updateEquipmentModel, "updateEquipmentModel");
 
-ajv.addSchema(createEventDescription, "createEventDescription");
-ajv.addSchema(updateEventDescription, "updateEventDescription");
+ajv.addSchema(createEventModel, "createEventModel");
+ajv.addSchema(updateEventModel, "updateEventModel");
 
-ajv.addSchema(createStatusField, "createStatusField");
-ajv.addSchema(updateStatusField, "updateStatusField");
+ajv.addSchema(createStatusModel, "createStatusModel");
+ajv.addSchema(updateStatusModel, "updateStatusModel");
 
 export default function validateSchema(schema: string) {
     return (req: Request, res: Response, next: NextFunction) => {

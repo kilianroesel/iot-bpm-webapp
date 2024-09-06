@@ -1,67 +1,55 @@
 import { queryOptions, useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
-import { GetPopulatedEquipmentDescription } from "./equipmentModelApi";
 import { queryClient } from "../config/queryClientConfig";
+import { GetEquipmentModel } from "./equipmentModelApi";
 
-export interface CreateMachineDescription {
+export interface CreateMachineModel {
   machineName: string;
   versionCsiStd: string;
   versionCsiSpecific: string;
   machineSoftwareVersion: string;
   machineMasterSoftwareVersion: string;
 }
-export interface GetMachineDescription extends CreateMachineDescription {
-  id: string;
-  updatedAt: String;
-  createdAt: String;
-}
-export interface GetPopulatedMachineDescription extends GetMachineDescription {
-  mainEquipment: GetPopulatedEquipmentDescription;
-  eventScopingRule?: EventScopingRule;
-}
-export interface UpdateMachineDescription extends GetMachineDescription {}
 
-export interface EventScopingRule {
-  id: String;
-  machineName: String;
-  versionCsiStd: String;
-  versionCsiSpecific: String;
-  machineSoftwareVersion: String;
-  machineMasterSoftwareVersion: String;
+interface GetMachineModelBase extends CreateMachineModel {
+  _id: string;
+  __t: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export const useCreateMachineDescription = () =>
+export interface GetPopulatedMachineModel extends GetMachineModelBase {
+  rootEquipmentModel: GetEquipmentModel;
+}
+export interface GetMachineModel extends GetMachineModelBase {
+  rootEquipmentModel: string;
+}
+
+export interface UpdateMachineModel extends CreateMachineModel, GetMachineModelBase {}
+
+export const useCreateMachineModel = () =>
   useMutation({
-    mutationFn: async (payload: CreateMachineDescription) => {
-      const response = await apiInstance.post(`/domain/machineDescriptions`, payload);
+    mutationFn: async (payload: CreateMachineModel) => {
+      const response = await apiInstance.post(`/domain/machineModels`, payload);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
   });
 
-export const machineDescriptionsQuery = () =>
+export const machineModelsQuery = () =>
   queryOptions({
-    queryKey: ["domain", "machineDescriptions"],
+    queryKey: ["domain", "machineModels"],
     queryFn: async () => {
-      const response = await apiInstance.get<GetPopulatedMachineDescription[]>("/domain/machineDescriptions");
+      const response = await apiInstance.get<GetMachineModel[]>("/domain/machineModels");
       return response.data;
     },
   });
 
-export const machineDescriptionQuery = (id: string) =>
+export const machineModelQuery = (id: string) =>
   queryOptions({
-    queryKey: ["domain", "machineDescription", id],
+    queryKey: ["domain", "machineModel", id],
     queryFn: async () => {
-      const response = await apiInstance.get<GetPopulatedMachineDescription>(`/domain/machineDescriptions/${id}`);
-      return response.data;
-    },
-  });
-
-export const equipmentDescriptionQuery = (id: string) =>
-  queryOptions({
-    queryKey: ["domain", "equipmentDescription", id],
-    queryFn: async () => {
-      const response = await apiInstance.get<GetPopulatedEquipmentDescription>(`/domain/equipmentDescriptions/${id}`);
+      const response = await apiInstance.get<GetMachineModel>(`/domain/machineModels/${id}`);
       return response.data;
     },
   });

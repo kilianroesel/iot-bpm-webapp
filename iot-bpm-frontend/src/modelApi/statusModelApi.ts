@@ -2,50 +2,41 @@ import { queryOptions, useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
 
-export interface CreateStatusField {
-  name: string;
+export interface CreateStatusModel {
+  statusName: string;
   field: string;
 }
-export interface GetStatusField extends CreateStatusField {
-  id: string;
-  name: string;
-  field: string;
-  equipmentId: string;
+export interface GetStatusModelBase extends CreateStatusModel {
+  _id: string;
+  __t: string;
   updatedAt: String;
   createdAt: String;
 }
-export interface UpdateStatusField {
-  id: string;
-  name: string;
-  field: string;
-  equipmentId: string;
+export interface UpdateStatusModel extends CreateStatusModel {
+  _id: string;
+  __t: string;
+}
+export interface GetStatusModel extends GetStatusModelBase {}
+
+export interface GetPopulatedStatusModel extends GetStatusModelBase {
+  isDispatched?: Boolean;
+  isActive?: Boolean;
 }
 
-export interface GetPopulatedStatusField extends GetStatusField {
-  eventEnrichmentRule?: EventEnrichmentRule;
-}
-
-export interface EventEnrichmentRule {
-  id: string;
-  name: string;
-  field: string;
-  equipmentId: string;
-}
-
-export const statusModelFieldQuery = (statusFieldId: string) =>
+export const statusModelQuery = (statusModelId: string) =>
   queryOptions({
-    queryKey: ["domain", "statusFields", statusFieldId],
+    queryKey: ["domain", "statusModels", statusModelId],
     queryFn: async () => {
-      const response = await apiInstance.get<GetPopulatedStatusField>(`/domain/statusFields/${statusFieldId}`);
+      const response = await apiInstance.get<GetPopulatedStatusModel>(`/domain/statusModels/${statusModelId}`);
       return response.data;
     },
   });
 
-export const useCreateStatusField = (equipmentId: string) =>
+export const useCreateStatusModel = (equipmentModelId: string) =>
   useMutation({
-    mutationFn: async (payload: CreateStatusField) => {
-      const response = await apiInstance.post<GetStatusField>(
-        `/domain/equipmentDescriptions/${equipmentId}/createStatusField`,
+    mutationFn: async (payload: CreateStatusModel) => {
+      const response = await apiInstance.post<GetStatusModel>(
+        `/domain/equipmentModels/${equipmentModelId}/statusModels`,
         payload,
       );
       return response.data;
@@ -53,20 +44,32 @@ export const useCreateStatusField = (equipmentId: string) =>
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
   });
 
-export const useUpdateStatusField = (id: string) =>
+export const useUpdateStatusModel = (id: string) =>
   useMutation({
-    mutationFn: async (payload: UpdateStatusField) => {
-      const response = await apiInstance.post<GetStatusField>(`/domain/statusFields/${id}`, payload);
+    mutationFn: async (payload: UpdateStatusModel) => {
+      const response = await apiInstance.post<GetStatusModel>(`/domain/statusModels/${id}`, payload);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
   });
 
-export const useDeleteStatusField = (id: string) =>
+export const useDeleteStatusModel = (id: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.delete(`/domain/statusFields/${id}`);
+      const response = await apiInstance.delete(`/domain/statusModels/${id}`);
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels"] });
+      queryClient.removeQueries({ queryKey: ["domain", "statusModels", id], exact: true });
+    },
   });
+
+  export const useDispatchStatusModel = (id: string) =>
+    useMutation({
+      mutationFn: async () => {
+        const response = await apiInstance.post(`/domain/statusModels/${id}/dispatch`);
+        return response.data;
+      },
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    });

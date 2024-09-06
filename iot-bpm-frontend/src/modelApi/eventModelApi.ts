@@ -1,35 +1,36 @@
-import { useMutation } from "@tanstack/react-query";
+import { queryOptions, useMutation } from "@tanstack/react-query";
 import { queryClient } from "../config/queryClientConfig";
 import { apiInstance } from "../config/modelApiConfig";
 
-export interface BaseGetEventDescription {
-  id: string;
-  name: string;
+export interface CreateEventModelBase {
+  eventName: string;
+  field: string;
+}
+
+export interface GetEventModelBase {
+  _id: string;
+  __t: string;
+  eventName: string;
   field: string;
   updatedAt: String;
   createdAt: String;
-  eventAbstractionRule?: EventAbstractionRule
 }
 
-export interface BaseCreateEventDescription {
-  name: string;
+export interface BaseUpdateEventModel {
+  _id: string;
+  __t: string;
+  eventName: string;
   field: string;
 }
 
-export interface BaseUpdateEventDescription {
-  id: string;
-  name: string;
-  field: string;
-}
+export interface GetScalarTriggerEventModel extends ScalarTriggerEventExtension, GetEventModelBase {}
+export interface GetRangeTriggerEventModel extends RangeTriggerEventExtension, GetEventModelBase {}
 
-export interface GetScalarTriggerEventDescription extends ScalarTriggerEventExtension, BaseGetEventDescription {}
-export interface GetRangeTriggerEventDescription extends RangeTriggerEventExtension, BaseGetEventDescription {}
+export interface CreateScalarTriggerEventModel extends ScalarTriggerEventExtension, CreateEventModelBase {}
+export interface CreateRangeTriggerEventModel extends RangeTriggerEventExtension, CreateEventModelBase {}
 
-export interface CreateScalarTriggerEventDescription extends ScalarTriggerEventExtension, BaseCreateEventDescription {}
-export interface CreateRangeTriggerEventDescription extends RangeTriggerEventExtension, BaseCreateEventDescription {}
-
-export interface UpdateScalarTriggerEventDescription extends ScalarTriggerEventExtension, BaseUpdateEventDescription {}
-export interface UpdateRangeTriggerEventDescription extends RangeTriggerEventExtension, BaseUpdateEventDescription {}
+export interface UpdateScalarTriggerEventModel extends ScalarTriggerEventExtension, BaseUpdateEventModel {}
+export interface UpdateRangeTriggerEventModel extends RangeTriggerEventExtension, BaseUpdateEventModel {}
 
 export interface ScalarTriggerEventExtension {
   triggerCategory: "SCALAR_TRIGGER";
@@ -50,15 +51,22 @@ export interface RangeTriggerEventExtension {
   to: number;
 }
 
-export interface EventAbstractionRule {
+export const eventModelQuery = (eventModelId: string) =>
+  queryOptions({
+    queryKey: ["domain", "eventModels", eventModelId],
+    queryFn: async () => {
+      const response = await apiInstance.get<GetScalarTriggerEventModel | GetRangeTriggerEventModel>(
+        `/domain/eventModels/${eventModelId}`,
+      );
+      return response.data;
+    },
+  });
 
-}
-
-export const useCreateEventDescription = (equipmentId: string) =>
+export const useCreateEventModel = (equipmentModelId: string) =>
   useMutation({
-    mutationFn: async (payload: CreateScalarTriggerEventDescription | CreateRangeTriggerEventDescription) => {
+    mutationFn: async (payload: CreateScalarTriggerEventModel | UpdateRangeTriggerEventModel) => {
       const response = await apiInstance.post(
-        `/domain/equipmentDescriptions/${equipmentId}/createEventDescription`,
+        `/domain/equipmentModels/${equipmentModelId}/eventModels`,
         payload,
       );
       return response.data;
@@ -66,19 +74,31 @@ export const useCreateEventDescription = (equipmentId: string) =>
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
   });
 
-export const useUpdateEventDescription = (eventDescriptionId: string) =>
+export const useUpdateEventModel = (eventModelId: string) =>
   useMutation({
-    mutationFn: async (payload: UpdateScalarTriggerEventDescription | CreateRangeTriggerEventDescription) => {
-      const response = await apiInstance.post(`/domain/eventDescriptions/${eventDescriptionId}`, payload);
+    mutationFn: async (payload: UpdateScalarTriggerEventModel | UpdateRangeTriggerEventModel) => {
+      const response = await apiInstance.post(`/domain/eventModels/${eventModelId}`, payload);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
   });
 
-export const useDeleteEventDescription = (id: string) =>
+export const useDeleteEventModel = (eventModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.delete(`/domain/eventDescriptions/${id}`);
+      const response = await apiInstance.delete(`/domain/eventModels/${eventModelId}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ["domain", "eventModels", eventModelId], exact: true });
+      queryClient.invalidateQueries({ queryKey: ["domain"] });
+    },
+  });
+
+export const useDispatchEventModel = (eventModelId: string) =>
+  useMutation({
+    mutationFn: async () => {
+      const response = await apiInstance.post(`/domain/eventModels/${eventModelId}/dispatch`);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),

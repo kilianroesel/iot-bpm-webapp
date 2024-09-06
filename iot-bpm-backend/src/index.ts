@@ -1,4 +1,5 @@
 import "dotenv/config";
+import './config/mongoClient';
 import express from "express";
 import domainRouter from "./routes/domain/domainRouter";
 import rulesRouter from "./routes/rulesRouter";
@@ -7,7 +8,6 @@ import { WebSocketTopicServer } from "./webSocketTopicServer";
 import { KafkaConsumer } from "./config/kafkaClient";
 import cors from "cors";
 import { errorHandler } from "./middleware/errorhandling";
-import prisma from "./config/prisma";
 
 const port = appConfig.port;
 const host = appConfig.host;
@@ -29,7 +29,6 @@ app.use(errorHandler);
 
 const server = app.listen(port, host, async () => {
     console.log(`Server is running on port ${port} and host ${host}`);
-    await prisma.$connect()
     // await kafkaConsumer.connectConsumer();
 });
 
@@ -40,7 +39,6 @@ server.on("upgrade", (request, socket, head) => {
 function exitHandler(signal: any) {
     server.close(async () => {
         try {
-            await prisma.$disconnect();
             process.exit(0)
         } catch (err) {
             process.exit(1);
