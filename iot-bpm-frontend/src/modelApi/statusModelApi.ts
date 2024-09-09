@@ -1,4 +1,4 @@
-import { queryOptions, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
 
@@ -19,18 +19,8 @@ export interface UpdateStatusModel extends CreateStatusModel {
 export interface GetStatusModel extends GetStatusModelBase {}
 
 export interface GetPopulatedStatusModel extends GetStatusModelBase {
-  isDispatched?: Boolean;
-  isActive?: Boolean;
+  ruleStatus: string
 }
-
-export const statusModelQuery = (statusModelId: string) =>
-  queryOptions({
-    queryKey: ["domain", "statusModels", statusModelId],
-    queryFn: async () => {
-      const response = await apiInstance.get<GetPopulatedStatusModel>(`/domain/statusModels/${statusModelId}`);
-      return response.data;
-    },
-  });
 
 export const useCreateStatusModel = (equipmentModelId: string) =>
   useMutation({
@@ -44,32 +34,37 @@ export const useCreateStatusModel = (equipmentModelId: string) =>
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
   });
 
-export const useUpdateStatusModel = (id: string) =>
+export const useUpdateStatusModel = (equipmentModelId: string, statusModelId: string) =>
   useMutation({
     mutationFn: async (payload: UpdateStatusModel) => {
-      const response = await apiInstance.post<GetStatusModel>(`/domain/statusModels/${id}`, payload);
+      const response = await apiInstance.post<GetStatusModel>(
+        `/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}`,
+        payload,
+      );
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
   });
 
-export const useDeleteStatusModel = (id: string) =>
+export const useDeleteStatusModel = (equipmentModelId: string, statusModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.delete(`/domain/statusModels/${id}`);
+      const response = await apiInstance.delete(
+        `/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}`,
+      );
       return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels"] });
-      queryClient.removeQueries({ queryKey: ["domain", "statusModels", id], exact: true });
+      queryClient.removeQueries({ queryKey: ["domain", "equipmentModels"], exact: true });
     },
   });
 
-  export const useDispatchStatusModel = (id: string) =>
-    useMutation({
-      mutationFn: async () => {
-        const response = await apiInstance.post(`/domain/statusModels/${id}/dispatch`);
-        return response.data;
-      },
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
-    });
+export const useCreateEventEnrichmentRule = (equipmentModelId: string, statusModelId: string) =>
+  useMutation({
+    mutationFn: async () => {
+      const response = await apiInstance.post( `/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}/rule`);
+      return response.data;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+  });

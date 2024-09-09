@@ -1,44 +1,51 @@
-import { RefObject, useState, FormEvent, Dispatch, SetStateAction } from "react";
+import { useState, FormEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Input, Select } from "../../../components/forms/Input";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import {
-  UpdateRangeTriggerEventModel,
   CreateScalarTriggerEventModel,
-  RangeTriggerEventExtension,
-  ScalarTriggerEventExtension,
   useCreateEventModel,
+  CreateEventModelBase,
+  CreateRangeTriggerEventModel,
+  ScalarTriggerEventExtensionForm,
+  RangeTriggerEventExtensionForm,
 } from "../../../modelApi/eventModelApi";
 
 export default function EventModelCreate({
-  dialogRef,
-  equipmentId,
+  setIsOpen,
+  equipmentModelId
 }: {
-  dialogRef: RefObject<HTMLDialogElement>;
-  equipmentId: string;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  equipmentModelId: string;
 }) {
-  const [newEventModel, setNewEventModel] = useState<
-    CreateScalarTriggerEventModel | UpdateRangeTriggerEventModel
-  >({
+  const [newEventModel, setNewEventModel] = useState<CreateEventModelBase>({
     eventName: "",
     field: "",
     triggerCategory: "SCALAR_TRIGGER",
-    triggerType: "ABSOLUTE_CHANGE_IS_GREATER_EQUAL",
-    value: 0,
   });
-  const [scalarTrigger, setScalarTrigger] = useState<ScalarTriggerEventExtension>({
+
+  const [scalarTrigger, setScalarTrigger] = useState<ScalarTriggerEventExtensionForm>({
     triggerCategory: "SCALAR_TRIGGER",
     triggerType: "CHANGES_TO",
-    value: 0,
+    value: "",
   });
-  const [rangeTrigger, setRangeTrigger] = useState<RangeTriggerEventExtension>({
+
+  const [rangeTrigger, setRangeTrigger] = useState<RangeTriggerEventExtensionForm>({
     triggerCategory: "RANGE_TRIGGER",
     triggerType: "ENTERS_RANGE_FROM_TO",
-    from: 0,
-    to: 0,
+    from: "",
+    to: "",
   });
-  const mutate = useCreateEventModel(equipmentId);
+  const createEventModelMutation = useCreateEventModel(equipmentModelId);
+  const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    ref.current?.showModal();
+    return () => {
+      ref.current?.close();
+    };
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -49,33 +56,13 @@ export default function EventModelCreate({
   };
 
   const stopCreating = () => {
-    setNewEventModel({
-      eventName: "",
-      field: "",
-      triggerCategory: "SCALAR_TRIGGER",
-      triggerType: "ABSOLUTE_CHANGE_IS_GREATER_EQUAL",
-      value: 0,
-    });
-    setScalarTrigger({
-      triggerCategory: "SCALAR_TRIGGER",
-      triggerType: "CHANGES_TO",
-      value: 0,
-    });
-    setRangeTrigger({
-      triggerCategory: "RANGE_TRIGGER",
-      triggerType: "ENTERS_RANGE_FROM_TO",
-      from: 0,
-      to: 0,
-    });
-    if (dialogRef.current) {
-      dialogRef.current.close();
-    }
+    setIsOpen(false);
   };
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    var payload: CreateScalarTriggerEventModel | UpdateRangeTriggerEventModel;
+    var payload: CreateScalarTriggerEventModel | CreateRangeTriggerEventModel;
     switch (newEventModel.triggerCategory) {
       case "SCALAR_TRIGGER":
         payload = {
@@ -93,13 +80,13 @@ export default function EventModelCreate({
         };
         break;
     }
-    mutate.mutate(payload, {
+    createEventModelMutation.mutate(payload, {
       onSuccess: stopCreating,
     });
   };
 
   return (
-    <Dialog ref={dialogRef}>
+    <Dialog ref={ref}>
       <Form onSubmit={submit}>
         <FormHeader>Add Event Model</FormHeader>
         <FormLabel>
@@ -134,12 +121,14 @@ export default function EventModelCreate({
   );
 }
 
+
+
 function ScalarTriggerCreate({
   scalarTrigger,
   setScalarTrigger,
 }: {
-  scalarTrigger: ScalarTriggerEventExtension;
-  setScalarTrigger: Dispatch<SetStateAction<ScalarTriggerEventExtension>>;
+  scalarTrigger: ScalarTriggerEventExtensionForm;
+  setScalarTrigger: Dispatch<SetStateAction<ScalarTriggerEventExtensionForm>>;
 }) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -171,19 +160,21 @@ function ScalarTriggerCreate({
   );
 }
 
+
+
 function RangeTriggerCreate({
   rangeTrigger,
   setRangeTrigger,
 }: {
-  rangeTrigger: RangeTriggerEventExtension;
-  setRangeTrigger: Dispatch<SetStateAction<RangeTriggerEventExtension>>;
+  rangeTrigger: RangeTriggerEventExtensionForm;
+  setRangeTrigger: Dispatch<SetStateAction<RangeTriggerEventExtensionForm>>;
 }) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = event.target;
     if (type == "number") {
       setRangeTrigger({
         ...rangeTrigger,
-        [name]: Number(value),
+        [name]: value,
       });
     } else {
       setRangeTrigger({

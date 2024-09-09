@@ -1,4 +1,4 @@
-import { FormEvent, RefObject, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Input } from "../../../components/forms/Input";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
@@ -6,16 +6,24 @@ import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { CreateEquipmentModel, GetPopulatedEquipmentModel, useCreateEquipment } from "../../../modelApi/equipmentModelApi";
 
 export default function EquipmentModelCreate({
-  dialogRef,
+  setIsOpen,
   equipment,
 }: {
-  dialogRef: RefObject<HTMLDialogElement>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   equipment: GetPopulatedEquipmentModel;
 }) {
   const [newEquipmentModel, setNewEquipmentModel] = useState<CreateEquipmentModel>({
     equipmentName: "",
   });
   const mutate = useCreateEquipment(equipment._id);
+  const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    ref.current?.showModal();
+    return () => {
+      ref.current?.close();
+    };
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -26,12 +34,7 @@ export default function EquipmentModelCreate({
   };
 
   const stopCreating = () => {
-    if (dialogRef.current) {
-      dialogRef.current.close();
-      setNewEquipmentModel({
-        equipmentName: "",
-      });
-    }
+    setIsOpen(false);
   };
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -42,12 +45,18 @@ export default function EquipmentModelCreate({
   };
 
   return (
-    <Dialog ref={dialogRef}>
+    <Dialog ref={ref}>
       <Form onSubmit={submit}>
         <FormHeader>Create Child Equipment for {equipment.equipmentName}</FormHeader>
         <FormLabel>
           <span>Name</span>
-          <Input aria-label="Status Name" type="text" name="equipmentName" onChange={handleChange} value={newEquipmentModel.equipmentName} />
+          <Input
+            aria-label="Status Name"
+            type="text"
+            name="equipmentName"
+            onChange={handleChange}
+            value={newEquipmentModel.equipmentName}
+          />
         </FormLabel>
         <div className="space-x-4">
           <SubmitButton type="submit">Save</SubmitButton>

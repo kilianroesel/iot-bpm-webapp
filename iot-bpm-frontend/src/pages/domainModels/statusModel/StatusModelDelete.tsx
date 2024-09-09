@@ -1,22 +1,30 @@
-import { RefObject, FormEvent } from "react";
+import { FormEvent, SetStateAction, Dispatch, useEffect, useRef } from "react";
 import { Dialog } from "../../../components/forms/Dialog";
 import { CancelButton, DeleteButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader } from "../../../components/forms/Form";
 import { GetStatusModel, useDeleteStatusModel } from "../../../modelApi/statusModelApi";
 
 export default function StatusModelDelete({
-  dialogRef,
+  setIsOpen,
   statusModel,
+  equipmentModelId
 }: {
-  dialogRef: RefObject<HTMLDialogElement>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   statusModel: GetStatusModel;
+  equipmentModelId: string;
 }) {
-  const mutate = useDeleteStatusModel(statusModel._id);
+  const mutate = useDeleteStatusModel(equipmentModelId, statusModel._id);
+  const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    ref.current?.showModal();
+    return () => {
+      ref.current?.close();
+    };
+  }, []);
 
   const stopDeleting = () => {
-    if (dialogRef.current) {
-      dialogRef.current.close();
-    }
+    setIsOpen(false);
   };
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -27,7 +35,7 @@ export default function StatusModelDelete({
   };
 
   return (
-    <Dialog ref={dialogRef}>
+    <Dialog ref={ref}>
       <Form onSubmit={submit}>
         <FormHeader>Delete StatusField</FormHeader>
         <div className="space-x-4">

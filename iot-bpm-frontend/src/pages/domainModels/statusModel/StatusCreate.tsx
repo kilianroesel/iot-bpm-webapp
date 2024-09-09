@@ -1,4 +1,4 @@
-import { RefObject, useState, FormEvent } from "react";
+import { useState, FormEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { Dialog } from "../../../components/forms/Dialog";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
@@ -6,17 +6,25 @@ import { Input } from "../../../components/forms/Input";
 import { CreateStatusModel, useCreateStatusModel } from "../../../modelApi/statusModelApi";
 
 export default function StatusModelCreate({
-  dialogRef,
-  equipmentId,
+  setIsOpen,
+  equipmentModelId,
 }: {
-  dialogRef: RefObject<HTMLDialogElement>;
-  equipmentId: string;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  equipmentModelId: string;
 }) {
   const [newStatusModel, setNewStatusModel] = useState<CreateStatusModel>({
     statusName: "",
     field: "",
   });
-  const mutate = useCreateStatusModel(equipmentId);
+  const mutate = useCreateStatusModel(equipmentModelId);
+  const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    ref.current?.showModal();
+    return () => {
+      ref.current?.close();
+    };
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -27,13 +35,7 @@ export default function StatusModelCreate({
   };
 
   const stopCreating = () => {
-    if (dialogRef.current) {
-      dialogRef.current.close();
-      setNewStatusModel({
-        statusName: "",
-        field: "",
-      });
-    }
+    setIsOpen(false);
   };
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -44,7 +46,7 @@ export default function StatusModelCreate({
   };
 
   return (
-    <Dialog ref={dialogRef}>
+    <Dialog ref={ref}>
       <Form onSubmit={submit}>
         <FormHeader>Add Status</FormHeader>
         <FormLabel>

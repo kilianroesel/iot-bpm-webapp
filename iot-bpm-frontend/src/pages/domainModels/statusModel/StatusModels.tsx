@@ -1,20 +1,17 @@
-import { useRef } from "react";
+import { useState } from "react";
 import StatusCreate from "./StatusCreate";
-import StatusDelete from "./StatusNodelDelete";
+import StatusDelete from "./StatusModelDelete";
 import StatusEdit from "./StatusEdit";
 import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
 import { GetPopulatedEquipmentModel } from "../../../modelApi/equipmentModelApi";
-import { GetPopulatedStatusModel, GetStatusModel, statusModelQuery, useDispatchStatusModel } from "../../../modelApi/statusModelApi";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { GetPopulatedStatusModel, useCreateEventEnrichmentRule } from "../../../modelApi/statusModelApi";
 import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiRocketLaunch } from "react-icons/hi2";
 
 export function StatusModels({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
-  const createDialogRef = useRef<HTMLDialogElement>(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const startCreate = () => {
-    if (createDialogRef.current) {
-      createDialogRef.current.showModal();
-    }
+    setIsCreateOpen(true);
   };
 
   return (
@@ -24,13 +21,13 @@ export function StatusModels({ equipmentModel }: { equipmentModel: GetPopulatedE
         <div className="justify-self-center">
           <IconAddButton onClick={startCreate} />
         </div>
-        <StatusCreate dialogRef={createDialogRef} equipmentId={equipmentModel._id} />
+        {isCreateOpen && <StatusCreate setIsOpen={setIsCreateOpen} equipmentModelId={equipmentModel._id} />}
       </div>
       <div>
         <ul>
           {equipmentModel.statusModels.map((statusModel) => (
             <li key={statusModel._id}>
-              <StatusModel statusModel={statusModel}/>
+              <StatusModel statusModel={statusModel} equipmentModelId={equipmentModel._id} />
             </li>
           ))}
         </ul>
@@ -39,43 +36,35 @@ export function StatusModels({ equipmentModel }: { equipmentModel: GetPopulatedE
   );
 }
 
-function StatusModel({ statusModel }: { statusModel: GetStatusModel | GetPopulatedStatusModel }) {
-  const { data: populatedStatusField } = useSuspenseQuery(statusModelQuery(statusModel._id));
-  const dispatchStatusFieldMutation = useDispatchStatusModel(statusModel._id);
-  const editDialogRef = useRef<HTMLDialogElement>(null);
-  const deleteDialogRef = useRef<HTMLDialogElement>(null);
+function StatusModel({ statusModel, equipmentModelId }: { statusModel: GetPopulatedStatusModel, equipmentModelId: string }) {
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  const createEventEnrichmentRule = useCreateEventEnrichmentRule(equipmentModelId, statusModel._id);
 
   const startEditStatus = () => {
-    if (editDialogRef.current) {
-      editDialogRef.current.showModal();
-    }
+    setIsEditOpen(true);
   };
 
   const startDeletingStatus = () => {
-    if (deleteDialogRef.current) {
-      deleteDialogRef.current.showModal();
-    }
-  };
-
-  const dispatchStatusField = () => {
-    dispatchStatusFieldMutation.mutate();
+    setIsDeleteOpen(true);
   };
 
   return (
     <>
       <div className="grid grid-cols-8">
         <div className="col-span-3 flex items-center space-x-2">
-            {!populatedStatusField.isDispatched && !populatedStatusField.isDispatched && (
+            {statusModel.ruleStatus == "NOT_RELEASED" && (
               <span>
                 <HiDocumentPlus className="text-blue-500" size="22" />
               </span>
             )}
-            {populatedStatusField.isDispatched && populatedStatusField.isActive && (
+            {statusModel.ruleStatus == "ACTIVE" && (
               <span>
                 <HiDocumentCheck className="text-green-500" size="22" />
               </span>
             )}
-            {!populatedStatusField.isActive && populatedStatusField.isDispatched && (
+            {statusModel.ruleStatus == "UPDATED" && (
               <span>
                 <HiDocumentMinus className="text-orange-500" size="22" />
               </span>
@@ -84,20 +73,20 @@ function StatusModel({ statusModel }: { statusModel: GetStatusModel | GetPopulat
         </div>
         <div className="col-span-4 truncate">{statusModel.field}</div>
         <div className="col-span-1 flex items-center space-x-4 justify-end">
-          {!populatedStatusField.isActive && (
+          {(statusModel.ruleStatus == "NOT_RELEASED" || statusModel.ruleStatus == "UPDATED") && (
             <IconButton
-              onClick={dispatchStatusField}
+              onClick={() => createEventEnrichmentRule.mutate()}
               className="inline-block h-full text-fuchsia-600 hover:text-fuchsia-500"
             >
               <HiRocketLaunch size="22" />
             </IconButton>
-          )}
+           )}
           <IconEditButton onClick={() => startEditStatus()} />
           <IconDeleteButton onClick={() => startDeletingStatus()} />
         </div>
       </div>
-      <StatusEdit dialogRef={editDialogRef} statusModel={statusModel} />
-      <StatusDelete dialogRef={deleteDialogRef} statusModel={statusModel} />
+      {isEditOpen && <StatusEdit  statusModel={statusModel} equipmentModelId={equipmentModelId} setIsOpen={setIsEditOpen}/>}
+      {isDeleteOpen && <StatusDelete statusModel={statusModel} equipmentModelId={equipmentModelId} setIsOpen={setIsDeleteOpen}/>}
     </>
   );
 }

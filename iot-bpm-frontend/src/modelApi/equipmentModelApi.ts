@@ -1,7 +1,7 @@
 import { queryOptions, useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
-import { GetStatusModel } from "./statusModelApi";
+import { GetPopulatedStatusModel } from "./statusModelApi";
 import { GetRangeTriggerEventModel, GetScalarTriggerEventModel } from "./eventModelApi";
 
 export interface CreateEquipmentModel {
@@ -25,17 +25,16 @@ export interface GetEquipmentModel extends GetEquipmentModelBase {
   equipmentModels: string[];
 }
 export interface GetPopulatedEquipmentModel extends GetEquipmentModelBase {
-  statusModels: GetStatusModel[];
+  statusModels: GetPopulatedStatusModel[];
   eventModels: (GetScalarTriggerEventModel | GetRangeTriggerEventModel)[];
   equipmentModels: GetEquipmentModel[];
 }
-
 
 export const equipmentModelQuery = (equipmentModelId: string) =>
   queryOptions({
     queryKey: ["domain", "equipmentModel", equipmentModelId],
     queryFn: async () => {
-      const response = await apiInstance.get<GetPopulatedEquipmentModel>(`/domain/equipmentModels/${equipmentModelId}`);
+      const response = await apiInstance.get<any>(`/domain/equipmentModels/${equipmentModelId}`);
       return response.data;
     },
   });

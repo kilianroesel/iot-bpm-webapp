@@ -1,4 +1,4 @@
-import { RefObject, useState, FormEvent } from "react";
+import { useState, FormEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
@@ -6,11 +6,13 @@ import { Input } from "../../../components/forms/Input";
 import { GetStatusModel, UpdateStatusModel, useUpdateStatusModel } from "../../../modelApi/statusModelApi";
 
 export default function StatusEdit({
-  dialogRef,
+  setIsOpen,
   statusModel,
+  equipmentModelId,
 }: {
-  dialogRef: RefObject<HTMLDialogElement>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   statusModel: GetStatusModel;
+  equipmentModelId: string;
 }) {
   const [updatedStatusField, setUpdatedStatusField] = useState<UpdateStatusModel>({
     _id: statusModel._id,
@@ -18,7 +20,15 @@ export default function StatusEdit({
     statusName: statusModel.statusName,
     field: statusModel.field
   });
-  const mutate = useUpdateStatusModel(statusModel._id);
+  const mutate = useUpdateStatusModel(equipmentModelId, statusModel._id);
+  const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    ref.current?.showModal();
+    return () => {
+      ref.current?.close();
+    };
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -28,9 +38,7 @@ export default function StatusEdit({
     });
   };
   const stopEditing = () => {
-    if (dialogRef.current) {
-      dialogRef.current.close();
-    }
+    setIsOpen(false)
   };
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -41,7 +49,7 @@ export default function StatusEdit({
   };
 
   return (
-    <Dialog ref={dialogRef}>
+    <Dialog ref={ref}>
       <Form onSubmit={submit}>
         <FormHeader className="font-medium">Edit StatusField</FormHeader>
         <FormLabel>

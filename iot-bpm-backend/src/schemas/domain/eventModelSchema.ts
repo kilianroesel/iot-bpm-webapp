@@ -1,7 +1,7 @@
 import { JSONSchemaType } from "ajv";
 
 interface CreateEventModelBase {
-    name: string;
+    eventName: string;
     field: string;
 }
 
@@ -31,7 +31,7 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
         {
             type: "object",
             properties: {
-                name: { type: "string" },
+                eventName: { type: "string" },
                 field: { type: "string" },
                 triggerCategory: {
                     type: "string",
@@ -51,13 +51,13 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                 },
                 value: { type: "number" },
             },
-            required: ["name", "field", "triggerCategory", "triggerType", "value"],
+            required: ["eventName", "field", "triggerCategory", "triggerType", "value"],
             additionalProperties: false,
         },
         {
             type: "object",
             properties: {
-                name: { type: "string" },
+                eventName: { type: "string" },
                 field: { type: "string" },
                 triggerCategory: {
                     type: "string",
@@ -70,19 +70,19 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                 from: { type: "number" },
                 to: { type: "number" },
             },
-            required: ["name", "field", "triggerCategory", "triggerType", "from", "to"],
+            required: ["eventName", "field", "triggerCategory", "triggerType", "from", "to"],
             additionalProperties: false,
         },
     ],
-    required: ["name", "field", "triggerCategory"],
+    required: ["eventName", "field", "triggerCategory"],
 };
 
 interface UpdateScalarTriggerModel extends ScalarTrigger {
-    id: string;
+    _id: string;
 }
 
 interface UpdateRangeTriggerModel extends RangeTrigger {
-    id: string;
+    _id: string;
 }
 
 export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateRangeTriggerModel> = {
@@ -91,8 +91,8 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
         {
             type: "object",
             properties: {
-                id: { type: "string" },
-                name: { type: "string" },
+                _id: { type: "string" },
+                eventName: { type: "string" },
                 field: { type: "string" },
                 triggerCategory: {
                     type: "string",
@@ -112,14 +112,14 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                 },
                 value: { type: "number" },
             },
-            required: ["name", "field", "triggerCategory", "triggerType", "value"],
+            required: ["_id", "eventName", "field", "triggerCategory", "triggerType", "value"],
             additionalProperties: false,
         },
         {
             type: "object",
             properties: {
-                id: { type: "string" },
-                name: { type: "string" },
+                _id: { type: "string" },
+                eventName: { type: "string" },
                 field: { type: "string" },
                 triggerCategory: {
                     type: "string",
@@ -132,9 +132,9 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                 from: { type: "number" },
                 to: { type: "number" },
             },
-            required: ["name", "field", "triggerCategory", "triggerType", "from", "to"],
+            required: ["eventName", "field", "triggerCategory", "triggerType", "from", "to", "_id"],
             additionalProperties: false,
         },
     ],
-    required: ["name", "field", "id", "triggerCategory"],
+    required: ["eventName", "field", "_id", "triggerCategory"],
 };

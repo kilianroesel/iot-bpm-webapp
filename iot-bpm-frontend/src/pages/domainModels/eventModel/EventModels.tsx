@@ -1,42 +1,32 @@
-import { useRef } from "react";
+import { useState } from "react";
 import EventModelDelete from "./EventModelDelete";
 import EventDescriptionCreate from "./EventModelCreate";
 import EventModelEdit from "./EventModelEdit";
-import { IconAddButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
+import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
 import { GetPopulatedEquipmentModel } from "../../../modelApi/equipmentModelApi";
-import {
-  eventModelQuery,
-  GetRangeTriggerEventModel,
-  GetScalarTriggerEventModel,
-  useDispatchEventModel,
-} from "../../../modelApi/eventModelApi";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { GetRangeTriggerEventModel, GetScalarTriggerEventModel, useCreateEventAbstractionRule } from "../../../modelApi/eventModelApi";
+import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiRocketLaunch } from "react-icons/hi2";
 
 export function EventModels({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
-  const createDialogRef = useRef<HTMLDialogElement>(null);
-  const startCreate = () => {
-    if (createDialogRef.current) {
-      createDialogRef.current.showModal();
-    }
-  };
+  const [isCreatingOpen, setIsCreatingOpen] = useState(false);
 
   return (
     <div className="space-y-4 rounded-md bg-slate-900 p-4">
       <div className="flex">
         <h3 className="flex-grow font-medium">Event Descriptions Fields</h3>
         <div>
-          <IconAddButton onClick={startCreate} />
+          <IconAddButton onClick={() => setIsCreatingOpen(true)} />
         </div>
-        <EventDescriptionCreate dialogRef={createDialogRef} equipmentId={equipmentModel._id} />
       </div>
       <div>
         <ul>
           {equipmentModel.eventModels.map((eventModel) => (
             <li key={eventModel._id}>
-              <EventModel eventModel={eventModel} />
+              <EventModel equipmentModelId={equipmentModel._id} eventModel={eventModel} />
             </li>
           ))}
         </ul>
+        {isCreatingOpen && <EventDescriptionCreate equipmentModelId={equipmentModel._id} setIsOpen={setIsCreatingOpen} />}
       </div>
     </div>
   );
@@ -44,69 +34,62 @@ export function EventModels({ equipmentModel }: { equipmentModel: GetPopulatedEq
 
 function EventModel({
   eventModel,
+  equipmentModelId,
 }: {
   eventModel: GetRangeTriggerEventModel | GetScalarTriggerEventModel;
+  equipmentModelId: string;
 }) {
-  const { data: populatedEventModel } = useSuspenseQuery(eventModelQuery(eventModel._id));
-  const dispatchEventDescriptionMutation = useDispatchEventModel(eventModel._id);
-  const editDialogRef = useRef<HTMLDialogElement>(null);
-  const deleteDialogRef = useRef<HTMLDialogElement>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const createEventAbstractionRule = useCreateEventAbstractionRule(equipmentModelId, eventModel._id);
 
   const startEdit = () => {
-    if (editDialogRef.current) {
-      editDialogRef.current.showModal();
-    }
+    setIsEditOpen(true);
   };
 
   const startDelete = () => {
-    if (deleteDialogRef.current) {
-      deleteDialogRef.current.showModal();
-    }
-  };
-
-  const dispatchEventDescription = () => {
-    dispatchEventDescriptionMutation.mutate();
+    setIsDeleteOpen(true);
   };
 
   return (
     <>
-      <div className="grid grid-cols-8">
-        <div className="col-span-1 flex items-center space-x-2">
-          {/* {!populatedEventDescription.isDispatched && !populatedEventDescription.isDispatched && (
+      <div className="grid grid-cols-11">
+        <div className="col-span-4 flex items-center space-x-2">
+          {eventModel.ruleStatus == "NOT_RELEASED" && (
             <span>
               <HiDocumentPlus className="text-blue-500" size="22" />
             </span>
           )}
-          {populatedEventDescription.isDispatched && populatedEventDescription.isActive && (
+          {eventModel.ruleStatus == "ACTIVE" && (
             <span>
               <HiDocumentCheck className="text-green-500" size="22" />
             </span>
           )}
-          {!populatedEventDescription.isActive && populatedEventDescription.isDispatched && (
+          {eventModel.ruleStatus == "UPDATED" && (
             <span>
               <HiDocumentMinus className="text-orange-500" size="22" />
             </span>
-          )} */}
+          )}
           <span>{eventModel.eventName}</span>
         </div>
         <div className="col-span-4 truncate">{eventModel.field}</div>
         <div className="col-span-1 truncate">{eventModel.triggerCategory}</div>
         <div className="col-span-1 truncate">{eventModel.triggerType}</div>
-        <div className="col-span-1 flex items-center space-x-4 justify-end">
-        {/* {!populatedEventDescription.isActive && (
+        <div className="col-span-1 flex items-center justify-end space-x-4">
+          {(eventModel.ruleStatus == "NOT_RELEASED" || eventModel.ruleStatus == "UPDATED") && (
             <IconButton
-              onClick={dispatchEventDescription}
+              onClick={() => createEventAbstractionRule.mutate()}
               className="inline-block h-full text-fuchsia-600 hover:text-fuchsia-500"
             >
               <HiRocketLaunch size="22" />
             </IconButton>
-          )} */}
-          <IconEditButton onClick={() => startEdit()} />
-          <IconDeleteButton onClick={() => startDelete()} />
+          )}
+          <IconEditButton onClick={startEdit} />
+          <IconDeleteButton onClick={startDelete} />
         </div>
       </div>
-      <EventModelEdit dialogRef={editDialogRef} eventModel={eventModel} />
-      <EventModelDelete dialogRef={deleteDialogRef} eventModel={eventModel} />
+      {isEditOpen && <EventModelEdit equipmentModelId={equipmentModelId} eventModel={eventModel} setIsOpen={setIsEditOpen} />}
+      {isDeleteOpen && <EventModelDelete equipmentModelId={equipmentModelId} eventModel={eventModel} setIsOpen={setIsDeleteOpen} />}
     </>
   );
 }

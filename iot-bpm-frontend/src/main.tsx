@@ -5,9 +5,8 @@ import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import MainLayout from "./routes/MainLayout";
 import { QueryClientProvider } from "@tanstack/react-query";
 import MachineDescriptionsList from "./pages/domainModels/machineModel/MachineModelList";
-import MachineDescriptionBase from "./pages/domainModels/machineModel/MachineModelBase";
+import MachineModelBase from "./pages/domainModels/machineModel/MachineModelBase";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import MachineDescriptionDetail from "./pages/domainModels/machineModel/MachineModelDetail";
 import { queryClient } from "./config/queryClientConfig";
 import { RecursiveEquipmentRouter } from "./routes/RecursiveEquipmentRouter";
 
@@ -19,14 +18,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path={"/"} element={<MainLayout />}>
             <Route index element={<div>Overview</div>} />
             <Route path={"event-explorer"} element={<div>Eventexplorer</div>} />
-            <Route path={"domain-models"} element={<Outlet />}>
+            <Route path={"domain-models"} element={<Outlet/>}>
               <Route index element={<MachineDescriptionsList />} />
-              <Route path={":machineModelId"} element={<MachineDescriptionBase />}>
-                <Route index element={<MachineDescriptionDetail />} />
-                <Route
-                  path={":equipmentModelId/*"}
-                  element={<RecursiveEquipmentRouter queryClient={queryClient} />} />
-              </Route>
+              <Route path={":equipmentModelId/*"} element={<div className="p-4 space-y-4"><MachineModelBase /><RecursiveEquipmentRouter queryClient={queryClient} /></div>} />
             </Route>
           </Route>
         </Routes>

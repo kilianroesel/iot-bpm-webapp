@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useLocation, useParams } from "react-router-dom";
 import { StatusModels } from "../statusModel/StatusModels";
 import { EventModels } from "../eventModel/EventModels";
-import { useRef } from "react";
+import { useState } from "react";
 import EquipmentModelCreate from "./EquipmentModelCreate";
 import { BreadCrumbLink } from "../../../components/links/BreadCrumb";
 import { HiOutlineChevronDoubleRight } from "react-icons/hi2";
@@ -13,11 +13,11 @@ import { GetPopulatedEquipmentModel } from "../../../modelApi/equipmentModelApi"
 
 export default function EquipmentModelDetail() {
   const params = useParams();
-  if (!params.equipmentModelId) throw new Error("No equipment Id provided");
+  if (!params.equipmentModelId) throw new Error("No Equipment model Id provided");
   const { data: equipmentModel } = useSuspenseQuery(equipmentModelQuery(params.equipmentModelId));
 
   return (
-    <>
+    <div className="space-y-4">
       <RecursiveEquipmentBreadCrumbs />
       <div className="grid grid-cols-2 gap-4">
         <EquipmentOverview equipmentModel={equipmentModel} />
@@ -26,24 +26,20 @@ export default function EquipmentModelDetail() {
       <div>
         <EventModels equipmentModel={equipmentModel} />
       </div>
-    </>
+    </div>
   );
 }
 
 function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
-  const createDialogRef = useRef<HTMLDialogElement>(null);
-  const deleteDialogRef = useRef<HTMLDialogElement>(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const startCreate = () => {
-    if (createDialogRef.current) {
-      createDialogRef.current.showModal();
-    }
+    setIsCreateOpen(true);
   };
 
   const startDelete = () => {
-    if (deleteDialogRef.current) {
-      deleteDialogRef.current.showModal();
-    }
+    setIsDeleteOpen(true);
   };
 
   return (
@@ -68,8 +64,8 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEqu
             <span className="font-medium">{equipmentModel.equipmentModels.length}</span>
             <span>Sub Equipment</span>
           </div>
-          <EquipmentModelDelete dialogRef={deleteDialogRef} equipmentModel={equipmentModel} />
-          <EquipmentModelCreate dialogRef={createDialogRef} equipmentModel={equipmentModel} />
+          {isCreateOpen && <EquipmentModelCreate setIsOpen={setIsCreateOpen} equipmentModel={equipmentModel} />}
+          {isDeleteOpen && <EquipmentModelDelete setIsOpen={setIsDeleteOpen} equipmentModel={equipmentModel} />}
         </div>
       </div>
 
@@ -95,17 +91,11 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEqu
 function RecursiveEquipmentBreadCrumbs() {
   const location = useLocation();
   const pathSegments = location.pathname.split("/").filter((segment) => segment);
-  const curPathSegment = pathSegments.splice(0, 2);
+  const curPathSegment = pathSegments.splice(0, 1);
 
   var curPathname = "/" + curPathSegment.join("/");
   return (
     <ol className="flex items-center">
-      <li className="flex items-center">
-        <BreadCrumbLink to={curPathname} end>
-          Overview
-        </BreadCrumbLink>
-        <HiOutlineChevronDoubleRight size="20" className="mx-1 text-gray-500" />
-      </li>
       {pathSegments.map((equipmentModelId, index) => {
         curPathname = curPathname + "/" + equipmentModelId;
         return (

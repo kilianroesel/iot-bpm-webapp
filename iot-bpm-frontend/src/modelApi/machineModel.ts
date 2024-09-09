@@ -20,6 +20,7 @@ interface GetMachineModelBase extends CreateMachineModel {
 
 export interface GetPopulatedMachineModel extends GetMachineModelBase {
   rootEquipmentModel: GetEquipmentModel;
+  ruleStatus: string
 }
 export interface GetMachineModel extends GetMachineModelBase {
   rootEquipmentModel: string;

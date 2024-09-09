@@ -1,4 +1,4 @@
-import { FormEvent, RefObject, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Input } from "../../../components/forms/Input";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
@@ -6,16 +6,24 @@ import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { CreateEquipmentModel, GetPopulatedEquipmentModel, useCreateEquipment } from "../../../modelApi/equipmentModelApi";
 
 export default function EquipmentModelCreate({
-  dialogRef,
+  setIsOpen,
   equipmentModel,
 }: {
-  dialogRef: RefObject<HTMLDialogElement>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   equipmentModel: GetPopulatedEquipmentModel;
 }) {
   const [newEquipmentModel, setNewEquipmentModel] = useState<CreateEquipmentModel>({
     equipmentName: "",
   });
   const mutate = useCreateEquipment(equipmentModel._id);
+  const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    ref.current?.showModal();
+    return () => {
+      ref.current?.close();
+    };
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -26,12 +34,7 @@ export default function EquipmentModelCreate({
   };
 
   const stopCreating = () => {
-    setNewEquipmentModel({
-      equipmentName: "",
-    });
-    if (dialogRef.current) {
-      dialogRef.current.close();
-    }
+    setIsOpen(false);
   };
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -42,7 +45,7 @@ export default function EquipmentModelCreate({
   };
 
   return (
-    <Dialog ref={dialogRef}>
+    <Dialog ref={ref}>
       <Form onSubmit={submit}>
         <FormHeader>Create Child Equipment for {equipmentModel.equipmentName}</FormHeader>
         <FormLabel>

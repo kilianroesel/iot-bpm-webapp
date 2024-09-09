@@ -1,8 +1,8 @@
 import express from "express";
 import { router as machineModelsRouter } from "./machineModels";
-import { router as equipmentModelsRouter } from "./equipmentModels/equipmentModels";
-import { router as eventModelsRouter } from "./equipmentModels/eventModels";
-import { router as statusModelRouter } from "./equipmentModels/statusModels";
+import { router as equipmentModelsRouter } from "./equipmentModels";
+import { router as eventModelsRouter } from "./eventModels";
+import { router as statusModelRouter } from "./statusModels";
 
 const router = express.Router();
 

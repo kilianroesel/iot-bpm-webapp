@@ -1,14 +1,14 @@
-import { FormEvent, RefObject, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Input } from "../../../components/forms/Input";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { CreateMachineModel, useCreateMachineModel } from "../../../modelApi/machineModel";
 
-export default function MachineDescriptionCreate({
-  dialogRef
+export default function MachineModelCreate({
+  setIsOpen
 }: {
-  dialogRef: RefObject<HTMLDialogElement>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const [newMachineDescription, setNewMachineDescription] = useState<CreateMachineModel>({
     machineName: "",
@@ -18,6 +18,14 @@ export default function MachineDescriptionCreate({
     machineMasterSoftwareVersion: "",
   });
   const mutate = useCreateMachineModel();
+  const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    ref.current?.showModal();
+    return () => {
+      ref.current?.close();
+    };
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -28,16 +36,7 @@ export default function MachineDescriptionCreate({
   };
 
   const stopCreating = () => {
-    setNewMachineDescription({
-      machineName: "",
-      versionCsiStd: "",
-      versionCsiSpecific: "",
-      machineSoftwareVersion: "",
-      machineMasterSoftwareVersion: "",
-    });
-    if (dialogRef.current) {
-      dialogRef.current.close();
-    }
+    setIsOpen(false);
   };
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -48,7 +47,7 @@ export default function MachineDescriptionCreate({
   };
 
   return (
-    <Dialog ref={dialogRef}>
+    <Dialog ref={ref}>
       <Form onSubmit={submit}>
         <FormHeader>Create Machine Description</FormHeader>
         <FormLabel>
