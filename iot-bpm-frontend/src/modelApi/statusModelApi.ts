@@ -19,16 +19,13 @@ export interface UpdateStatusModel extends CreateStatusModel {
 export interface GetStatusModel extends GetStatusModelBase {}
 
 export interface GetPopulatedStatusModel extends GetStatusModelBase {
-  ruleStatus: string
+  ruleStatus: string;
 }
 
 export const useCreateStatusModel = (equipmentModelId: string) =>
   useMutation({
     mutationFn: async (payload: CreateStatusModel) => {
-      const response = await apiInstance.post<GetStatusModel>(
-        `/domain/equipmentModels/${equipmentModelId}/statusModels`,
-        payload,
-      );
+      const response = await apiInstance.post<GetStatusModel>(`/domain/equipmentModels/${equipmentModelId}/statusModels`, payload);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
@@ -49,9 +46,7 @@ export const useUpdateStatusModel = (equipmentModelId: string, statusModelId: st
 export const useDeleteStatusModel = (equipmentModelId: string, statusModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.delete(
-        `/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}`,
-      );
+      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}`);
       return response.data;
     },
     onSuccess: () => {
@@ -63,7 +58,16 @@ export const useDeleteStatusModel = (equipmentModelId: string, statusModelId: st
 export const useCreateEventEnrichmentRule = (equipmentModelId: string, statusModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.post( `/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}/rule`);
+      const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}/rule`);
+      return response.data;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+  });
+
+export const useDeleteEventEnrichmentRule = (equipmentModelId: string, statusModelId: string) =>
+  useMutation({
+    mutationFn: async () => {
+      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}/rule`);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),

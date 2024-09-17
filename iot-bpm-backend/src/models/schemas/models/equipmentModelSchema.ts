@@ -1,8 +1,19 @@
 import mongoose from "mongoose";
 import { statusModelSchema } from "./statusModelSchema";
 import { eventModelSchema } from "./eventModelSchema";
+import { MachineModel } from "./machineModelSchema";
 
-export const equipmentModelSchema = new mongoose.Schema(
+export interface EquipmentModel {
+    equipmentName: string;
+    statusModels: any;
+    eventModels: any;
+    equipmentModels: EquipmentModel[];
+    machineModel: MachineModel;
+    parentEquipmentModel?: MachineModel,
+    equipmentPath: string;
+}
+
+export const equipmentModelSchema = new mongoose.Schema<EquipmentModel>(
     {
         equipmentName: {
             type: String,

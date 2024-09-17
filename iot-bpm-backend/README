@@ -1,11 +1,26 @@
-docker run -d \
-    --restart always \
-    --name bpm_event_processing_db \
-    -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=bpm_event_processing -v postgres_data:/var/lib/postgresql/data/ postgres:alpine3.19
+# Getting started
 
-docker run -d \
-  --restart always \
-  --name bpm_event_processing_mongo_db \
-  -p 27017:27017 \
-  -v mongo_data:/data/db \
-  mongo:latest
+Setup up a mongodb replica set
+
+docker run -d --restart=always --name mongo1 --network=host -v mongo1:/data/db mongo:latest mongod --replSet myReplicaSet --port 27017
+docker run -d --restart=always --name mongo2 --network=host -v mongo2:/data/db mongo:latest mongod --replSet myReplicaSet --port 27018
+docker run -d --restart=always --name mongo3 --network=host -v mongo3:/data/db mongo:latest mongod --replSet myReplicaSet --port 27019
+
+docker exec -it mongo1 mongosh --eval "rs.initiate({
+ _id: \"myReplicaSet\",
+ members: [
+   {_id: 0, host: \"localhost:27017\"},
+   {_id: 1, host: \"localhost:27018\"},
+   {_id: 2, host: \"localhost:27019\"}
+ ]
+})"
+
+// Enable pre and post image on rules collection
+db.runCommand({
+  collMod: "rules", 
+  changeStreamPreAndPostImages: {
+    enabled: true 
+  } 
+})
+
+docker exec -it mongo1 mongosh --eval "rs.status()"

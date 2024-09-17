@@ -28,7 +28,7 @@ app.use(errorHandler);
 const server = app.listen(port, host, async () => {
     console.log(`Server is running on port ${port} and host ${host}`);
     // await kafkaClient.connectConsumer();
-    await kafkaClient.connectProducer();
+    // await kafkaClient.connectProducer();
 });
 
 server.on("upgrade", (request, socket, head) => {

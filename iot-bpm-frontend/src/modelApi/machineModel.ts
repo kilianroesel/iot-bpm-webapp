@@ -1,7 +1,6 @@
 import { queryOptions, useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
-import { GetEquipmentModel } from "./equipmentModelApi";
 
 export interface CreateMachineModel {
   machineName: string;
@@ -11,22 +10,18 @@ export interface CreateMachineModel {
   machineMasterSoftwareVersion: string;
 }
 
-interface GetMachineModelBase extends CreateMachineModel {
+export interface GetMachineModel extends CreateMachineModel {
   _id: string;
   __t: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface GetPopulatedMachineModel extends GetMachineModelBase {
-  rootEquipmentModel: GetEquipmentModel;
-  ruleStatus: string
-}
-export interface GetMachineModel extends GetMachineModelBase {
-  rootEquipmentModel: string;
+export interface GetPopulatedMachineModel extends GetMachineModel {
+  ruleStatus: string;
 }
 
-export interface UpdateMachineModel extends CreateMachineModel, GetMachineModelBase {}
+export interface UpdateMachineModel extends CreateMachineModel, GetMachineModel {}
 
 export const useCreateMachineModel = () =>
   useMutation({
@@ -46,11 +41,38 @@ export const machineModelsQuery = () =>
     },
   });
 
-export const machineModelQuery = (id: string) =>
+export const machineModelQuery = (machineModelId: string) =>
   queryOptions({
-    queryKey: ["domain", "machineModel", id],
+    queryKey: ["domain", "machineModel", machineModelId],
     queryFn: async () => {
-      const response = await apiInstance.get<GetMachineModel>(`/domain/machineModels/${id}`);
+      const response = await apiInstance.get<GetPopulatedMachineModel>(`/domain/machineModels/${machineModelId}`);
       return response.data;
     },
   });
+
+export const useUpdateMachineModel = (machineModelId: string) =>
+  useMutation({
+    mutationFn: async (payload: UpdateMachineModel) => {
+      const response = await apiInstance.post(`/domain/machineModels/${machineModelId}`, payload);
+      return response.data;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+  });
+
+export const useCreateEventScopingeRule = (machineModelId: string) =>
+  useMutation({
+    mutationFn: async () => {
+      const response = await apiInstance.post(`/domain/machineModels/${machineModelId}/rule`);
+      return response.data;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+  });
+
+  export const useDeleteEventScopingeRule = (machineModelId: string) =>
+    useMutation({
+      mutationFn: async () => {
+        const response = await apiInstance.delete(`/domain/machineModels/${machineModelId}/rule`);
+        return response.data;
+      },
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    });

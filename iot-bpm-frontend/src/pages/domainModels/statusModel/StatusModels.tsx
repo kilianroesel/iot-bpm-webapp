@@ -4,8 +4,8 @@ import StatusDelete from "./StatusModelDelete";
 import StatusEdit from "./StatusEdit";
 import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
 import { GetPopulatedEquipmentModel } from "../../../modelApi/equipmentModelApi";
-import { GetPopulatedStatusModel, useCreateEventEnrichmentRule } from "../../../modelApi/statusModelApi";
-import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiRocketLaunch } from "react-icons/hi2";
+import { GetPopulatedStatusModel, useCreateEventEnrichmentRule, useDeleteEventEnrichmentRule } from "../../../modelApi/statusModelApi";
+import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiOutlineDocumentArrowDown, HiOutlineDocumentArrowUp } from "react-icons/hi2";
 
 export function StatusModels({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -41,6 +41,7 @@ function StatusModel({ statusModel, equipmentModelId }: { statusModel: GetPopula
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const createEventEnrichmentRule = useCreateEventEnrichmentRule(equipmentModelId, statusModel._id);
+  const deleteEventEnrichmentRule = useDeleteEventEnrichmentRule(equipmentModelId, statusModel._id);
 
   const startEditStatus = () => {
     setIsEditOpen(true);
@@ -76,9 +77,17 @@ function StatusModel({ statusModel, equipmentModelId }: { statusModel: GetPopula
           {(statusModel.ruleStatus == "NOT_RELEASED" || statusModel.ruleStatus == "UPDATED") && (
             <IconButton
               onClick={() => createEventEnrichmentRule.mutate()}
-              className="inline-block h-full text-fuchsia-600 hover:text-fuchsia-500"
+              className="inline-block h-full text-emerald-600 hover:text-emerald-500"
             >
-              <HiRocketLaunch size="22" />
+              <HiOutlineDocumentArrowUp size="22" />
+            </IconButton>
+           )}
+           {(statusModel.ruleStatus == "ACTIVE" || statusModel.ruleStatus == "UPDATED") && (
+            <IconButton
+              onClick={() => deleteEventEnrichmentRule.mutate()}
+              className="inline-block h-full text-amber-600 hover:text-amber-500"
+            >
+              <HiOutlineDocumentArrowDown size="22" />
             </IconButton>
            )}
           <IconEditButton onClick={() => startEditStatus()} />

@@ -2,7 +2,6 @@ import express from "express";
 import { NotFoundError } from "../../middleware/errorhandling";
 import validateSchema from "../../middleware/schemaValidation";
 import { EquipmentModel, EventAbstractionRule, MachineModel } from "../../models/schemas/models";
-import { kafkaClient } from "../..";
 
 export const router = express.Router();
 
@@ -14,7 +13,7 @@ router.post("/:equipmentModelId/eventModels", validateSchema("createEventModel")
             {
                 $push: { eventModels: req.body },
             },
-            { runValidators: true }
+            { new: true, runValidators: true }
         );
         if (!newEquipmentModel) throw new NotFoundError("Equipment model not found");
 
@@ -40,7 +39,8 @@ router.post(
                     },
                 },
                 {
-                    runValidators: true
+                    new: true,
+                    runValidators: true,
                 }
             );
             if (!equipmentModel) throw new NotFoundError("Equipment Model not found");
@@ -53,6 +53,7 @@ router.post(
 
 router.delete("/:equipmentModelId/eventModels/:eventModelId", async (req, res, next) => {
     try {
+        // First delete EventAbstractionRule and remove Event Model, there is no transaction needed
         await EventAbstractionRule.findByIdAndDelete(req.params.eventModelId);
         const result = await EquipmentModel.findByIdAndUpdate(req.params.equipmentModelId, {
             $pull: {
@@ -77,24 +78,21 @@ router.post("/:equipmentModelId/eventModels/:eventModelId/rule", async (req, res
         const eventModel = equipmentModel.eventModels.id(eventModelId);
         if (!eventModel) throw new NotFoundError("StatusModel not found");
 
+        // Fetch the scope Id, which is the id of the root equipment, i.e. MachineModel
         var scopeId = equipmentModel._id;
         if (equipmentModel.equipmentPath) {
             const rootId = equipmentModel.equipmentPath.split(",")[1];
-            const machine = await MachineModel.findById(rootId)
-            if (!machine)
-                throw new NotFoundError("Equipment not found");
+            const machine = await MachineModel.findById(rootId);
+            if (!machine) throw new NotFoundError("Equipment not found");
             scopeId = machine._id;
         }
 
         var rule;
         switch (eventModel.triggerCategory) {
             case "SCALAR_TRIGGER":
-                rule = await EventAbstractionRule.findOneAndUpdate(
+                rule = await EventAbstractionRule.findByIdAndUpdate(
+                    eventModelId,
                     {
-                        _id: eventModelId,
-                    },
-                    {
-                        control: "ACTIVE",
                         eventName: eventModel.eventName,
                         field: eventModel.field,
                         scopeId: scopeId,
@@ -107,12 +105,9 @@ router.post("/:equipmentModelId/eventModels/:eventModelId/rule", async (req, res
                 );
                 break;
             case "RANGE_TRIGGER":
-                rule = await EventAbstractionRule.findOneAndUpdate(
+                rule = await EventAbstractionRule.findByIdAndUpdate(
+                    eventModelId,
                     {
-                        _id: eventModelId,
-                    },
-                    {
-                        control: "ACTIVE",
                         eventName: eventModel.eventName,
                         field: eventModel.field,
                         scopeId: scopeId,
@@ -128,7 +123,6 @@ router.post("/:equipmentModelId/eventModels/:eventModelId/rule", async (req, res
             default:
                 res.status(500);
         }
-        await kafkaClient.sendMessage("eh-bpm-rules-prod", JSON.stringify(rule));
         res.status(202).send(rule);
     } catch (err) {
         next(err);
@@ -137,19 +131,8 @@ router.post("/:equipmentModelId/eventModels/:eventModelId/rule", async (req, res
 
 router.delete("/:equipmentModelId/eventModels/:eventModelId/rule", async (req, res, next) => {
     try {
-        const eventModelId = req.params.eventModelId;
-        const rule = await EventAbstractionRule.findOneAndUpdate(
-            {
-                _id: eventModelId,
-            },
-            {
-                $set: { control: 'INACTIVE'}
-            },
-            { new: true, runValidators: true }
-        );
-        if (rule) await kafkaClient.sendMessage("eh-bpm-rules-prod", JSON.stringify(rule));
-        const result = await EventAbstractionRule.findByIdAndDelete(eventModelId);
-        if (!result) throw new NotFoundError("Event Model not found");
+        const result = await EventAbstractionRule.findByIdAndDelete(req.params.eventModelId);
+        if (!result) throw new NotFoundError("Event Abstraction Rule not found");
         res.send(result);
     } catch (err) {
         next(err);

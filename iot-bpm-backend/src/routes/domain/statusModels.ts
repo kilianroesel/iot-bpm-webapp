@@ -1,8 +1,7 @@
 import express from "express";
 import { NotFoundError } from "../../middleware/errorhandling";
 import validateSchema from "../../middleware/schemaValidation";
-import { EquipmentModel, EventEnrichmentRule, MachineModel } from "../../models/schemas/models";
-import { kafkaClient } from "../..";
+import { EquipmentModel, EventEnrichmentRule } from "../../models/schemas/models";
 
 export const router = express.Router();
 
@@ -78,18 +77,14 @@ router.post("/:equipmentModelId/statusModels/:statusModelId/rule", async (req, r
         const statusModel = equipmentModel.statusModels.id(statusModelId);
         if (!statusModel) throw new NotFoundError("StatusModel not found");
 
-        const rule = await EventEnrichmentRule.findOneAndUpdate(
-            {
-                _id: statusModelId,
-            },
+        const rule = await EventEnrichmentRule.findByIdAndUpdate(
+            statusModelId,
             {
                 statusName: statusModel.statusName,
                 field: statusModel.field,
                 equipmentId: equipmentModel._id,
-                control: 'ACTIVE'
             }, { new: true, upsert: true, runValidators: true }
         );
-        await kafkaClient.sendMessage("eh-bpm-rules-prod", JSON.stringify(rule));
         res.status(202).send(rule);
     } catch (err) {
         next(err);
@@ -98,19 +93,8 @@ router.post("/:equipmentModelId/statusModels/:statusModelId/rule", async (req, r
 
 router.delete("/:equipmentModelId/statusModels/:statusModelId/rule", async (req, res, next) => {
     try {
-        const statusModelId = req.params.statusModelId;
-        const rule = await EventEnrichmentRule.findOneAndUpdate(
-            {
-                _id: statusModelId,
-            },
-            {
-                $set: { control: 'INACTIVE'}
-            },
-            { new: true }
-        );
-        if (rule) await kafkaClient.sendMessage("eh-bpm-rules-prod", JSON.stringify(rule));
         const result = await EventEnrichmentRule.findByIdAndDelete(req.params.statusModelId);
-        if (!result) throw new NotFoundError("Status Model not found");
+        if (!result) throw new NotFoundError("EventEnrichmentRule not found");
         res.send(result);
     } catch (err) {
         next(err);

@@ -30,7 +30,7 @@ export interface GetEventModelBase {
   eventName: string;
   field: string;
   triggerCategory: TriggerCategories;
-  ruleStatus: string
+  ruleStatus: string;
   updatedAt: String;
   createdAt: String;
 }
@@ -52,8 +52,13 @@ export interface CreateRangeTriggerEventModel extends RangeTriggerEventExtension
 export interface UpdateScalarTriggerEventModel extends ScalarTriggerEventExtension, Omit<BaseUpdateEventModel, "triggerCategory"> {}
 export interface UpdateRangeTriggerEventModel extends RangeTriggerEventExtension, Omit<BaseUpdateEventModel, "triggerCategory"> {}
 
-export interface ScalarTriggerEventExtensionForm extends Omit<ScalarTriggerEventExtension, 'value'> { value: string }
-export interface RangeTriggerEventExtensionForm extends Omit<RangeTriggerEventExtension, 'from' | 'to'> { from: string, to: string }
+export interface ScalarTriggerEventExtensionForm extends Omit<ScalarTriggerEventExtension, "value"> {
+  value: string;
+}
+export interface RangeTriggerEventExtensionForm extends Omit<RangeTriggerEventExtension, "from" | "to"> {
+  from: string;
+  to: string;
+}
 
 export interface ScalarTriggerEventExtension {
   triggerCategory: "SCALAR_TRIGGER";
@@ -115,11 +120,11 @@ export const useCreateEventAbstractionRule = (equipmentModelId: string, eventMod
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
   });
 
-  export const useDeleteEventAbstractionRule = (equipmentModelId: string, eventModelId: string) =>
-    useMutation({
-      mutationFn: async () => {
-        const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/eventModels/${eventModelId}/rule`);
-        return response.data;
-      },
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
-    });
+export const useDeleteEventAbstractionRule = (equipmentModelId: string, eventModelId: string) =>
+  useMutation({
+    mutationFn: async () => {
+      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/eventModels/${eventModelId}/rule`);
+      return response.data;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+  });

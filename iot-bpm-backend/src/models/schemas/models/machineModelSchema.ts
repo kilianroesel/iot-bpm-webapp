@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
+import { EquipmentModel } from "./equipmentModelSchema";
 
-
-interface MachineModel {
+export interface MachineModel {
     machineName: string;
     versionCsiStd: string;
     versionCsiSpecific: string;
@@ -11,10 +11,6 @@ interface MachineModel {
 
 export const machineModelSchema = new mongoose.Schema<MachineModel>(
     {
-        machineName: {
-            type: String,
-            required: true,
-        },
         versionCsiStd: {
             type: String,
             required: true,
@@ -30,10 +26,19 @@ export const machineModelSchema = new mongoose.Schema<MachineModel>(
         machineMasterSoftwareVersion: {
             type: String,
             required: true,
-        }
+        },
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+machineModelSchema
+    .virtual("machineName")
+    .get(function (this: EquipmentModel) {
+        return this.equipmentName;
+    })
+    .set(function (v) {
+        this.set({ equipmentName: v });
+    });
 
 machineModelSchema
     .virtual("ruleStatus", {
@@ -53,4 +58,18 @@ machineModelSchema
         )
             return "ACTIVE";
         return "UPDATED";
+    });
+
+    machineModelSchema.pre("find", function () {
+        this.populate({
+            path: "ruleStatus",
+            model: "EventScopingRule"
+        });
+    });
+    
+    machineModelSchema.pre("findOne", function () {
+        this.populate({
+            path: "ruleStatus",
+            model: "EventScopingRule"
+        });
     });

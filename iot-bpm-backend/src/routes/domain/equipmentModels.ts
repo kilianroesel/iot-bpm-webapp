@@ -5,8 +5,7 @@ import mongoose from "mongoose";
 import mongodb from "../../config/mongoClient";
 import { router as eventModelRouter } from "./eventModels";
 import { router as statusModelRouter } from "./statusModels";
-import { EquipmentModel, EventScopingRule, MachineModel } from "../../models/schemas/models";
-import { kafkaClient } from "../..";
+import { EquipmentModel } from "../../models/schemas/models";
 
 export const router = express.Router();
 
@@ -107,41 +106,6 @@ router.post("/:equipmentModelId/equipmentModels", validateSchema("createEquipmen
         } finally {
             session.endSession();
         }
-    } catch (err) {
-        next(err);
-    }
-});
-
-router.post("/:equipmentModelId/rule", async (req, res, next) => {
-    try {
-        const equipmentModelId = req.params.equipmentModelId;
-        const equipmentModel = await MachineModel.findById(equipmentModelId);
-        if (!equipmentModel) throw new NotFoundError("Machine Model not found");
-
-        const rule = await EventScopingRule.findOneAndUpdate(
-            {
-                _id: equipmentModelId,
-            },
-            {
-                machineName: equipmentModel.machineName,
-                versionCsiStd: equipmentModel.versionCsiStd,
-                versionCsiSpecific: equipmentModel.versionCsiSpecific,
-                machineSoftwareVersion: equipmentModel.machineSoftwareVersion,
-                machineMasterSoftwareVersion: equipmentModel.machineMasterSoftwareVersion,
-            }, { new: true, upsert: true, runValidators: true }
-        );
-        await kafkaClient.sendMessage("eh-bpm-rules-prod", JSON.stringify(rule));
-        res.status(202).send(rule);
-    } catch (err) {
-        next(err);
-    }
-});
-
-router.delete("/:equipmentModelId/rule", async (req, res, next) => {
-    try {
-        const result = await EventScopingRule.findByIdAndDelete(req.params.equipmentModelId);
-        if (!result) throw new NotFoundError("Machine Model not found");
-        res.send(result);
     } catch (err) {
         next(err);
     }

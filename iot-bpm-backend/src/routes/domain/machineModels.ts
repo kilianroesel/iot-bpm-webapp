@@ -1,8 +1,7 @@
 import express from "express";
 import validateSchema from "../../middleware/schemaValidation";
 import { NotFoundError } from "../../middleware/errorhandling";
-import { EquipmentModel, EventScopingRule, MachineModel } from "../../models/schemas/models";
-import { kafkaClient } from "../..";
+import { EventScopingRule, MachineModel } from "../../models/schemas/models";
 
 export const router = express.Router();
 
@@ -44,10 +43,17 @@ router.get("/:machineModelId", async (req, res, next) => {
 
 router.post("/:machineModelId", validateSchema("updateMachineModel"), async (req, res, next) => {
     try {
-        const updatedModel = await MachineModel.findByIdAndUpdate(req.params.machineModelId, req.body, {
-            new: true,
-            runValidators: true,
-        });
+        const updatedModel = await MachineModel.findByIdAndUpdate(
+            req.params.machineModelId,
+            {
+                ...req.body,
+                equipmentName: req.body.machineName,
+            },
+            {
+                new: true,
+                runValidators: true,
+            }
+        );
         res.send(updatedModel);
     } catch (err) {
         next(err);
@@ -56,7 +62,7 @@ router.post("/:machineModelId", validateSchema("updateMachineModel"), async (req
 
 router.delete("/:machineModelId", async (req, res, next) => {
     try {
-        await EventScopingRule.findByIdAndDelete(req.params.machineModelId)
+        await EventScopingRule.findByIdAndDelete(req.params.machineModelId);
         await MachineModel.findByIdAndDelete(req.params.machineModelId);
         res.status(204).send();
     } catch (err) {
@@ -67,24 +73,20 @@ router.delete("/:machineModelId", async (req, res, next) => {
 router.post("/:machineModelId/rule", async (req, res, next) => {
     try {
         const machineModelId = req.params.machineModelId;
-        const machineModel = await MachineModel.find({_id: machineModelId});
-        if (!machineModel) throw new NotFoundError("Machine model not found");
+        const machineModel = await MachineModel.findById(machineModelId);
+        if (!machineModel) throw new NotFoundError("Machine Model not found");
 
-        const rule = await EventScopingRule.findOneAndUpdate(
-            {
-                _id: machineModelId,
-            },
+        const rule = await EventScopingRule.findByIdAndUpdate(
+            machineModelId,
             {
                 machineName: machineModel.machineName,
                 versionCsiStd: machineModel.versionCsiStd,
                 versionCsiSpecific: machineModel.versionCsiSpecific,
                 machineSoftwareVersion: machineModel.machineSoftwareVersion,
                 machineMasterSoftwareVersion: machineModel.machineMasterSoftwareVersion,
-                control: 'ACTIVE',
             },
             { new: true, upsert: true, runValidators: true }
         );
-        await kafkaClient.sendMessage("eh-bpm-rules-prod", JSON.stringify(rule));
         res.status(202).send(rule);
     } catch (err) {
         next(err);
@@ -94,19 +96,9 @@ router.post("/:machineModelId/rule", async (req, res, next) => {
 router.delete("/:machineModelId/rule", async (req, res, next) => {
     try {
         const machineModelId = req.params.machineModelId;
-        const rule = await EventScopingRule.findOneAndUpdate(
-            {
-                _id: machineModelId,
-            },
-            {
-                $set: { control: 'INACTIVE'}
-            },
-            { new: true }
-        );
-        if (rule) await kafkaClient.sendMessage("eh-bpm-rules-prod", JSON.stringify(rule));
-        const result = await EventScopingRule.findByIdAndDelete(machineModelId);
-        if (!result) throw new NotFoundError("Machine Model not found");
-        res.send(result);
+        const rule = await EventScopingRule.findByIdAndDelete(machineModelId);
+        if (!rule) throw new NotFoundError("Event Scoping Rule not found");
+        res.status(204).send();
     } catch (err) {
         next(err);
     }

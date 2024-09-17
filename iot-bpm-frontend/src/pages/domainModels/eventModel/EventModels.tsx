@@ -4,8 +4,8 @@ import EventDescriptionCreate from "./EventModelCreate";
 import EventModelEdit from "./EventModelEdit";
 import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
 import { GetPopulatedEquipmentModel } from "../../../modelApi/equipmentModelApi";
-import { GetRangeTriggerEventModel, GetScalarTriggerEventModel, useCreateEventAbstractionRule } from "../../../modelApi/eventModelApi";
-import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiRocketLaunch } from "react-icons/hi2";
+import { GetRangeTriggerEventModel, GetScalarTriggerEventModel, useCreateEventAbstractionRule, useDeleteEventAbstractionRule } from "../../../modelApi/eventModelApi";
+import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiOutlineDocumentArrowDown, HiOutlineDocumentArrowUp } from "react-icons/hi2";
 
 export function EventModels({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
   const [isCreatingOpen, setIsCreatingOpen] = useState(false);
@@ -42,6 +42,7 @@ function EventModel({
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const createEventAbstractionRule = useCreateEventAbstractionRule(equipmentModelId, eventModel._id);
+  const deleteEventAbstractionRule = useDeleteEventAbstractionRule(equipmentModelId, eventModel._id);
 
   const startEdit = () => {
     setIsEditOpen(true);
@@ -79,9 +80,17 @@ function EventModel({
           {(eventModel.ruleStatus == "NOT_RELEASED" || eventModel.ruleStatus == "UPDATED") && (
             <IconButton
               onClick={() => createEventAbstractionRule.mutate()}
-              className="inline-block h-full text-fuchsia-600 hover:text-fuchsia-500"
+              className="inline-block h-full text-emerald-600 hover:text-emerald-500"
             >
-              <HiRocketLaunch size="22" />
+              <HiOutlineDocumentArrowUp size="22" />
+            </IconButton>
+          )}
+          {(eventModel.ruleStatus == "ACTIVE" || eventModel.ruleStatus == "UPDATED") && (
+            <IconButton
+              onClick={() => deleteEventAbstractionRule.mutate()}
+              className="inline-block h-full text-amber-600 hover:text-amber-500"
+            >
+              <HiOutlineDocumentArrowDown size="22" />
             </IconButton>
           )}
           <IconEditButton onClick={startEdit} />
