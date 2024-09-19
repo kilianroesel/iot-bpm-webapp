@@ -1,4 +1,4 @@
-import { queryOptions, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../config/queryClientConfig";
 import { apiInstance } from "../config/modelApiConfig";
 
@@ -72,59 +72,50 @@ export interface RangeTriggerEventExtension {
   to: number;
 }
 
-export const eventModelQuery = (eventModelId: string) =>
-  queryOptions({
-    queryKey: ["domain", "eventModels", eventModelId],
-    queryFn: async () => {
-      const response = await apiInstance.get<GetScalarTriggerEventModel | GetRangeTriggerEventModel>(`/domain/eventModels/${eventModelId}`);
-      return response.data;
-    },
-  });
-
-export const useCreateEventModel = (equipmentModelId: string) =>
+export const useCreateEventModel = (equipmentModelId: string, lifecycleModelId: string) =>
   useMutation({
     mutationFn: async (payload: CreateScalarTriggerEventModel | CreateRangeTriggerEventModel) => {
-      const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/eventModels`, payload);
+      const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/eventModels`, payload);
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),
   });
 
-export const useUpdateEventModel = (equipmentModelId: string, eventModelId: string) =>
+export const useUpdateEventModel = (equipmentModelId: string, lifecycleModelId: string, eventModelId: string) =>
   useMutation({
     mutationFn: async (payload: UpdateScalarTriggerEventModel | UpdateRangeTriggerEventModel) => {
-      const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/eventModels/${eventModelId}`, payload);
+      const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/eventModels/${eventModelId}/`, payload);
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),
   });
 
-export const useDeleteEventModel = (equipmentModelId: string, eventModelId: string) =>
+export const useDeleteEventModel = (equipmentModelId: string, lifecycleModelId: string, eventModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/eventModels/${eventModelId}`);
+      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/eventModels/${eventModelId}`);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.removeQueries({ queryKey: ["domain", "equipmentModels", eventModelId], exact: true });
+      queryClient.removeQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] });
       queryClient.invalidateQueries({ queryKey: ["domain"] });
     },
   });
 
-export const useCreateEventAbstractionRule = (equipmentModelId: string, eventModelId: string) =>
+export const useCreateEventAbstractionRule = (equipmentModelId: string, lifecycleModelId: string, eventModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/eventModels/${eventModelId}/rule`);
+      const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/eventModels/${eventModelId}/rule`);
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),
   });
 
-export const useDeleteEventAbstractionRule = (equipmentModelId: string, eventModelId: string) =>
+export const useDeleteEventAbstractionRule = (equipmentModelId: string, lifecycleModelId: string, eventModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/eventModels/${eventModelId}/rule`);
+      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}$/eventModels/${eventModelId}/rule`);
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),
   });

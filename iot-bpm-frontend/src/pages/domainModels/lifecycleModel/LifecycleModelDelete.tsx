@@ -1,19 +1,19 @@
-import { FormEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { CancelButton, DeleteButton } from "../../../components/forms/Buttons";
+import { FormEvent, SetStateAction, Dispatch, useEffect, useRef } from "react";
 import { Dialog } from "../../../components/forms/Dialog";
-import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
-import { GetEventModelBase, useDeleteEventModel } from "../../../modelApi/eventModelApi";
+import { CancelButton, DeleteButton } from "../../../components/forms/Buttons";
+import { Form, FormHeader } from "../../../components/forms/Form";
+import { GetLifecycleModel, useDeleteLifecycleModel } from "../../../modelApi/lifecycleModelApi";
 
-export default function EventModelDelete({
+export default function LifecycleModelDelete({
   setIsOpen,
-  eventModel,
-  equipmentModelId,
+  lifecycleModel,
+  equipmentModelId
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  eventModel: GetEventModelBase;
-  equipmentModelId: string
+  lifecycleModel: GetLifecycleModel;
+  equipmentModelId: string;
 }) {
-  const mutate = useDeleteEventModel(equipmentModelId, eventModel._id);
+  const mutate = useDeleteLifecycleModel(equipmentModelId, lifecycleModel._id);
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -37,11 +37,7 @@ export default function EventModelDelete({
   return (
     <Dialog ref={ref}>
       <Form onSubmit={submit}>
-        <FormHeader>Delete Event</FormHeader>
-        <FormLabel>
-          <span>Event Name</span>
-          <div>{eventModel.eventName}</div>
-        </FormLabel>
+        <FormHeader>Delete Lifecycle Model</FormHeader>
         <div className="space-x-4">
           <DeleteButton type="submit" />
           <CancelButton type="button" onClick={stopDeleting}>

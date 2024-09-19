@@ -28,7 +28,7 @@ export const useCreateStatusModel = (equipmentModelId: string) =>
       const response = await apiInstance.post<GetStatusModel>(`/domain/equipmentModels/${equipmentModelId}/statusModels`, payload);
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),
   });
 
 export const useUpdateStatusModel = (equipmentModelId: string, statusModelId: string) =>
@@ -50,8 +50,7 @@ export const useDeleteStatusModel = (equipmentModelId: string, statusModelId: st
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels"] });
-      queryClient.removeQueries({ queryKey: ["domain", "equipmentModels"], exact: true });
+      queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] });
     },
   });
 
@@ -61,7 +60,7 @@ export const useCreateEventEnrichmentRule = (equipmentModelId: string, statusMod
       const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}/rule`);
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),
   });
 
 export const useDeleteEventEnrichmentRule = (equipmentModelId: string, statusModelId: string) =>
@@ -70,5 +69,5 @@ export const useDeleteEventEnrichmentRule = (equipmentModelId: string, statusMod
       const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}/rule`);
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),
   });

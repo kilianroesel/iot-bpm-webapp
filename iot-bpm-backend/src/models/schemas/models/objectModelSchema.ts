@@ -3,11 +3,23 @@ import { statusModelSchema } from "./statusModelSchema";
 
 export const objectModelSchema = new mongoose.Schema(
     {
+        equipmentId: {
+            type: String,
+            required: true,
+        },
         objectType: {
             type: String,
             required: true,
         },
         statusModels: [statusModelSchema],
+        consumable: {
+            type: Boolean,
+            default: false,
+        },
+        singleton: {
+            type: Boolean,
+            default: false,
+        }
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

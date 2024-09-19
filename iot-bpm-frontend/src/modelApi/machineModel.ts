@@ -23,15 +23,6 @@ export interface GetPopulatedMachineModel extends GetMachineModel {
 
 export interface UpdateMachineModel extends CreateMachineModel, GetMachineModel {}
 
-export const useCreateMachineModel = () =>
-  useMutation({
-    mutationFn: async (payload: CreateMachineModel) => {
-      const response = await apiInstance.post(`/domain/machineModels`, payload);
-      return response.data;
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
-  });
-
 export const machineModelsQuery = () =>
   queryOptions({
     queryKey: ["domain", "machineModels"],
@@ -39,6 +30,15 @@ export const machineModelsQuery = () =>
       const response = await apiInstance.get<GetMachineModel[]>("/domain/machineModels");
       return response.data;
     },
+  });
+
+export const useCreateMachineModel = () =>
+  useMutation({
+    mutationFn: async (payload: CreateMachineModel) => {
+      const response = await apiInstance.post(`/domain/machineModels`, payload);
+      return response.data;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "machineModels"] }),
   });
 
 export const machineModelQuery = (machineModelId: string) =>
@@ -56,7 +56,7 @@ export const useUpdateMachineModel = (machineModelId: string) =>
       const response = await apiInstance.post(`/domain/machineModels/${machineModelId}`, payload);
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "machineModel", machineModelId] }),
   });
 
 export const useCreateEventScopingeRule = (machineModelId: string) =>
@@ -65,7 +65,7 @@ export const useCreateEventScopingeRule = (machineModelId: string) =>
       const response = await apiInstance.post(`/domain/machineModels/${machineModelId}/rule`);
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "machineModel", machineModelId] }),
   });
 
   export const useDeleteEventScopingeRule = (machineModelId: string) =>
@@ -74,5 +74,5 @@ export const useCreateEventScopingeRule = (machineModelId: string) =>
         const response = await apiInstance.delete(`/domain/machineModels/${machineModelId}/rule`);
         return response.data;
       },
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "machineModel", machineModelId] }),
     });

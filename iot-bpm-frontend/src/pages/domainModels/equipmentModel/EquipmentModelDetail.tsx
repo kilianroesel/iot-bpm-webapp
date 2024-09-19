@@ -1,15 +1,16 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useLocation, useParams } from "react-router-dom";
 import { StatusModels } from "../statusModel/StatusModels";
-import { EventModels } from "../eventModel/EventModels";
 import { useState } from "react";
 import EquipmentModelCreate from "./EquipmentModelCreate";
 import { BreadCrumbLink } from "../../../components/links/BreadCrumb";
 import { HiOutlineChevronDoubleRight } from "react-icons/hi2";
 import EquipmentModelDelete from "./EquipmentModelDelete";
 import { equipmentModelQuery } from "../../../modelApi/equipmentModelApi";
-import { IconAddButton, IconDeleteButton } from "../../../components/links/IconButtons";
+import { IconAddButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
 import { GetPopulatedEquipmentModel } from "../../../modelApi/equipmentModelApi";
+import { LifecycleModels } from "../lifecycleModel/LifecycleModel";
+import EquipmentModelEdit from "./EquipmentModelEdit";
 
 export default function EquipmentModelDetail() {
   const params = useParams();
@@ -21,10 +22,10 @@ export default function EquipmentModelDetail() {
       <RecursiveEquipmentBreadCrumbs />
       <div className="grid grid-cols-2 gap-4">
         <EquipmentOverview equipmentModel={equipmentModel} />
-        <StatusModels equipmentModel={equipmentModel} />
+        <StatusModels statusModels={equipmentModel.statusModels} equipmentModelId={equipmentModel._id} />
       </div>
       <div>
-        <EventModels equipmentModel={equipmentModel} />
+        <LifecycleModels equipmentModel={equipmentModel} />
       </div>
     </div>
   );
@@ -32,10 +33,15 @@ export default function EquipmentModelDetail() {
 
 function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const startCreate = () => {
     setIsCreateOpen(true);
+  };
+
+  const startEdit= () => {
+    setIsEditOpen(true);
   };
 
   const startDelete = () => {
@@ -47,7 +53,8 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEqu
       <div className="space-y-4 rounded-md bg-slate-900 p-4">
         <div className="flex">
           <h3 className="flex-grow font-medium">Summary</h3>
-          <div className="justify-self-center">
+          <div className="justify-self-center space-x-4">
+            <IconEditButton onClick={startEdit} />
             <IconDeleteButton onClick={startDelete} />
           </div>
         </div>
@@ -65,6 +72,7 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEqu
             <span>Sub Equipment</span>
           </div>
           {isCreateOpen && <EquipmentModelCreate setIsOpen={setIsCreateOpen} equipmentModel={equipmentModel} />}
+          {isEditOpen && <EquipmentModelEdit setIsOpen={setIsEditOpen} equipmentModel={equipmentModel} />}
           {isDeleteOpen && <EquipmentModelDelete setIsOpen={setIsDeleteOpen} equipmentModel={equipmentModel} />}
         </div>
       </div>

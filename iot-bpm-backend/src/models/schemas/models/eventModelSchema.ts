@@ -28,6 +28,14 @@ export const eventModelSchema = new mongoose.Schema(
         to: {
             type: Number,
         },
+        creates: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "ObjectModel"
+        }],
+        consumes: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "ObjectModel"
+        }]
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

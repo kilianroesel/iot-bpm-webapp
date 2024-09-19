@@ -2,11 +2,13 @@ import mongoose from "mongoose";
 import { statusModelSchema } from "./statusModelSchema";
 import { eventModelSchema } from "./eventModelSchema";
 import { MachineModel } from "./machineModelSchema";
+import { lifecycleModelSchema } from "./lifecycleModel";
 
 export interface EquipmentModel {
     equipmentName: string;
     statusModels: any;
     eventModels: any;
+    lifecycleModels: any;
     equipmentModels: EquipmentModel[];
     machineModel: MachineModel;
     parentEquipmentModel?: MachineModel,
@@ -21,6 +23,7 @@ export const equipmentModelSchema = new mongoose.Schema<EquipmentModel>(
         },
         statusModels: [statusModelSchema],
         eventModels: [eventModelSchema],
+        lifecycleModels: [lifecycleModelSchema],
         equipmentModels: [
             {
                 type: mongoose.Schema.Types.ObjectId,

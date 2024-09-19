@@ -3,11 +3,10 @@ import StatusCreate from "./StatusCreate";
 import StatusDelete from "./StatusModelDelete";
 import StatusEdit from "./StatusEdit";
 import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
-import { GetPopulatedEquipmentModel } from "../../../modelApi/equipmentModelApi";
 import { GetPopulatedStatusModel, useCreateEventEnrichmentRule, useDeleteEventEnrichmentRule } from "../../../modelApi/statusModelApi";
 import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiOutlineDocumentArrowDown, HiOutlineDocumentArrowUp } from "react-icons/hi2";
 
-export function StatusModels({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
+export function StatusModels({ statusModels, equipmentModelId }: { statusModels: GetPopulatedStatusModel[], equipmentModelId: string }) {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const startCreate = () => {
@@ -21,13 +20,13 @@ export function StatusModels({ equipmentModel }: { equipmentModel: GetPopulatedE
         <div className="justify-self-center">
           <IconAddButton onClick={startCreate} />
         </div>
-        {isCreateOpen && <StatusCreate setIsOpen={setIsCreateOpen} equipmentModelId={equipmentModel._id} />}
+        {isCreateOpen && <StatusCreate setIsOpen={setIsCreateOpen} equipmentModelId={equipmentModelId} />}
       </div>
       <div>
         <ul>
-          {equipmentModel.statusModels.map((statusModel) => (
+          {statusModels.map((statusModel) => (
             <li key={statusModel._id}>
-              <StatusModel statusModel={statusModel} equipmentModelId={equipmentModel._id} />
+              <StatusModel statusModel={statusModel} equipmentModelId={equipmentModelId} />
             </li>
           ))}
         </ul>

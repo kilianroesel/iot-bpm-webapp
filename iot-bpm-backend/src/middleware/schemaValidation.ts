@@ -4,6 +4,8 @@ import { createMachineModel, updateMachineModel } from "../schemas/domain/machin
 import { createEquipmentModel, updateEquipmentModel } from "../schemas/domain/equipmentModelSchema";
 import { createEventModel, updateEventModel } from "../schemas/domain/eventModelSchema";
 import { createStatusModel, updateStatusModel } from "../schemas/domain/statusModelSchema";
+import { createLifecycleModel, updateLifecycleModel } from "../schemas/domain/lifecycleModelSchema";
+
 
 const ajv = new Ajv();
 
@@ -18,6 +20,9 @@ ajv.addSchema(updateEventModel, "updateEventModel");
 
 ajv.addSchema(createStatusModel, "createStatusModel");
 ajv.addSchema(updateStatusModel, "updateStatusModel");
+
+ajv.addSchema(createLifecycleModel, "createLifecycleModel");
+ajv.addSchema(updateLifecycleModel, "updateLifecycleModel");
 
 export default function validateSchema(schema: string) {
     return (req: Request, res: Response, next: NextFunction) => {

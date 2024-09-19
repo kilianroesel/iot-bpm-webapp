@@ -2,31 +2,27 @@ import { useState } from "react";
 import EventModelDelete from "./EventModelDelete";
 import EventDescriptionCreate from "./EventModelCreate";
 import EventModelEdit from "./EventModelEdit";
-import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
-import { GetPopulatedEquipmentModel } from "../../../modelApi/equipmentModelApi";
-import { GetRangeTriggerEventModel, GetScalarTriggerEventModel, useCreateEventAbstractionRule, useDeleteEventAbstractionRule } from "../../../modelApi/eventModelApi";
+import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../../components/links/IconButtons";
+import { GetRangeTriggerEventModel, GetScalarTriggerEventModel, useCreateEventAbstractionRule, useDeleteEventAbstractionRule } from "../../../../modelApi/eventModelApi";
 import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiOutlineDocumentArrowDown, HiOutlineDocumentArrowUp } from "react-icons/hi2";
 
-export function EventModels({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
+export function EventModels({ eventModels, equipmentModelId, lifecycleModelId }: { eventModels: (GetScalarTriggerEventModel | GetRangeTriggerEventModel)[], equipmentModelId: string, lifecycleModelId: string }) {
   const [isCreatingOpen, setIsCreatingOpen] = useState(false);
 
   return (
-    <div className="space-y-4 rounded-md bg-slate-900 p-4">
-      <div className="flex">
-        <h3 className="flex-grow font-medium">Event Descriptions Fields</h3>
-        <div>
-          <IconAddButton onClick={() => setIsCreatingOpen(true)} />
-        </div>
-      </div>
+    <div className="space-y-4 bg-slate-900 border-t border-slate-800">
       <div>
         <ul>
-          {equipmentModel.eventModels.map((eventModel) => (
+          {eventModels.map((eventModel) => (
             <li key={eventModel._id}>
-              <EventModel equipmentModelId={equipmentModel._id} eventModel={eventModel} />
+              <EventModel equipmentModelId={equipmentModelId} lifecycleModelId={lifecycleModelId} eventModel={eventModel} />
             </li>
           ))}
         </ul>
-        {isCreatingOpen && <EventDescriptionCreate equipmentModelId={equipmentModel._id} setIsOpen={setIsCreatingOpen} />}
+        {isCreatingOpen && <EventDescriptionCreate equipmentModelId={equipmentModelId} lifecycleModelId={lifecycleModelId} setIsOpen={setIsCreatingOpen} />}
+      </div>
+      <div className="flex justify-center">
+        <IconAddButton onClick={() => setIsCreatingOpen(true)} />
       </div>
     </div>
   );
@@ -35,14 +31,16 @@ export function EventModels({ equipmentModel }: { equipmentModel: GetPopulatedEq
 function EventModel({
   eventModel,
   equipmentModelId,
+  lifecycleModelId
 }: {
   eventModel: GetRangeTriggerEventModel | GetScalarTriggerEventModel;
   equipmentModelId: string;
+  lifecycleModelId: string;
 }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const createEventAbstractionRule = useCreateEventAbstractionRule(equipmentModelId, eventModel._id);
-  const deleteEventAbstractionRule = useDeleteEventAbstractionRule(equipmentModelId, eventModel._id);
+  const createEventAbstractionRule = useCreateEventAbstractionRule(equipmentModelId, lifecycleModelId, eventModel._id);
+  const deleteEventAbstractionRule = useDeleteEventAbstractionRule(equipmentModelId, lifecycleModelId, eventModel._id);
 
   const startEdit = () => {
     setIsEditOpen(true);
@@ -97,8 +95,8 @@ function EventModel({
           <IconDeleteButton onClick={startDelete} />
         </div>
       </div>
-      {isEditOpen && <EventModelEdit equipmentModelId={equipmentModelId} eventModel={eventModel} setIsOpen={setIsEditOpen} />}
-      {isDeleteOpen && <EventModelDelete equipmentModelId={equipmentModelId} eventModel={eventModel} setIsOpen={setIsDeleteOpen} />}
+      {isEditOpen && <EventModelEdit equipmentModelId={equipmentModelId} lifecycleModelId={lifecycleModelId} eventModel={eventModel} setIsOpen={setIsEditOpen} />}
+      {isDeleteOpen && <EventModelDelete equipmentModelId={equipmentModelId} lifecycleModelId={lifecycleModelId} eventModel={eventModel} setIsOpen={setIsDeleteOpen} />}
     </>
   );
 }

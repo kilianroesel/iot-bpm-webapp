@@ -3,6 +3,7 @@ import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
 import { GetPopulatedStatusModel } from "./statusModelApi";
 import { GetRangeTriggerEventModel, GetScalarTriggerEventModel } from "./eventModelApi";
+import { GetLifecycleModel } from "./lifecycleModelApi";
 
 export interface CreateEquipmentModel {
   equipmentName: string;
@@ -15,7 +16,9 @@ interface GetEquipmentModelBase extends CreateEquipmentModel {
   updatedAt: string;
 }
 
-export interface UpdateEquipmentModel extends CreateEquipmentModel, GetEquipmentModelBase {}
+export interface UpdateEquipmentModel extends CreateEquipmentModel {
+  _id: string;
+}
 
 export interface GetEquipmentModel extends GetEquipmentModelBase {
   _id: string;
@@ -28,6 +31,7 @@ export interface GetPopulatedEquipmentModel extends GetEquipmentModelBase {
   statusModels: GetPopulatedStatusModel[];
   eventModels: (GetScalarTriggerEventModel | GetRangeTriggerEventModel)[];
   equipmentModels: GetEquipmentModel[];
+  lifecycleModels: GetLifecycleModel[];
 }
 
 export const equipmentModelQuery = (equipmentModelId: string) =>
@@ -39,17 +43,29 @@ export const equipmentModelQuery = (equipmentModelId: string) =>
     },
   });
 
-export const useCreateEquipment = (equipmentId: string) =>
+export const useCreateEquipment = (equipmentModelId: string) =>
   useMutation({
     mutationFn: async (payload: CreateEquipmentModel) => {
       const response = await apiInstance.post<GetPopulatedEquipmentModel>(
-        `/domain/equipmentModels/${equipmentId}/equipmentModels`,
+        `/domain/equipmentModels/${equipmentModelId}/equipmentModels`,
         payload,
       );
       return response.data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModel", equipmentModelId] }),
   });
+
+  export const useUpdateEquipment = (equipmentModelId: string) =>
+    useMutation({
+      mutationFn: async (payload: UpdateEquipmentModel) => {
+        const response = await apiInstance.post<GetPopulatedEquipmentModel>(
+          `/domain/equipmentModels/${equipmentModelId}`,
+          payload,
+        );
+        return response.data;
+      },
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModel", equipmentModelId] }),
+    });
 
 export const useDeleteEquipment = (equipmentModelId: string) =>
   useMutation({
