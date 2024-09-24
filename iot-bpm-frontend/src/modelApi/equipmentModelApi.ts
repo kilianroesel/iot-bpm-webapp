@@ -2,7 +2,6 @@ import { queryOptions, useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
 import { GetPopulatedStatusModel } from "./statusModelApi";
-import { GetRangeTriggerEventModel, GetScalarTriggerEventModel } from "./eventModelApi";
 import { GetLifecycleModel } from "./lifecycleModelApi";
 
 export interface CreateEquipmentModel {
@@ -24,12 +23,12 @@ export interface GetEquipmentModel extends GetEquipmentModelBase {
   _id: string;
   __t: string;
   statusModels: string[];
-  eventModels: string[];
+  lifecycleModels: string[];
   equipmentModels: string[];
 }
+
 export interface GetPopulatedEquipmentModel extends GetEquipmentModelBase {
   statusModels: GetPopulatedStatusModel[];
-  eventModels: (GetScalarTriggerEventModel | GetRangeTriggerEventModel)[];
   equipmentModels: GetEquipmentModel[];
   lifecycleModels: GetLifecycleModel[];
 }

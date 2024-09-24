@@ -19,8 +19,6 @@ export default function EquipmentModelEdit({
   const mutate = useUpdateEquipment(equipmentModel._id);
   const ref = useRef<HTMLDialogElement>(null);
 
-  console.log(newEquipmentModel);
-
   useEffect(() => {
     ref.current?.showModal();
     return () => {

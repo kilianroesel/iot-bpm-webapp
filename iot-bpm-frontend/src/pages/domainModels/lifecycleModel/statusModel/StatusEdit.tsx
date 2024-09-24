@@ -1,18 +1,20 @@
 import { useState, FormEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { Dialog } from "../../../components/forms/Dialog";
-import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
-import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
-import { Input } from "../../../components/forms/Input";
-import { GetStatusModel, UpdateStatusModel, useUpdateStatusModel } from "../../../modelApi/statusModelApi";
+import { Dialog } from "../../../../components/forms/Dialog";
+import { Form, FormHeader, FormLabel } from "../../../../components/forms/Form";
+import { CancelButton, SubmitButton } from "../../../../components/forms/Buttons";
+import { Input } from "../../../../components/forms/Input";
+import { GetStatusModel, UpdateStatusModel, useUpdateStatusModel } from "../../../../modelApi/statusModelApi";
 
 export default function StatusEdit({
   setIsOpen,
   statusModel,
   equipmentModelId,
+  lifecycleModelId
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   statusModel: GetStatusModel;
   equipmentModelId: string;
+  lifecycleModelId: string;
 }) {
   const [updatedStatusField, setUpdatedStatusField] = useState<UpdateStatusModel>({
     _id: statusModel._id,
@@ -20,7 +22,7 @@ export default function StatusEdit({
     statusName: statusModel.statusName,
     field: statusModel.field
   });
-  const mutate = useUpdateStatusModel(equipmentModelId, statusModel._id);
+  const mutate = useUpdateStatusModel(equipmentModelId, lifecycleModelId, statusModel._id);
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {

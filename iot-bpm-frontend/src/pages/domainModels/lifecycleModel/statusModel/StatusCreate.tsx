@@ -1,22 +1,24 @@
 import { useState, FormEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { Dialog } from "../../../components/forms/Dialog";
-import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
-import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
-import { Input } from "../../../components/forms/Input";
-import { CreateStatusModel, useCreateStatusModel } from "../../../modelApi/statusModelApi";
+import { Dialog } from "../../../../components/forms/Dialog";
+import { CancelButton, SubmitButton } from "../../../../components/forms/Buttons";
+import { Form, FormHeader, FormLabel } from "../../../../components/forms/Form";
+import { Input } from "../../../../components/forms/Input";
+import { CreateStatusModel, useCreateStatusModel } from "../../../../modelApi/statusModelApi";
 
 export default function StatusModelCreate({
   setIsOpen,
   equipmentModelId,
+  lifecycleModelId
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   equipmentModelId: string;
+  lifecycleModelId: string;
 }) {
   const [newStatusModel, setNewStatusModel] = useState<CreateStatusModel>({
     statusName: "",
     field: "",
   });
-  const mutate = useCreateStatusModel(equipmentModelId);
+  const mutate = useCreateStatusModel(equipmentModelId, lifecycleModelId);
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {

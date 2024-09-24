@@ -1,19 +1,21 @@
 import { FormEvent, SetStateAction, Dispatch, useEffect, useRef } from "react";
-import { Dialog } from "../../../components/forms/Dialog";
-import { CancelButton, DeleteButton } from "../../../components/forms/Buttons";
-import { Form, FormHeader } from "../../../components/forms/Form";
-import { GetStatusModel, useDeleteStatusModel } from "../../../modelApi/statusModelApi";
+import { Dialog } from "../../../../components/forms/Dialog";
+import { CancelButton, DeleteButton } from "../../../../components/forms/Buttons";
+import { Form, FormHeader } from "../../../../components/forms/Form";
+import { GetStatusModel, useDeleteStatusModel } from "../../../../modelApi/statusModelApi";
 
 export default function StatusModelDelete({
   setIsOpen,
   statusModel,
-  equipmentModelId
+  equipmentModelId,
+  lifecycleModelId
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   statusModel: GetStatusModel;
   equipmentModelId: string;
+  lifecycleModelId: string;
 }) {
-  const mutate = useDeleteStatusModel(equipmentModelId, statusModel._id);
+  const mutate = useDeleteStatusModel(equipmentModelId, lifecycleModelId, statusModel._id);
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {

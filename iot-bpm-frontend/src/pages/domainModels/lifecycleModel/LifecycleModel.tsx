@@ -7,6 +7,7 @@ import LifecycleModelCreate from "./LifecycleModelCreate";
 import LifecycleModelDelete from "./LifecycleModelDelete";
 import { HiChevronDown } from "react-icons/hi2";
 import { EventModels } from "./eventModel/EventModels";
+import { StatusModels } from "./statusModel/StatusModels";
 
 export function LifecycleModels({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
   const [isCreatingOpen, setIsCreatingOpen] = useState(false);
@@ -48,18 +49,29 @@ function LifecycleModel({ lifecycleModel, equipmentModelId }: { lifecycleModel: 
   return (
     <>
       <details className="group" name="lifecycleModel">
-        <summary className="flex items-center space-x-2 cursor-pointer">
-          <HiChevronDown className="group-open:rotate-180" size="16"/>
-          <div className="grow">
-            {lifecycleModel.lifecycleName}
-          </div>
-          <div className="flex items-center justify-end space-x-4">
-            <IconEditButton onClick={startEdit} />
-            <IconDeleteButton onClick={startDelete} />
-          </div>
+        <summary className="flex cursor-pointer items-center space-x-2">
+          <HiChevronDown className="group-open:rotate-180" size="16" />
+          <span className="grow font-medium">{lifecycleModel.lifecycleName}</span>
+          <IconEditButton onClick={startEdit} />
+          <IconDeleteButton onClick={startDelete} />
         </summary>
-        <div className="ml-6">
-          <EventModels eventModels={lifecycleModel.eventModels} equipmentModelId={equipmentModelId} lifecycleModelId={lifecycleModel._id}/>
+        <div className="ml-6 space-y-2">
+          <span className="font-light">Lifecycle Events</span>
+          <div>
+            <EventModels
+              eventModels={lifecycleModel.eventModels}
+              equipmentModelId={equipmentModelId}
+              lifecycleModelId={lifecycleModel._id}
+            />
+          </div>
+          <span className="font-light">Lifecycle Status</span>
+          <div>
+            <StatusModels
+              statusModels={lifecycleModel.statusModels}
+              equipmentModelId={equipmentModelId}
+              lifecycleModelId={lifecycleModel._id}
+            />
+          </div>
         </div>
       </details>
       {isEditOpen && <LifecycleModelEdit equipmentModelId={equipmentModelId} lifecycleModel={lifecycleModel} setIsOpen={setIsEditOpen} />}

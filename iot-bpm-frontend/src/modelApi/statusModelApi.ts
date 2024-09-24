@@ -22,20 +22,20 @@ export interface GetPopulatedStatusModel extends GetStatusModelBase {
   ruleStatus: string;
 }
 
-export const useCreateStatusModel = (equipmentModelId: string) =>
+export const useCreateStatusModel = (equipmentModelId: string, lifecycleModelId: string) =>
   useMutation({
     mutationFn: async (payload: CreateStatusModel) => {
-      const response = await apiInstance.post<GetStatusModel>(`/domain/equipmentModels/${equipmentModelId}/statusModels`, payload);
+      const response = await apiInstance.post<GetStatusModel>(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/statusModels`, payload);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),
   });
 
-export const useUpdateStatusModel = (equipmentModelId: string, statusModelId: string) =>
+export const useUpdateStatusModel = (equipmentModelId: string, lifecycleModelId: string, statusModelId: string) =>
   useMutation({
     mutationFn: async (payload: UpdateStatusModel) => {
       const response = await apiInstance.post<GetStatusModel>(
-        `/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}`,
+        `/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/statusModels/${statusModelId}`,
         payload,
       );
       return response.data;
@@ -43,10 +43,10 @@ export const useUpdateStatusModel = (equipmentModelId: string, statusModelId: st
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
   });
 
-export const useDeleteStatusModel = (equipmentModelId: string, statusModelId: string) =>
+export const useDeleteStatusModel = (equipmentModelId: string, lifecycleModelId: string, statusModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/statusModels/${statusModelId}`);
+      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/statusModels/${statusModelId}`);
       return response.data;
     },
     onSuccess: () => {

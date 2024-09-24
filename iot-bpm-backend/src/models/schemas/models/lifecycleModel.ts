@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { eventModelSchema } from "./eventModelSchema";
+import { statusModelSchema } from "./statusModelSchema";
 
 export const lifecycleModelSchema = new mongoose.Schema(
     {
@@ -8,6 +9,7 @@ export const lifecycleModelSchema = new mongoose.Schema(
             required: true,
         },
         eventModels: [eventModelSchema],
+        statusModels: [statusModelSchema],
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../../components/links/IconButtons";
+import { IconAddButton } from "../../../../components/links/IconButtons";
 import { GetPopulatedEquipmentModel } from "../../../../modelApi/equipmentModelApi";
-import { GetRangeTriggerEventModel, GetScalarTriggerEventModel } from "../../../../modelApi/eventModelApi";
-import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiRocketLaunch } from "react-icons/hi2";
-
-export function ObjectModels({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
+export function ObjectModels({  }: { equipmentModel: GetPopulatedEquipmentModel }) {
   const [isCreatingOpen, setIsCreatingOpen] = useState(false);
 
   console.log(isCreatingOpen);
@@ -18,75 +15,75 @@ export function ObjectModels({ equipmentModel }: { equipmentModel: GetPopulatedE
         </div>
       </div>
       <div>
-        <ul>
-          {equipmentModel.eventModels.map((eventModel) => (
+        {/* <ul>
+          {equipmentModel.lifecycleModels.map((eventModel) => (
             <li key={eventModel._id}>
               <ObjectModel objectModelId={equipmentModel._id} objectModel={eventModel} />
             </li>
           ))}
-        </ul>
+        </ul> */}
       </div>
     </div>
   );
 }
 
-function ObjectModel({
-  objectModel,
-  objectModelId,
-}: {
-  objectModel: GetRangeTriggerEventModel | GetScalarTriggerEventModel;
-  objectModelId: string;
-}) {
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+// function ObjectModel({
+//   objectModel,
+//   objectModelId,
+// }: {
+//   objectModel: GetRangeTriggerEventModel | GetScalarTriggerEventModel;
+//   objectModelId: string;
+// }) {
+//   const [isEditOpen, setIsEditOpen] = useState(false);
+//   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const startEdit = () => {
-    setIsEditOpen(true);
-  };
+//   const startEdit = () => {
+//     setIsEditOpen(true);
+//   };
 
-  const startDelete = () => {
-    setIsDeleteOpen(true);
-  };
+//   const startDelete = () => {
+//     setIsDeleteOpen(true);
+//   };
 
-  console.log(isEditOpen + "" + isDeleteOpen + objectModelId);
+//   console.log(isEditOpen + "" + isDeleteOpen + objectModelId);
 
-  return (
-    <>
-      <div className="grid grid-cols-11">
-        <div className="col-span-4 flex items-center space-x-2">
-          {objectModel.ruleStatus == "NOT_RELEASED" && (
-            <span>
-              <HiDocumentPlus className="text-blue-500" size="22" />
-            </span>
-          )}
-          {objectModel.ruleStatus == "ACTIVE" && (
-            <span>
-              <HiDocumentCheck className="text-green-500" size="22" />
-            </span>
-          )}
-          {objectModel.ruleStatus == "UPDATED" && (
-            <span>
-              <HiDocumentMinus className="text-orange-500" size="22" />
-            </span>
-          )}
-          <span>{objectModel.eventName}</span>
-        </div>
-        <div className="col-span-4 truncate">{objectModel.field}</div>
-        <div className="col-span-1 truncate">{objectModel.triggerCategory}</div>
-        <div className="col-span-1 truncate">{objectModel.triggerType}</div>
-        <div className="col-span-1 flex items-center justify-end space-x-4">
-          {(objectModel.ruleStatus == "NOT_RELEASED" || objectModel.ruleStatus == "UPDATED") && (
-            <IconButton
-              onClick={() => console.log("click")}
-              className="inline-block h-full text-fuchsia-600 hover:text-fuchsia-500"
-            >
-              <HiRocketLaunch size="22" />
-            </IconButton>
-          )}
-          <IconEditButton onClick={startEdit} />
-          <IconDeleteButton onClick={startDelete} />
-        </div>
-      </div>
-    </>
-  );
-}
+//   return (
+//     <>
+//       <div className="grid grid-cols-11">
+//         <div className="col-span-4 flex items-center space-x-2">
+//           {objectModel.ruleStatus == "NOT_RELEASED" && (
+//             <span>
+//               <HiDocumentPlus className="text-blue-500" size="22" />
+//             </span>
+//           )}
+//           {objectModel.ruleStatus == "ACTIVE" && (
+//             <span>
+//               <HiDocumentCheck className="text-green-500" size="22" />
+//             </span>
+//           )}
+//           {objectModel.ruleStatus == "UPDATED" && (
+//             <span>
+//               <HiDocumentMinus className="text-orange-500" size="22" />
+//             </span>
+//           )}
+//           <span>{objectModel.eventName}</span>
+//         </div>
+//         <div className="col-span-4 truncate">{objectModel.field}</div>
+//         <div className="col-span-1 truncate">{objectModel.triggerCategory}</div>
+//         <div className="col-span-1 truncate">{objectModel.triggerType}</div>
+//         <div className="col-span-1 flex items-center justify-end space-x-4">
+//           {(objectModel.ruleStatus == "NOT_RELEASED" || objectModel.ruleStatus == "UPDATED") && (
+//             <IconButton
+//               onClick={() => console.log("click")}
+//               className="inline-block h-full text-fuchsia-600 hover:text-fuchsia-500"
+//             >
+//               <HiRocketLaunch size="22" />
+//             </IconButton>
+//           )}
+//           <IconEditButton onClick={startEdit} />
+//           <IconDeleteButton onClick={startDelete} />
+//         </div>
+//       </div>
+//     </>
+//   );
+// }

@@ -1,6 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useLocation, useParams } from "react-router-dom";
-import { StatusModels } from "../statusModel/StatusModels";
 import { useState } from "react";
 import EquipmentModelCreate from "./EquipmentModelCreate";
 import { BreadCrumbLink } from "../../../components/links/BreadCrumb";
@@ -22,7 +21,7 @@ export default function EquipmentModelDetail() {
       <RecursiveEquipmentBreadCrumbs />
       <div className="grid grid-cols-2 gap-4">
         <EquipmentOverview equipmentModel={equipmentModel} />
-        <StatusModels statusModels={equipmentModel.statusModels} equipmentModelId={equipmentModel._id} />
+        <ChildEquipment equipmentModel={equipmentModel} />
       </div>
       <div>
         <LifecycleModels equipmentModel={equipmentModel} />
@@ -32,15 +31,10 @@ export default function EquipmentModelDetail() {
 }
 
 function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const startCreate = () => {
-    setIsCreateOpen(true);
-  };
-
-  const startEdit= () => {
+  const startEdit = () => {
     setIsEditOpen(true);
   };
 
@@ -53,7 +47,7 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEqu
       <div className="space-y-4 rounded-md bg-slate-900 p-4">
         <div className="flex">
           <h3 className="flex-grow font-medium">Summary</h3>
-          <div className="justify-self-center space-x-4">
+          <div className="space-x-2 justify-self-center">
             <IconEditButton onClick={startEdit} />
             <IconDeleteButton onClick={startDelete} />
           </div>
@@ -64,22 +58,33 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEqu
             <span>Statusfields</span>
           </div>
           <div className="flex h-36 w-36 flex-col items-center justify-center rounded-full border border-yellow-500">
-            <span className="font-medium">{equipmentModel.eventModels.length}</span>
-            <span>Events</span>
+            <span className="font-medium">{equipmentModel.lifecycleModels.length}</span>
+            <span>Lifecycles</span>
           </div>
           <div className="flex h-36 w-36 flex-col items-center justify-center rounded-full border border-green-500">
             <span className="font-medium">{equipmentModel.equipmentModels.length}</span>
             <span>Sub Equipment</span>
           </div>
-          {isCreateOpen && <EquipmentModelCreate setIsOpen={setIsCreateOpen} equipmentModel={equipmentModel} />}
           {isEditOpen && <EquipmentModelEdit setIsOpen={setIsEditOpen} equipmentModel={equipmentModel} />}
           {isDeleteOpen && <EquipmentModelDelete setIsOpen={setIsDeleteOpen} equipmentModel={equipmentModel} />}
         </div>
       </div>
+    </div>
+  );
+}
 
+function ChildEquipment({equipmentModel}: {equipmentModel: GetPopulatedEquipmentModel}) {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const startCreate = () => {
+    setIsCreateOpen(true);
+  };
+
+  return (
+    <>
       <div className="space-y-4 rounded-md bg-slate-900 p-4">
         <div className="space-y-4">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             <h3 className="flex-grow font-medium">Child Equipment</h3>
             <IconAddButton onClick={startCreate} />
           </div>
@@ -92,7 +97,8 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEqu
           </ul>
         </div>
       </div>
-    </div>
+      {isCreateOpen && <EquipmentModelCreate setIsOpen={setIsCreateOpen} equipmentModel={equipmentModel} />}
+    </>
   );
 }
 
@@ -109,9 +115,7 @@ function RecursiveEquipmentBreadCrumbs() {
         return (
           <li key={equipmentModelId} className="flex items-center">
             <BreadCrumb equipmentModelId={equipmentModelId} pathname={curPathname} />
-            {index < pathSegments.length - 1 && (
-              <HiOutlineChevronDoubleRight size="20" className="mx-1 text-gray-500" />
-            )}
+            {index < pathSegments.length - 1 && <HiOutlineChevronDoubleRight size="20" className="mx-1 text-gray-500" />}
           </li>
         );
       })}

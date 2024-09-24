@@ -1,13 +1,10 @@
 import mongoose from "mongoose";
 import { statusModelSchema } from "./statusModelSchema";
-import { eventModelSchema } from "./eventModelSchema";
 import { MachineModel } from "./machineModelSchema";
 import { lifecycleModelSchema } from "./lifecycleModel";
 
 export interface EquipmentModel {
     equipmentName: string;
-    statusModels: any;
-    eventModels: any;
     lifecycleModels: any;
     equipmentModels: EquipmentModel[];
     machineModel: MachineModel;
@@ -21,8 +18,6 @@ export const equipmentModelSchema = new mongoose.Schema<EquipmentModel>(
             type: String,
             required: true,
         },
-        statusModels: [statusModelSchema],
-        eventModels: [eventModelSchema],
         lifecycleModels: [lifecycleModelSchema],
         equipmentModels: [
             {
@@ -52,30 +47,28 @@ equipmentModelSchema.pre("findOne", function () {
     this.populate("equipmentModels");
 });
 
-equipmentModelSchema.pre("find", function () {
-    this.populate({
-        path: "statusModels.ruleStatus",
-        model: "EventEnrichmentRule"
-    });
-});
+// equipmentModelSchema.pre("find", function () {
+//     this.populate({
+//         path: "statusModels.ruleStatus",
+//         model: "EventEnrichmentRule"
+//     });
+// });
+// equipmentModelSchema.pre("findOne", function () {
+//     this.populate({
+//         path: "statusModels.ruleStatus",
+//         model: "EventEnrichmentRule"
+//     });
+// });
 
-equipmentModelSchema.pre("findOne", function () {
-    this.populate({
-        path: "statusModels.ruleStatus",
-        model: "EventEnrichmentRule"
-    });
-});
-
-equipmentModelSchema.pre("find", function () {
-    this.populate({
-        path: "eventModels.ruleStatus",
-        model: "EventAbstractionRule"
-    });
-});
-
-equipmentModelSchema.pre("findOne", function () {
-    this.populate({
-        path: "eventModels.ruleStatus",
-        model: "EventAbstractionRule"
-    });
-});
+// equipmentModelSchema.pre("find", function () {
+//     this.populate({
+//         path: "eventModels.ruleStatus",
+//         model: "EventAbstractionRule"
+//     });
+// });
+// equipmentModelSchema.pre("findOne", function () {
+//     this.populate({
+//         path: "eventModels.ruleStatus",
+//         model: "EventAbstractionRule"
+//     });
+// });
