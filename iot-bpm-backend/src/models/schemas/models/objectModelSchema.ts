@@ -1,40 +1,15 @@
 import mongoose from "mongoose";
-import { statusModelSchema } from "./statusModelSchema";
 
 export const objectModelSchema = new mongoose.Schema(
     {
-        equipmentId: {
+        objectModelName: {
             type: String,
             required: true,
         },
-        objectType: {
-            type: String,
-            required: true,
+        machineModel: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "MachineModel",
         },
-        statusModels: [statusModelSchema],
-        consumable: {
-            type: Boolean,
-            default: false,
-        },
-        singleton: {
-            type: Boolean,
-            default: false,
-        }
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
-
-objectModelSchema
-    .virtual("ruleStatus", {
-        ref: "EventCorrelationRule",
-        localField: "_id",
-        foreignField: "_id",
-        justOne: true,
-    })
-    .get(function (rule) {
-        if (!rule)
-            return "NOT_RELEASED";
-        if (rule.objectType == this.objectType)
-            return "ACTIVE";
-        return "UPDATED"
-    });

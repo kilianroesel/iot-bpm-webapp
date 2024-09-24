@@ -6,11 +6,15 @@ export const eventAbstractionRuleSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        scopeId: {
+            type: String,
+            required: true,
+        },
         equipmentId: {
             type: String,
             required: true,
         },
-        scopeId: {
+        lifecycleId: {
             type: String,
             required: true,
         },

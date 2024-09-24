@@ -53,10 +53,6 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEqu
           </div>
         </div>
         <div className="grid grid-cols-3 gap-4">
-          <div className="flex h-36 w-36 flex-col items-center justify-center rounded-full border border-cyan-500">
-            <span className="font-medium">{equipmentModel.statusModels.length}</span>
-            <span>Statusfields</span>
-          </div>
           <div className="flex h-36 w-36 flex-col items-center justify-center rounded-full border border-yellow-500">
             <span className="font-medium">{equipmentModel.lifecycleModels.length}</span>
             <span>Lifecycles</span>

@@ -114,7 +114,7 @@ export const useCreateEventAbstractionRule = (equipmentModelId: string, lifecycl
 export const useDeleteEventAbstractionRule = (equipmentModelId: string, lifecycleModelId: string, eventModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}$/eventModels/${eventModelId}/rule`);
+      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/eventModels/${eventModelId}/rule`);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),

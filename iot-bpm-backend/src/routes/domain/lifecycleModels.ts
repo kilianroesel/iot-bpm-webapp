@@ -50,7 +50,7 @@ router.post(
 
 router.delete("/:equipmentModelId/lifecycleModels/:lifecycleModelId", async (req, res, next) => {
     try {
-        await EventEnrichmentRule.findByIdAndDelete(req.params.lifecycleModelId);
+        // await EventEnrichmentRule.findByIdAndDelete(req.params.lifecycleModelId);
         const result = await EquipmentModel.findByIdAndUpdate(req.params.equipmentModelId, {
             $pull: {
                 lifecycleModels: { _id: req.params.lifecycleModelId },

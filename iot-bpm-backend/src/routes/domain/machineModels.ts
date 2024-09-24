@@ -1,7 +1,7 @@
 import express from "express";
 import validateSchema from "../../middleware/schemaValidation";
 import { NotFoundError } from "../../middleware/errorhandling";
-import { EventScopingRule, MachineModel } from "../../models/schemas/models";
+import { EventScopingRule, MachineModel, ObjectModel } from "../../models/schemas/models";
 
 export const router = express.Router();
 
@@ -24,7 +24,7 @@ router.post("", validateSchema("createMachineModel"), async (req, res, next) => 
             machineSoftwareVersion: req.body.machineSoftwareVersion,
             machineMasterSoftwareVersion: req.body.machineMasterSoftwareVersion,
         };
-        const newMachineModel = await MachineModel.create([machineModel]);
+        const newMachineModel = await MachineModel.create([machineModel], { new: true, runValidators: true });
         res.status(201).send(newMachineModel);
     } catch (err) {
         next(err);
@@ -65,6 +65,28 @@ router.delete("/:machineModelId", async (req, res, next) => {
         await EventScopingRule.findByIdAndDelete(req.params.machineModelId);
         await MachineModel.findByIdAndDelete(req.params.machineModelId);
         res.status(204).send();
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.post("/:machineModelId/objectModel", validateSchema("createObjectModel"), async (req, res, next) => {
+    try {
+        // Save Equipment Model
+        const machineModel = await MachineModel.findById(req.params.machineModelId);
+        if (!machineModel) throw new NotFoundError("Machine model not found");
+
+        const objectModel = {
+            objectModelName: req.body.objectModelName,
+            machineModel: machineModel._id
+        };
+
+        const newObjectModel = await ObjectModel.create([objectModel], {
+            new: true,
+            runValidators: true,
+        })
+
+        res.status(201).send(newObjectModel);
     } catch (err) {
         next(err);
     }

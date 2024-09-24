@@ -28,37 +28,46 @@ export const eventModelSchema = new mongoose.Schema(
         to: {
             type: Number,
         },
-        creates: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "ObjectModel"
-        }],
-        consumes: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "ObjectModel"
-        }]
+        relations: [
+            {
+                objectInteractionType: {
+                    // create, consume, reference
+                    type: String,
+                    required: true,
+                },
+                qualifier: {
+                    type: String,
+                    required: true,
+                },
+                objectModel: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "ObjectModel",
+                },
+            },
+        ],
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-// eventModelSchema
-//     .virtual("ruleStatus", {
-//         ref: "EventAbstractionRule",
-//         localField: "_id",
-//         foreignField: "_id",
-//         justOne: true,
-//     })
-//     .get(function (rule) {
-//         if (!rule) return "NOT_RELEASED";
-//         if (
-//             rule.eventName == this.eventName &&
-//             rule.field == this.field &&
-//             rule.triggerCategory == this.triggerCategory &&
-//             rule.triggerType == this.triggerType &&
-//             rule.value == this.value &&
-//             rule.from == this.from &&
-//             rule.to == this.to
-//         ) {
-//             return "ACTIVE";
-//         }
-//         return "UPDATED";
-//     });
+eventModelSchema
+    .virtual("ruleStatus", {
+        ref: "EventAbstractionRule",
+        localField: "_id",
+        foreignField: "_id",
+        justOne: true,
+    })
+    .get(function (rule) {
+        if (!rule) return "NOT_RELEASED";
+        if (
+            rule.eventName == this.eventName &&
+            rule.field == this.field &&
+            rule.triggerCategory == this.triggerCategory &&
+            rule.triggerType == this.triggerType &&
+            rule.value == this.value &&
+            rule.from == this.from &&
+            rule.to == this.to
+        ) {
+            return "ACTIVE";
+        }
+        return "UPDATED";
+    });

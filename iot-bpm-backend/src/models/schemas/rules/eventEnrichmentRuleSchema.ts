@@ -14,6 +14,10 @@ export const eventEnrichmentRuleSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        lifecycleId: {
+            type: String,
+            required: true,
+        }
     },
     { timestamps: true }
 );

@@ -1,7 +1,6 @@
 import { queryOptions, useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
-import { GetPopulatedStatusModel } from "./statusModelApi";
 import { GetLifecycleModel } from "./lifecycleModelApi";
 
 export interface CreateEquipmentModel {
@@ -28,7 +27,6 @@ export interface GetEquipmentModel extends GetEquipmentModelBase {
 }
 
 export interface GetPopulatedEquipmentModel extends GetEquipmentModelBase {
-  statusModels: GetPopulatedStatusModel[];
   equipmentModels: GetEquipmentModel[];
   lifecycleModels: GetLifecycleModel[];
 }

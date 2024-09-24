@@ -88,44 +88,43 @@ router.delete(
     }
 );
 
-// router.post(
-//     "/:equipmentModelId/lifecycleModels/:lifecycleModelId/statusModels/:statusModelId/rule",
-//     async (req, res, next) => {
-//         try {
-//             const statusModelId = req.params.statusModelId;
-//             const equipmentModel = await EquipmentModel.findOne({
-//                 _id: req.params.equipmentModelId,
-//                 "statusModels._id": statusModelId,
-//             });
-//             if (!equipmentModel) throw new NotFoundError("Equipment not found");
-//             const statusModel = equipmentModel.statusModels.id(statusModelId);
-//             if (!statusModel) throw new NotFoundError("StatusModel not found");
+router.post(
+    "/:equipmentModelId/lifecycleModels/:lifecycleModelId/statusModels/:statusModelId/rule",
+    async (req, res, next) => {
+        try {
+            const equipmentModel = await EquipmentModel.findById(req.params.equipmentModelId);
+            if (!equipmentModel) throw new NotFoundError("Equipment not found");
+            const lifecycleModel = equipmentModel.lifecycleModels.id(req.params.lifecycleModelId);
+            if (!lifecycleModel) throw new NotFoundError("Lifecycle model not found");
+            const statusModel = lifecycleModel.statusModels.id(req.params.statusModelId);
+            if (!statusModel) throw new NotFoundError("StatusModel not found");
 
-//             const rule = await EventEnrichmentRule.findByIdAndUpdate(
-//                 statusModelId,
-//                 {
-//                     statusName: statusModel.statusName,
-//                     field: statusModel.field,
-//                     equipmentId: equipmentModel._id,
-//                 },
-//                 { new: true, upsert: true, runValidators: true }
-//             );
-//             res.status(202).send(rule);
-//         } catch (err) {
-//             next(err);
-//         }
-//     }
-// );
+            const rule = await EventEnrichmentRule.findByIdAndUpdate(
+                req.params.statusModelId,
+                {
+                    statusName: statusModel.statusName,
+                    field: statusModel.field,
+                    equipmentId: equipmentModel._id,
+                    lifecycleId: lifecycleModel._id,
+                },
+                { new: true, upsert: true, runValidators: true }
+            );
+            res.status(202).send(rule);
+        } catch (err) {
+            next(err);
+        }
+    }
+);
 
-// router.delete(
-//     "/:equipmentModelId/lifecycleModels/:lifecycleModelId/statusModels/:statusModelId/rule",
-//     async (req, res, next) => {
-//         try {
-//             const result = await EventEnrichmentRule.findByIdAndDelete(req.params.statusModelId);
-//             if (!result) throw new NotFoundError("EventEnrichmentRule not found");
-//             res.send(result);
-//         } catch (err) {
-//             next(err);
-//         }
-//     }
-// );
+router.delete(
+    "/:equipmentModelId/lifecycleModels/:lifecycleModelId/statusModels/:statusModelId/rule",
+    async (req, res, next) => {
+        try {
+            const result = await EventEnrichmentRule.findByIdAndDelete(req.params.statusModelId);
+            if (!result) throw new NotFoundError("EventEnrichmentRule not found");
+            res.send(result);
+        } catch (err) {
+            next(err);
+        }
+    }
+);

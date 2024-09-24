@@ -48,8 +48,8 @@ function StatusModel({
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const createEventEnrichmentRule = useCreateEventEnrichmentRule(equipmentModelId, statusModel._id);
-  const deleteEventEnrichmentRule = useDeleteEventEnrichmentRule(equipmentModelId, statusModel._id);
+  const createEventEnrichmentRule = useCreateEventEnrichmentRule(equipmentModelId, lifecycleModelId, statusModel._id);
+  const deleteEventEnrichmentRule = useDeleteEventEnrichmentRule(equipmentModelId, lifecycleModelId, statusModel._id);
 
   const startEditStatus = () => {
     setIsEditOpen(true);

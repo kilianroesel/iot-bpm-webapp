@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import { statusModelSchema } from "./statusModelSchema";
 import { MachineModel } from "./machineModelSchema";
 import { lifecycleModelSchema } from "./lifecycleModel";
 
 export interface EquipmentModel {
     equipmentName: string;
     lifecycleModels: any;
+    objectModels: any;
     equipmentModels: EquipmentModel[];
     machineModel: MachineModel;
     parentEquipmentModel?: MachineModel,
@@ -47,28 +47,28 @@ equipmentModelSchema.pre("findOne", function () {
     this.populate("equipmentModels");
 });
 
-// equipmentModelSchema.pre("find", function () {
-//     this.populate({
-//         path: "statusModels.ruleStatus",
-//         model: "EventEnrichmentRule"
-//     });
-// });
-// equipmentModelSchema.pre("findOne", function () {
-//     this.populate({
-//         path: "statusModels.ruleStatus",
-//         model: "EventEnrichmentRule"
-//     });
-// });
+equipmentModelSchema.pre("find", function () {
+    this.populate({
+        path: "lifecycleModels.statusModels.ruleStatus",
+        model: "EventEnrichmentRule"
+    });
+});
+equipmentModelSchema.pre("findOne", function () {
+    this.populate({
+        path: "lifecycleModels.statusModels.ruleStatus",
+        model: "EventEnrichmentRule"
+    });
+});
 
-// equipmentModelSchema.pre("find", function () {
-//     this.populate({
-//         path: "eventModels.ruleStatus",
-//         model: "EventAbstractionRule"
-//     });
-// });
-// equipmentModelSchema.pre("findOne", function () {
-//     this.populate({
-//         path: "eventModels.ruleStatus",
-//         model: "EventAbstractionRule"
-//     });
-// });
+equipmentModelSchema.pre("find", function () {
+    this.populate({
+        path: "lifecycleModels.eventModels.ruleStatus",
+        model: "EventAbstractionRule"
+    });
+});
+equipmentModelSchema.pre("findOne", function () {
+    this.populate({
+        path: "lifecycleModels.eventModels.ruleStatus",
+        model: "EventAbstractionRule"
+    });
+});
