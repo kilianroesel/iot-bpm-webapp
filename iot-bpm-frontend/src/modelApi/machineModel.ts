@@ -1,6 +1,8 @@
 import { queryOptions, useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
+import { GetEquipmentModel } from "./equipmentModelApi";
+import { GetObjectModel } from "./objectModelApi";
 
 export interface CreateMachineModel {
   machineName: string;
@@ -10,18 +12,16 @@ export interface CreateMachineModel {
   machineMasterSoftwareVersion: string;
 }
 
-export interface GetMachineModel extends CreateMachineModel {
+export interface GetMachineModel extends CreateMachineModel, GetEquipmentModel {
   _id: string;
   __t: string;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface GetPopulatedMachineModel extends GetMachineModel {
   ruleStatus: string;
+  objectModels: GetObjectModel[];
 }
 
-export interface UpdateMachineModel extends CreateMachineModel, GetMachineModel {}
+export interface UpdateMachineModel extends CreateMachineModel {}
 
 export const machineModelsQuery = () =>
   queryOptions({
@@ -45,7 +45,7 @@ export const machineModelQuery = (machineModelId: string) =>
   queryOptions({
     queryKey: ["domain", "machineModel", machineModelId],
     queryFn: async () => {
-      const response = await apiInstance.get<GetPopulatedMachineModel>(`/domain/machineModels/${machineModelId}`);
+      const response = await apiInstance.get<GetMachineModel>(`/domain/machineModels/${machineModelId}`);
       return response.data;
     },
   });

@@ -1,4 +1,4 @@
-import { useState, FormEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { useState, FormEvent, Dispatch, SetStateAction } from "react";
 import { CancelButton, SubmitButton } from "../../../../components/forms/Buttons";
 import { Input, Select } from "../../../../components/forms/Input";
 import { Dialog } from "../../../../components/forms/Dialog";
@@ -40,14 +40,6 @@ export default function EventModelCreate({
     to: "",
   });
   const createEventModelMutation = useCreateEventModel(equipmentModelId, lifecycleModelId);
-  const ref = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    ref.current?.showModal();
-    return () => {
-      ref.current?.close();
-    };
-  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -88,7 +80,7 @@ export default function EventModelCreate({
   };
 
   return (
-    <Dialog ref={ref}>
+    <Dialog>
       <Form onSubmit={submit}>
         <FormHeader>Add Event Model</FormHeader>
         <FormLabel>

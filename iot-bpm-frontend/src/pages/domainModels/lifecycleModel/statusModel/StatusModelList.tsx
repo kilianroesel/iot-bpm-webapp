@@ -3,15 +3,15 @@ import StatusCreate from "./StatusCreate";
 import StatusDelete from "./StatusModelDelete";
 import StatusEdit from "./StatusEdit";
 import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../../components/links/IconButtons";
-import { GetPopulatedStatusModel, useCreateEventEnrichmentRule, useDeleteEventEnrichmentRule } from "../../../../modelApi/statusModelApi";
+import { GetStatusModel, useCreateEventEnrichmentRule, useDeleteEventEnrichmentRule } from "../../../../modelApi/statusModelApi";
 import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiOutlineDocumentArrowDown, HiOutlineDocumentArrowUp } from "react-icons/hi2";
 
-export function StatusModels({
+export function StatusModelList({
   statusModels,
   equipmentModelId,
   lifecycleModelId,
 }: {
-  statusModels: GetPopulatedStatusModel[];
+  statusModels: GetStatusModel[];
   equipmentModelId: string;
   lifecycleModelId: string;
 }) {
@@ -41,7 +41,7 @@ function StatusModel({
   equipmentModelId,
   lifecycleModelId,
 }: {
-  statusModel: GetPopulatedStatusModel;
+  statusModel: GetStatusModel;
   equipmentModelId: string;
   lifecycleModelId: string;
 }) {

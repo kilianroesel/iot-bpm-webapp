@@ -11,7 +11,7 @@ import {
 } from "../../../../modelApi/eventModelApi";
 import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiOutlineDocumentArrowDown, HiOutlineDocumentArrowUp } from "react-icons/hi2";
 
-export function EventModels({
+export function EventModelList({
   eventModels,
   equipmentModelId,
   lifecycleModelId,

@@ -23,6 +23,6 @@ export const updateObjectModel: JSONSchemaType<UpdateObjectModel> = {
         _id: { type: "string" },
         objectModelName: { type: "string" },
     },
-    required: ["_id", "objectModelName"],
+    required: ["objectModelName"],
     additionalProperties: false,
 };

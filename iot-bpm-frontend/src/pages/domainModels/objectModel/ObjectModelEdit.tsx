@@ -1,26 +1,28 @@
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { useState, FormEvent, Dispatch, SetStateAction } from "react";
 import { Dialog } from "../../../components/forms/Dialog";
-import { Input } from "../../../components/forms/Input";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
-import { CreateEquipmentModel, GetEquipmentModel, useCreateEquipment } from "../../../modelApi/equipmentModelApi";
+import { Input } from "../../../components/forms/Input";
+import { GetObjectModel, UpdateObjectModel, useUpdateObjectModel } from "../../../modelApi/objectModelApi";
 
-export default function EquipmentModelCreate({
+export default function ObjectModelEdit({
   setIsOpen,
-  equipmentModel,
+  objectModel,
+  machineModelId,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  equipmentModel: GetEquipmentModel;
+  objectModel: GetObjectModel;
+  machineModelId: string;
 }) {
-  const [newEquipmentModel, setNewEquipmentModel] = useState<CreateEquipmentModel>({
-    equipmentName: "",
+  const [newObjectModel, setNewObjectModel] = useState<UpdateObjectModel>({
+    objectModelName: objectModel.objectModelName
   });
-  const mutate = useCreateEquipment(equipmentModel._id);
+  const mutate = useUpdateObjectModel(machineModelId, objectModel._id);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setNewEquipmentModel({
-      ...newEquipmentModel,
+    setNewObjectModel({
+      ...newObjectModel,
       [name]: value,
     });
   };
@@ -31,7 +33,7 @@ export default function EquipmentModelCreate({
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutate.mutate(newEquipmentModel, {
+    mutate.mutate(newObjectModel, {
       onSuccess: stopCreating,
     });
   };
@@ -39,10 +41,10 @@ export default function EquipmentModelCreate({
   return (
     <Dialog>
       <Form onSubmit={submit}>
-        <FormHeader>Create Child Equipment for {equipmentModel.equipmentName}</FormHeader>
+        <FormHeader>Edit Object Model</FormHeader>
         <FormLabel>
-          <span>Name</span>
-          <Input aria-label="Status Name" type="text" name="equipmentName" onChange={handleChange} value={newEquipmentModel.equipmentName} />
+          <span>Object Model Name</span>
+          <Input type="text" name="objectModelName" onChange={handleChange} value={newObjectModel.objectModelName} />
         </FormLabel>
         <div className="space-x-4">
           <SubmitButton type="submit">Save</SubmitButton>

@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
 import { GetRangeTriggerEventModel, GetScalarTriggerEventModel } from "./eventModelApi";
-import { GetPopulatedStatusModel } from "./statusModelApi";
+import { GetStatusModel } from "./statusModelApi";
 
 export interface CreateLifecycleModel {
   lifecycleName: string;
@@ -11,7 +11,7 @@ export interface GetLifecycleModelBase extends CreateLifecycleModel {
   _id: string;
   __t: string;
   eventModels: (GetScalarTriggerEventModel | GetRangeTriggerEventModel)[];
-  statusModels: GetPopulatedStatusModel[];
+  statusModels: GetStatusModel[];
   updatedAt: String;
   createdAt: String;
 }
@@ -54,7 +54,6 @@ export const useDeleteLifecycleModel = (equipmentModelId: string, lifecycleModel
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels"] });
-      queryClient.removeQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] });
     },
   });
 

@@ -7,8 +7,8 @@ import { HiOutlineChevronDoubleRight } from "react-icons/hi2";
 import EquipmentModelDelete from "./EquipmentModelDelete";
 import { equipmentModelQuery } from "../../../modelApi/equipmentModelApi";
 import { IconAddButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
-import { GetPopulatedEquipmentModel } from "../../../modelApi/equipmentModelApi";
-import { LifecycleModels } from "../lifecycleModel/LifecycleModel";
+import { GetEquipmentModel } from "../../../modelApi/equipmentModelApi";
+import { LifecycleModelList } from "../lifecycleModel/LifecycleModelList";
 import EquipmentModelEdit from "./EquipmentModelEdit";
 
 export default function EquipmentModelDetail() {
@@ -24,13 +24,13 @@ export default function EquipmentModelDetail() {
         <ChildEquipment equipmentModel={equipmentModel} />
       </div>
       <div>
-        <LifecycleModels equipmentModel={equipmentModel} />
+        <LifecycleModelList equipmentModel={equipmentModel} />
       </div>
     </div>
   );
 }
 
-function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
+function EquipmentOverview({ equipmentModel }: { equipmentModel: GetEquipmentModel }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
@@ -69,7 +69,7 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetPopulatedEqu
   );
 }
 
-function ChildEquipment({equipmentModel}: {equipmentModel: GetPopulatedEquipmentModel}) {
+function ChildEquipment({equipmentModel}: {equipmentModel: GetEquipmentModel}) {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const startCreate = () => {

@@ -1,4 +1,4 @@
-import { FormEvent, SetStateAction, Dispatch, useEffect, useRef } from "react";
+import { FormEvent, SetStateAction, Dispatch } from "react";
 import { Dialog } from "../../../components/forms/Dialog";
 import { CancelButton, DeleteButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader } from "../../../components/forms/Form";
@@ -14,14 +14,6 @@ export default function LifecycleModelDelete({
   equipmentModelId: string;
 }) {
   const mutate = useDeleteLifecycleModel(equipmentModelId, lifecycleModel._id);
-  const ref = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    ref.current?.showModal();
-    return () => {
-      ref.current?.close();
-    };
-  }, []);
 
   const stopDeleting = () => {
     setIsOpen(false);
@@ -35,7 +27,7 @@ export default function LifecycleModelDelete({
   };
 
   return (
-    <Dialog ref={ref}>
+    <Dialog>
       <Form onSubmit={submit}>
         <FormHeader>Delete Lifecycle Model</FormHeader>
         <div className="space-x-4">

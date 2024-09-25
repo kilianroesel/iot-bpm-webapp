@@ -7,9 +7,9 @@ export const objectModelSchema = new mongoose.Schema(
             required: true,
         },
         machineModel: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "MachineModel",
-        },
+            type: mongoose.Types.ObjectId,
+            ref: "MachineModel"
+        }
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

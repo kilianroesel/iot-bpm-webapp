@@ -16,9 +16,8 @@ export interface UpdateStatusModel extends CreateStatusModel {
   _id: string;
   __t: string;
 }
-export interface GetStatusModel extends GetStatusModelBase {}
 
-export interface GetPopulatedStatusModel extends GetStatusModelBase {
+export interface GetStatusModel extends GetStatusModelBase {
   ruleStatus: string;
 }
 

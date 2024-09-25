@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { IconAddButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
-import { GetPopulatedEquipmentModel } from "../../../modelApi/equipmentModelApi";
+import { GetEquipmentModel } from "../../../modelApi/equipmentModelApi";
 import { GetLifecycleModel } from "../../../modelApi/lifecycleModelApi";
 import LifecycleModelEdit from "./LifecycleModelEdit";
 import LifecycleModelCreate from "./LifecycleModelCreate";
 import LifecycleModelDelete from "./LifecycleModelDelete";
 import { HiChevronDown } from "react-icons/hi2";
-import { EventModels } from "./eventModel/EventModels";
-import { StatusModels } from "./statusModel/StatusModels";
+import { EventModelList } from "./eventModel/EventModelList";
+import { StatusModelList } from "./statusModel/StatusModelList";
 
-export function LifecycleModels({ equipmentModel }: { equipmentModel: GetPopulatedEquipmentModel }) {
+export function LifecycleModelList({ equipmentModel }: { equipmentModel: GetEquipmentModel }) {
   const [isCreatingOpen, setIsCreatingOpen] = useState(false);
 
   return (
@@ -58,7 +58,7 @@ function LifecycleModel({ lifecycleModel, equipmentModelId }: { lifecycleModel: 
         <div className="ml-6 space-y-2">
           <span className="font-light">Lifecycle Events</span>
           <div>
-            <EventModels
+            <EventModelList
               eventModels={lifecycleModel.eventModels}
               equipmentModelId={equipmentModelId}
               lifecycleModelId={lifecycleModel._id}
@@ -66,7 +66,7 @@ function LifecycleModel({ lifecycleModel, equipmentModelId }: { lifecycleModel: 
           </div>
           <span className="font-light">Lifecycle Status</span>
           <div>
-            <StatusModels
+            <StatusModelList
               statusModels={lifecycleModel.statusModels}
               equipmentModelId={equipmentModelId}
               lifecycleModelId={lifecycleModel._id}

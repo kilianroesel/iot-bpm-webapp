@@ -1,4 +1,4 @@
-import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Dialog } from "../../../components/forms/Dialog";
 import { Input } from "../../../components/forms/Input";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
@@ -18,14 +18,6 @@ export default function MachineModelCreate({
     machineMasterSoftwareVersion: "",
   });
   const mutate = useCreateMachineModel();
-  const ref = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    ref.current?.showModal();
-    return () => {
-      ref.current?.close();
-    };
-  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -47,7 +39,7 @@ export default function MachineModelCreate({
   };
 
   return (
-    <Dialog ref={ref}>
+    <Dialog>
       <Form onSubmit={submit}>
         <FormHeader>Create Machine Description</FormHeader>
         <FormLabel>

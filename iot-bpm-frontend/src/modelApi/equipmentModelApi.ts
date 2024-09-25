@@ -7,26 +7,12 @@ export interface CreateEquipmentModel {
   equipmentName: string;
 }
 
-interface GetEquipmentModelBase extends CreateEquipmentModel {
-  _id: string;
-  __t: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface UpdateEquipmentModel extends CreateEquipmentModel {
   _id: string;
 }
 
-export interface GetEquipmentModel extends GetEquipmentModelBase {
+export interface GetEquipmentModel extends CreateEquipmentModel {
   _id: string;
-  __t: string;
-  statusModels: string[];
-  lifecycleModels: string[];
-  equipmentModels: string[];
-}
-
-export interface GetPopulatedEquipmentModel extends GetEquipmentModelBase {
   equipmentModels: GetEquipmentModel[];
   lifecycleModels: GetLifecycleModel[];
 }
@@ -43,7 +29,7 @@ export const equipmentModelQuery = (equipmentModelId: string) =>
 export const useCreateEquipment = (equipmentModelId: string) =>
   useMutation({
     mutationFn: async (payload: CreateEquipmentModel) => {
-      const response = await apiInstance.post<GetPopulatedEquipmentModel>(
+      const response = await apiInstance.post<GetEquipmentModel>(
         `/domain/equipmentModels/${equipmentModelId}/equipmentModels`,
         payload,
       );
@@ -55,7 +41,7 @@ export const useCreateEquipment = (equipmentModelId: string) =>
   export const useUpdateEquipment = (equipmentModelId: string) =>
     useMutation({
       mutationFn: async (payload: UpdateEquipmentModel) => {
-        const response = await apiInstance.post<GetPopulatedEquipmentModel>(
+        const response = await apiInstance.post<GetEquipmentModel>(
           `/domain/equipmentModels/${equipmentModelId}`,
           payload,
         );

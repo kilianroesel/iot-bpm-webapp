@@ -1,4 +1,4 @@
-import { useState, FormEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { useState, FormEvent, Dispatch, SetStateAction, useEffect } from "react";
 import { Input, Select } from "../../../../components/forms/Input";
 import { CancelButton, SubmitButton } from "../../../../components/forms/Buttons";
 import { Dialog } from "../../../../components/forms/Dialog";
@@ -43,15 +43,6 @@ export default function EventModelEdit({
     to: eventModel.triggerCategory == "RANGE_TRIGGER" ?  eventModel.to.toString() : "",
   });
 
-  const ref = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    ref.current?.showModal();
-    return () => {
-      ref.current?.close();
-    };
-  }, []);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
     setUpdatedEventModel({
@@ -91,7 +82,7 @@ export default function EventModelEdit({
   };
 
   return (
-    <Dialog ref={ref}>
+    <Dialog>
       <Form onSubmit={submit}>
         <FormHeader>Edit Event Description</FormHeader>
         <FormLabel>

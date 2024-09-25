@@ -1,4 +1,4 @@
-import { useState, FormEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { useState, FormEvent, Dispatch, SetStateAction } from "react";
 import { Dialog } from "../../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../../components/forms/Form";
 import { CancelButton, SubmitButton } from "../../../../components/forms/Buttons";
@@ -23,14 +23,6 @@ export default function StatusEdit({
     field: statusModel.field
   });
   const mutate = useUpdateStatusModel(equipmentModelId, lifecycleModelId, statusModel._id);
-  const ref = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    ref.current?.showModal();
-    return () => {
-      ref.current?.close();
-    };
-  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -51,7 +43,7 @@ export default function StatusEdit({
   };
 
   return (
-    <Dialog ref={ref}>
+    <Dialog>
       <Form onSubmit={submit}>
         <FormHeader className="font-medium">Edit StatusField</FormHeader>
         <FormLabel>

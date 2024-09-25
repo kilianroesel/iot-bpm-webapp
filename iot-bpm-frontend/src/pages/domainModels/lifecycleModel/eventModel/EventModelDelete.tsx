@@ -1,4 +1,4 @@
-import { FormEvent, Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { FormEvent, Dispatch, SetStateAction } from "react";
 import { CancelButton, DeleteButton } from "../../../../components/forms/Buttons";
 import { Dialog } from "../../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../../components/forms/Form";
@@ -16,14 +16,6 @@ export default function EventModelDelete({
   lifecycleModelId: string;
 }) {
   const mutate = useDeleteEventModel(equipmentModelId, lifecycleModelId, eventModel._id);
-  const ref = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    ref.current?.showModal();
-    return () => {
-      ref.current?.close();
-    };
-  }, []);
 
   const stopDeleting = () => {
     setIsOpen(false);
@@ -37,7 +29,7 @@ export default function EventModelDelete({
   };
 
   return (
-    <Dialog ref={ref}>
+    <Dialog>
       <Form onSubmit={submit}>
         <FormHeader>Delete Event</FormHeader>
         <FormLabel>
