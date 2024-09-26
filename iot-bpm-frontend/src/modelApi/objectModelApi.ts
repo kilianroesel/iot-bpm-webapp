@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 
 export interface CreateObjectModel {
@@ -13,6 +13,15 @@ export interface GetObjectModel extends CreateObjectModel {
 }
 
 export interface UpdateObjectModel extends CreateObjectModel {}
+
+export const objectModelsQuery = () =>
+  queryOptions({
+    queryKey: ["domain", "objectModels"],
+    queryFn: async () => {
+      const response = await apiInstance.get<any>(`/domain/objectModels`);
+      return response.data;
+    },
+  });
 
 export const useCreateObjectModel = (machineModelId: string) => {
   const queryClient = useQueryClient();

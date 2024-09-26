@@ -52,7 +52,7 @@ function ObjectModel({
   return (
     <>
       <div className="flex">
-        <div className="flex-grow flex items-center space-x-2">
+        <div className="flex-grow flex items-center space-x-4">
           {objectModel.ruleStatus == "NOT_RELEASED" && (
             <span>
               <HiDocumentPlus className="text-blue-500" size="22" />

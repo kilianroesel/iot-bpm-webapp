@@ -1,5 +1,6 @@
 import "dotenv/config";
-import './config/mongoClient';
+import "./config/loggers";
+import "./config/mongoClient";
 import express from "express";
 import domainRouter from "./routes/domain/domainRouter";
 import { appConfig } from "./config/appConfig";
@@ -7,7 +8,10 @@ import { WebSocketTopicServer } from "./webSocketTopicServer";
 import { KafkaClient } from "./config/kafkaClient";
 import cors from "cors";
 import { errorHandler } from "./middleware/errorhandling";
+import { logging } from "./middleware/logging";
+import winston from "winston";
 
+const logger = winston.loggers.get("systemLogger");
 const port = appConfig.port;
 const host = appConfig.host;
 const app = express();
@@ -20,13 +24,15 @@ kafkaClient.on("message", (topic: string, message: any) => {
 });
 
 app.use(cors(appConfig.corsOptions));
+app.use(logging);
 app.use(express.json());
+
 app.use("/domain", domainRouter);
 
 app.use(errorHandler);
 
 const server = app.listen(port, host, async () => {
-    console.log(`Server is running on port ${port} and host ${host}`);
+    logger.info(`Server is running on port ${port} and host ${host}`);
     // await kafkaClient.connectConsumer();
     // await kafkaClient.connectProducer();
 });

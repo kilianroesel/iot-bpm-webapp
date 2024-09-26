@@ -16,7 +16,7 @@ export default function EventModelEdit({
   setIsOpen,
   eventModel,
   equipmentModelId,
-  lifecycleModelId
+  lifecycleModelId,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   eventModel: UpdateScalarTriggerEventModel | UpdateRangeTriggerEventModel;
@@ -29,18 +29,18 @@ export default function EventModelEdit({
     __t: eventModel.__t,
     eventName: eventModel.eventName,
     field: eventModel.field,
-    triggerCategory: eventModel.triggerCategory
+    triggerCategory: eventModel.triggerCategory,
   });
   const [scalarTrigger, setScalarTrigger] = useState<ScalarTriggerEventExtensionForm>({
     triggerCategory: "SCALAR_TRIGGER",
-    triggerType: eventModel.triggerCategory == "SCALAR_TRIGGER" ?  eventModel.triggerType : "CHANGES_TO",
-    value: eventModel.triggerCategory == "SCALAR_TRIGGER" ?  eventModel.value.toString() : ""
+    triggerType: eventModel.triggerCategory == "SCALAR_TRIGGER" ? eventModel.triggerType : "CHANGES_TO",
+    value: eventModel.triggerCategory == "SCALAR_TRIGGER" ? eventModel.value.toString() : "",
   });
   const [rangeTrigger, setRangeTrigger] = useState<RangeTriggerEventExtensionForm>({
     triggerCategory: "RANGE_TRIGGER",
-    triggerType: eventModel.triggerCategory == "RANGE_TRIGGER" ?  eventModel.triggerType : "ENTERS_RANGE_FROM_TO",
-    from: eventModel.triggerCategory == "RANGE_TRIGGER" ?  eventModel.from.toString() : "",
-    to: eventModel.triggerCategory == "RANGE_TRIGGER" ?  eventModel.to.toString() : "",
+    triggerType: eventModel.triggerCategory == "RANGE_TRIGGER" ? eventModel.triggerType : "ENTERS_RANGE_FROM_TO",
+    from: eventModel.triggerCategory == "RANGE_TRIGGER" ? eventModel.from.toString() : "",
+    to: eventModel.triggerCategory == "RANGE_TRIGGER" ? eventModel.to.toString() : "",
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -106,6 +106,10 @@ export default function EventModelEdit({
         {updatedEventModel.triggerCategory == "RANGE_TRIGGER" && (
           <RangeTriggerEdit rangeTrigger={rangeTrigger} setRangeTrigger={setRangeTrigger} />
         )}
+        <FormLabel>
+          <span>Object Models</span>
+          <Select name="objectModelName"></Select>
+        </FormLabel>
         <div className="space-x-4">
           <SubmitButton type="submit">Save</SubmitButton>
           <CancelButton type="button" onClick={stopEdit}>

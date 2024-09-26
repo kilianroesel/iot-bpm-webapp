@@ -49,7 +49,7 @@ function LifecycleModel({ lifecycleModel, equipmentModelId }: { lifecycleModel: 
   return (
     <>
       <details className="group" name="lifecycleModel">
-        <summary className="flex cursor-pointer items-center space-x-2">
+        <summary className="flex cursor-pointer items-center space-x-4">
           <HiChevronDown className="group-open:rotate-180" size="16" />
           <span className="grow font-medium">{lifecycleModel.lifecycleName}</span>
           <IconEditButton onClick={startEdit} />

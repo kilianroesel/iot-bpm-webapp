@@ -64,7 +64,7 @@ export default function MachineModelEdit({
           <span>Machine Master Software Version</span>
           <Input type="text" name="machineMasterSoftwareVersion" onChange={handleChange} value={newMachineDescription.machineMasterSoftwareVersion} />
         </FormLabel>
-        <div className="space-x-2">
+        <div className="space-x-4">
           <SubmitButton type="submit">Save</SubmitButton>
           <CancelButton type="button" onClick={stopEditing} />
         </div>

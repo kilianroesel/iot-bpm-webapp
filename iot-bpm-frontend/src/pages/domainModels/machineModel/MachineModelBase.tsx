@@ -25,7 +25,7 @@ export default function MachineModelBase() {
     <>
       <div className="grid grid-cols-3 gap-4">
         <div className="space-y-4 rounded-md bg-slate-900 p-4">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
             {machineModel.ruleStatus == "NOT_RELEASED" && (
               <span>
                 <HiDocumentPlus className="text-blue-500" size="28" />

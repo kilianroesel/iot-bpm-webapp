@@ -39,7 +39,7 @@ export default function MachineModelsList() {
               <tr key={machineModel._id}>
                 <td className="group flex items-center whitespace-nowrap px-6 py-4">
                   <Link to={machineModel._id}>
-                    <div className="flex items-center space-x-2 group-hover:text-white">
+                    <div className="flex items-center space-x-4 group-hover:text-white">
                       <div>{machineModel.machineName}</div>
                       <HiArrowTopRightOnSquare className="text-blue-600 group-hover:text-blue-500" size="18" />
                     </div>

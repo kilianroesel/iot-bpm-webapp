@@ -12,7 +12,7 @@ export default function MainLayout() {
         <div className="grow">
         <Suspense
           fallback={
-            <div className="flex h-screen items-center justify-center space-x-2 transition">
+            <div className="flex h-screen items-center justify-center space-x-4 transition">
               <div className="h-4 w-4 animate-bounce rounded-full bg-cyan-500"></div>
               <div className="h-4 w-4 animate-bounce rounded-full bg-cyan-500 delay-500"></div>
               <div className="h-4 w-4 animate-bounce rounded-full bg-cyan-500 delay-1000"></div>

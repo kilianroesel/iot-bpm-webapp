@@ -62,7 +62,7 @@ function StatusModel({
   return (
     <>
       <div className="grid grid-cols-8">
-        <div className="col-span-3 flex items-center space-x-2">
+        <div className="col-span-3 flex items-center space-x-4">
           {statusModel.ruleStatus == "NOT_RELEASED" && (
             <span>
               <HiDocumentPlus className="text-blue-500" size="22" />
@@ -81,7 +81,7 @@ function StatusModel({
           <span>{statusModel.statusName}</span>
         </div>
         <div className="col-span-4 truncate">{statusModel.field}</div>
-        <div className="col-span-1 flex items-center justify-end space-x-2">
+        <div className="col-span-1 flex items-center justify-end space-x-4">
           {(statusModel.ruleStatus == "NOT_RELEASED" || statusModel.ruleStatus == "UPDATED") && (
             <IconButton
               onClick={() => createEventEnrichmentRule.mutate()}

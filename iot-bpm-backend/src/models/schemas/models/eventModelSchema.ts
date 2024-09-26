@@ -30,6 +30,10 @@ export const eventModelSchema = new mongoose.Schema(
         },
         relations: [
             {
+                objectModel: {
+                    type: mongoose.Types.ObjectId,
+                    ref: "ObjectModel",
+                },
                 objectInteractionType: {
                     // create, consume, reference
                     type: String,
@@ -38,10 +42,6 @@ export const eventModelSchema = new mongoose.Schema(
                 qualifier: {
                     type: String,
                     required: true,
-                },
-                objectModel: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "ObjectModel",
                 },
             },
         ],

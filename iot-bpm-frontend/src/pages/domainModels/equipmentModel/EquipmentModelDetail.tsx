@@ -47,7 +47,7 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetEquipmentMod
       <div className="space-y-4 rounded-md bg-slate-900 p-4">
         <div className="flex">
           <h3 className="flex-grow font-medium">Summary</h3>
-          <div className="space-x-2 justify-self-center">
+          <div className="space-x-4 justify-self-center">
             <IconEditButton onClick={startEdit} />
             <IconDeleteButton onClick={startDelete} />
           </div>
@@ -80,7 +80,7 @@ function ChildEquipment({equipmentModel}: {equipmentModel: GetEquipmentModel}) {
     <>
       <div className="space-y-4 rounded-md bg-slate-900 p-4">
         <div className="space-y-4">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
             <h3 className="flex-grow font-medium">Child Equipment</h3>
             <IconAddButton onClick={startCreate} />
           </div>

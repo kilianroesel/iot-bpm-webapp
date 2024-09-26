@@ -42,12 +42,11 @@ export const updateMachineModel: JSONSchemaType<UpdateMachineModel> = {
         machineMasterSoftwareVersion: { type: "string" },
     },
     required: [
-        "_id",
         "machineName",
         "versionCsiStd",
         "versionCsiSpecific",
         "machineSoftwareVersion",
         "machineMasterSoftwareVersion",
     ],
-    additionalProperties: true,
+    additionalProperties: false,
 };
