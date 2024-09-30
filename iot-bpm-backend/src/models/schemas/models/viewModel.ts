@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import { eventModelSchema } from "./eventModelSchema";
 import { statusModelSchema } from "./statusModelSchema";
 
-export const lifecycleModelSchema = new mongoose.Schema(
+export const viewModelSchema = new mongoose.Schema(
     {
-        lifecycleName: {
+        viewName: {
             type: String,
             required: true,
         },

@@ -8,7 +8,7 @@ import EquipmentModelDelete from "./EquipmentModelDelete";
 import { equipmentModelQuery } from "../../../modelApi/equipmentModelApi";
 import { IconAddButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
 import { GetEquipmentModel } from "../../../modelApi/equipmentModelApi";
-import { LifecycleModelList } from "../lifecycleModel/LifecycleModelList";
+import ViewModelList from "../viewModel/ViewModelList";
 import EquipmentModelEdit from "./EquipmentModelEdit";
 
 export default function EquipmentModelDetail() {
@@ -24,7 +24,7 @@ export default function EquipmentModelDetail() {
         <ChildEquipment equipmentModel={equipmentModel} />
       </div>
       <div>
-        <LifecycleModelList equipmentModel={equipmentModel} />
+        <ViewModelList equipmentModel={equipmentModel} />
       </div>
     </div>
   );
@@ -54,8 +54,8 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetEquipmentMod
         </div>
         <div className="grid grid-cols-3 gap-4">
           <div className="flex h-36 w-36 flex-col items-center justify-center rounded-full border border-yellow-500">
-            <span className="font-medium">{equipmentModel.lifecycleModels.length}</span>
-            <span>Lifecycles</span>
+            <span className="font-medium">{equipmentModel.viewModels.length}</span>
+            <span>Views</span>
           </div>
           <div className="flex h-36 w-36 flex-col items-center justify-center rounded-full border border-green-500">
             <span className="font-medium">{equipmentModel.equipmentModels.length}</span>

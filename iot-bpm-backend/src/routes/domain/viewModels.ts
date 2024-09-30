@@ -5,14 +5,14 @@ import { EquipmentModel } from "../../models/schemas/models";
 
 export const router = express.Router();
 
-router.post("/:equipmentModelId/lifecycleModels", validateSchema("createLifecycleModel"), async (req, res, next) => {
+router.post("/:equipmentModelId/viewModels", validateSchema("createViewModel"), async (req, res, next) => {
     try {
-        const lifecycleModel = {
-            lifecycleName: req.body.lifecycleName,
+        const viewModel = {
+            viewName: req.body.viewName,
         };
         const equipmentModel = await EquipmentModel.findByIdAndUpdate(
             req.params.equipmentModelId,
-            { $addToSet: { lifecycleModels: lifecycleModel } },
+            { $addToSet: { viewModels: viewModel } },
             { new: true, runValidators: true }
         );
         if (!equipmentModel) throw new NotFoundError("Equipment Model not found");
@@ -23,24 +23,24 @@ router.post("/:equipmentModelId/lifecycleModels", validateSchema("createLifecycl
 });
 
 router.post(
-    "/:equipmentModelId/lifecycleModels/:lifecycleModelId",
-    validateSchema("updateLifecycleModel"),
+    "/:equipmentModelId/viewModels/:viewModelId",
+    validateSchema("updateViewModel"),
     async (req, res, next) => {
         try {
             const updatedDescription = await EquipmentModel.findByIdAndUpdate(
                 req.params.equipmentModelId,
                 {
                     $set: {
-                        "lifecycleModels.$[outer].lifecycleName": req.body.lifecycleName,
+                        "viewModels.$[outer].viewName": req.body.viewName,
                     },
                 },
                 {
-                    arrayFilters: [{ "outer._id": req.params.lifecycleModelId }],
+                    arrayFilters: [{ "outer._id": req.params.viewModelId }],
                     new: true,
                     runValidators: true,
                 }
             );
-            if (!updatedDescription) throw new NotFoundError("Lifecycle Model not found");
+            if (!updatedDescription) throw new NotFoundError("View Model not found");
             res.send(updatedDescription);
         } catch (err) {
             next(err);
@@ -48,31 +48,31 @@ router.post(
     }
 );
 
-router.delete("/:equipmentModelId/lifecycleModels/:lifecycleModelId", async (req, res, next) => {
+router.delete("/:equipmentModelId/viewModels/:viewModelId", async (req, res, next) => {
     try {
-        // await EventEnrichmentRule.findByIdAndDelete(req.params.lifecycleModelId);
+        // await EventEnrichmentRule.findByIdAndDelete(req.params.viewModelId);
         const result = await EquipmentModel.findByIdAndUpdate(req.params.equipmentModelId, {
             $pull: {
-                lifecycleModels: { _id: req.params.lifecycleModelId },
+                viewModels: { _id: req.params.viewModelId },
             },
         });
-        if (!result) throw new NotFoundError("Lifecycle Model not found");
+        if (!result) throw new NotFoundError("View Model not found");
         res.send(result);
     } catch (err) {
         next(err);
     }
 });
 
-// router.post("/:equipmentModelId/statusModels/:lifecycleModelId/rule", async (req, res, next) => {
+// router.post("/:equipmentModelId/statusModels/:viewModelId/rule", async (req, res, next) => {
 //     try {
-//         const statusModelId = req.params.lifecycleModelId;
+//         const statusModelId = req.params.viewModelId;
 //         const equipmentModel = await EquipmentModel.findOne({
 //             _id: req.params.equipmentModelId,
-//             "lifecycleModels._id": statusModelId,
+//             "viewModels._id": statusModelId,
 //         });
 //         if (!equipmentModel) throw new NotFoundError("Equipment not found");
 //         const statusModel = equipmentModel.statusModels.id(statusModelId);
-//         if (!statusModel) throw new NotFoundError("Lifecycle Model not found");
+//         if (!statusModel) throw new NotFoundError("View Model not found");
 
 //         const rule = await EventEnrichmentRule.findByIdAndUpdate(
 //             statusModelId,

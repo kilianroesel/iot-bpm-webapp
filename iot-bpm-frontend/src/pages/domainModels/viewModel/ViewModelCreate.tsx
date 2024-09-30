@@ -3,24 +3,24 @@ import { Dialog } from "../../../components/forms/Dialog";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { Input } from "../../../components/forms/Input";
-import { CreateLifecycleModel, useCreateLifecycleModel } from "../../../modelApi/lifecycleModelApi";
+import { CreateViewModel, useCreateViewModel } from "../../../modelApi/viewModelApi";
 
-export default function LifecycleModelCreate({
+export default function ViewModelCreate({
   setIsOpen,
   equipmentModelId,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   equipmentModelId: string;
 }) {
-  const [newLifecycleModel, setNewLifecycleModel] = useState<CreateLifecycleModel>({
-    lifecycleName: "",
+  const [newViewModel, setNewViewModel] = useState<CreateViewModel>({
+    viewName: "",
   });
-  const mutate = useCreateLifecycleModel(equipmentModelId);
+  const mutate = useCreateViewModel(equipmentModelId);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setNewLifecycleModel({
-      ...newLifecycleModel,
+    setNewViewModel({
+      ...newViewModel,
       [name]: value,
     });
   };
@@ -31,7 +31,7 @@ export default function LifecycleModelCreate({
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutate.mutate(newLifecycleModel, {
+    mutate.mutate(newViewModel, {
       onSuccess: stopCreating,
     });
   };
@@ -39,10 +39,10 @@ export default function LifecycleModelCreate({
   return (
     <Dialog>
       <Form onSubmit={submit}>
-        <FormHeader>Add Lifecycle</FormHeader>
+        <FormHeader>Add View</FormHeader>
         <FormLabel>
-          <span>Lifecycle Name</span>
-          <Input type="text" name="lifecycleName" onChange={handleChange} value={newLifecycleModel.lifecycleName} />
+          <span>View Name</span>
+          <Input type="text" name="viewName" onChange={handleChange} value={newViewModel.viewName} />
         </FormLabel>
         <div className="space-x-4">
           <SubmitButton type="submit">Save</SubmitButton>

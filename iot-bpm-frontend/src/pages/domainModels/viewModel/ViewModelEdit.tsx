@@ -3,28 +3,28 @@ import { Dialog } from "../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Input } from "../../../components/forms/Input";
-import { GetLifecycleModel, UpdateLifecycleModel, useUpdateLifecycleModel } from "../../../modelApi/lifecycleModelApi";
+import { GetViewModel, UpdateViewModel, useUpdateViewModel } from "../../../modelApi/viewModelApi";
 
-export default function LifecycleModelEdit({
+export default function ViewModelEdit({
   setIsOpen,
-  lifecycleModel,
+  viewModel,
   equipmentModelId,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  lifecycleModel: GetLifecycleModel;
+  viewModel: GetViewModel;
   equipmentModelId: string;
 }) {
-  const [updatedLifecycleModel, setUpdatedLifecycleModel] = useState<UpdateLifecycleModel>({
-    _id: lifecycleModel._id,
-    __t: lifecycleModel.__t,
-    lifecycleName: lifecycleModel.lifecycleName,
+  const [updatedViewModel, setUpdatedViewModel] = useState<UpdateViewModel>({
+    _id: viewModel._id,
+    __t: viewModel.__t,
+    viewName: viewModel.viewName,
   });
-  const mutate = useUpdateLifecycleModel(equipmentModelId, lifecycleModel._id);
+  const mutate = useUpdateViewModel(equipmentModelId, viewModel._id);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setUpdatedLifecycleModel({
-      ...updatedLifecycleModel,
+    setUpdatedViewModel({
+      ...updatedViewModel,
       [name]: value,
     });
   };
@@ -34,7 +34,7 @@ export default function LifecycleModelEdit({
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutate.mutate(updatedLifecycleModel, {
+    mutate.mutate(updatedViewModel, {
       onSuccess: stopEditing,
     });
   };
@@ -42,14 +42,14 @@ export default function LifecycleModelEdit({
   return (
     <Dialog>
       <Form onSubmit={submit}>
-        <FormHeader className="font-medium">Edit Lifecycle Model</FormHeader>
+        <FormHeader className="font-medium">Edit View Model</FormHeader>
         <FormLabel>
           <span>Name</span>
           <Input
             type="text"
-            name="lifecycleName"
+            name="viewName"
             onChange={handleChange}
-            value={updatedLifecycleModel.lifecycleName}
+            value={updatedViewModel.viewName}
           />
         </FormLabel>
         <div className="space-x-4">

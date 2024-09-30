@@ -8,14 +8,14 @@ export default function EventModelDelete({
   setIsOpen,
   eventModel,
   equipmentModelId,
-  lifecycleModelId,
+  viewModelId,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   eventModel: GetEventModelBase;
   equipmentModelId: string;
-  lifecycleModelId: string;
+  viewModelId: string;
 }) {
-  const mutate = useDeleteEventModel(equipmentModelId, lifecycleModelId, eventModel._id);
+  const mutate = useDeleteEventModel(equipmentModelId, viewModelId, eventModel._id);
 
   const stopDeleting = () => {
     setIsOpen(false);

@@ -15,11 +15,11 @@ import {
 export default function EventModelCreate({
   setIsOpen,
   equipmentModelId,
-  lifecycleModelId
+  viewModelId
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   equipmentModelId: string;
-  lifecycleModelId: string;
+  viewModelId: string;
 }) {
   const [newEventModel, setNewEventModel] = useState<CreateEventModelBase>({
     eventName: "",
@@ -39,7 +39,7 @@ export default function EventModelCreate({
     from: "",
     to: "",
   });
-  const createEventModelMutation = useCreateEventModel(equipmentModelId, lifecycleModelId);
+  const createEventModelMutation = useCreateEventModel(equipmentModelId, viewModelId);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;

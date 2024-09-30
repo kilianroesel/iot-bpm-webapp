@@ -8,17 +8,17 @@ import { CreateStatusModel, useCreateStatusModel } from "../../../../modelApi/st
 export default function StatusModelCreate({
   setIsOpen,
   equipmentModelId,
-  lifecycleModelId
+  viewModelId
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   equipmentModelId: string;
-  lifecycleModelId: string;
+  viewModelId: string;
 }) {
   const [newStatusModel, setNewStatusModel] = useState<CreateStatusModel>({
     statusName: "",
     field: "",
   });
-  const mutate = useCreateStatusModel(equipmentModelId, lifecycleModelId);
+  const mutate = useCreateStatusModel(equipmentModelId, viewModelId);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;

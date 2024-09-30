@@ -71,13 +71,13 @@ machineModelSchema
 machineModelSchema.pre("findOne", function () {
     this.populate({ path: "ruleStatus" });
     this.populate({ path: "equipmentModels", model: "EquipmentModel" });
-    this.populate({ path: "lifecycleModels.eventModels.ruleStatus"});
-    this.populate({ path: "lifecycleModels.statusModels.ruleStatus"});
+    this.populate({ path: "viewModels.eventModels.ruleStatus"});
+    this.populate({ path: "viewModels.statusModels.ruleStatus"});
 });
 
 machineModelSchema.pre("find", function () {
     this.populate({ path: "ruleStatus" });
     this.populate({ path: "equipmentModels", model: "EquipmentModel" });
-    this.populate({ path: "lifecycleModels.eventModels.ruleStatus"});
-    this.populate({ path: "lifecycleModels.statusModels.ruleStatus"});
+    this.populate({ path: "viewModels.eventModels.ruleStatus"});
+    this.populate({ path: "viewModels.statusModels.ruleStatus"});
 });

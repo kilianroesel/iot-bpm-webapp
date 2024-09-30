@@ -21,14 +21,14 @@ export default function EventModelEdit({
   setIsOpen,
   eventModel,
   equipmentModelId,
-  lifecycleModelId,
+  viewModelId,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   eventModel: GetScalarTriggerEventModel | GetRangeTriggerEventModel;
   equipmentModelId: string;
-  lifecycleModelId: string;
+  viewModelId: string;
 }) {
-  const mutate = useUpdateEventModel(equipmentModelId, lifecycleModelId, eventModel._id);
+  const mutate = useUpdateEventModel(equipmentModelId, viewModelId, eventModel._id);
   const queryObjectModels = useQuery(objectModelsQuery());
 
   const [updatedEventModel, setUpdatedEventModel] = useState<BaseUpdateEventModel>({
@@ -149,7 +149,7 @@ export default function EventModelEdit({
         {updatedEventModel.triggerCategory == "RANGE_TRIGGER" && (
           <RangeTriggerEdit rangeTrigger={rangeTrigger} setRangeTrigger={setRangeTrigger} />
         )}
-        <div>
+        <div className="space-y-2">
           <div className="flex items-center space-x-2">
             <span>Resource relations</span>
             <IconAddButton onClick={addEventObjectRelation} />
@@ -170,7 +170,6 @@ export default function EventModelEdit({
                 onChange={handleRelationsChange}
               >
                 <option value="CREATE">CREATE</option>
-                <option value="REFERENCE">REFERENCE</option>
                 <option value="CONSUME">CONSUME</option>
               </Select>
               <Input type="text" name="qualifier" value={relation.qualifier} data-index={index} onChange={handleRelationsChange} />

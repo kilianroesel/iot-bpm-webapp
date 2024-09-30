@@ -14,7 +14,7 @@ export const eventAbstractionRuleSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        lifecycleId: {
+        viewId: {
             type: String,
             required: true,
         },

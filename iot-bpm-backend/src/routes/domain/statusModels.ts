@@ -6,7 +6,7 @@ import { EquipmentModel, EventEnrichmentRule } from "../../models/schemas/models
 export const router = express.Router();
 
 router.post(
-    "/:equipmentModelId/lifecycleModels/:lifecycleModelId/statusModels",
+    "/:equipmentModelId/viewModels/:viewModelId/statusModels",
     validateSchema("createStatusModel"),
     async (req, res, next) => {
         try {
@@ -19,10 +19,10 @@ router.post(
             const equipmentModel = await EquipmentModel.findOneAndUpdate(
                 {
                     _id: req.params.equipmentModelId,
-                    "lifecycleModels._id": req.params.lifecycleModelId,
+                    "viewModels._id": req.params.viewModelId,
                 },
                 {
-                    $push: { "lifecycleModels.$.statusModels": statusModel },
+                    $push: { "viewModels.$.statusModels": statusModel },
                 },
                 { new: true, runValidators: true }
             );
@@ -36,7 +36,7 @@ router.post(
 );
 
 router.post(
-    "/:equipmentModelId/lifecycleModels/:lifecycleModelId/statusModels/:statusModelId",
+    "/:equipmentModelId/viewModels/:viewModelId/statusModels/:statusModelId",
     validateSchema("updateStatusModel"),
     async (req, res, next) => {
         try {
@@ -44,12 +44,12 @@ router.post(
                 req.params.equipmentModelId,
                 {
                     $set: {
-                        "lifecycleModels.$[outer].statusModels.$[inner]": req.body,
+                        "viewModels.$[outer].statusModels.$[inner]": req.body,
                     },
                 },
                 {
                     arrayFilters: [
-                        { "outer._id": req.params.lifecycleModelId },
+                        { "outer._id": req.params.viewModelId },
                         { "inner._id": req.params.statusModelId },
                     ],
                     new: true,
@@ -65,7 +65,7 @@ router.post(
 );
 
 router.delete(
-    "/:equipmentModelId/lifecycleModels/:lifecycleModelId/statusModels/:statusModelId",
+    "/:equipmentModelId/viewModels/:viewModelId/statusModels/:statusModelId",
     async (req, res, next) => {
         try {
             await EventEnrichmentRule.findByIdAndDelete(req.params.statusModelId);
@@ -73,11 +73,11 @@ router.delete(
                 req.params.equipmentModelId,
                 {
                     $pull: {
-                        "lifecycleModels.$[outer].statusModels": { _id: req.params.statusModelId },
+                        "viewModels.$[outer].statusModels": { _id: req.params.statusModelId },
                     },
                 },
                 {
-                    arrayFilters: [{ "outer._id": req.params.lifecycleModelId }],
+                    arrayFilters: [{ "outer._id": req.params.viewModelId }],
                 }
             );
             if (!result) throw new NotFoundError("Status model not found");
@@ -89,14 +89,14 @@ router.delete(
 );
 
 router.post(
-    "/:equipmentModelId/lifecycleModels/:lifecycleModelId/statusModels/:statusModelId/rule",
+    "/:equipmentModelId/viewModels/:viewModelId/statusModels/:statusModelId/rule",
     async (req, res, next) => {
         try {
             const equipmentModel = await EquipmentModel.findById(req.params.equipmentModelId);
             if (!equipmentModel) throw new NotFoundError("Equipment not found");
-            const lifecycleModel = equipmentModel.lifecycleModels.id(req.params.lifecycleModelId);
-            if (!lifecycleModel) throw new NotFoundError("Lifecycle model not found");
-            const statusModel = lifecycleModel.statusModels.id(req.params.statusModelId);
+            const viewModel = equipmentModel.viewModels.id(req.params.viewModelId);
+            if (!viewModel) throw new NotFoundError("View model not found");
+            const statusModel = viewModel.statusModels.id(req.params.statusModelId);
             if (!statusModel) throw new NotFoundError("StatusModel not found");
 
             const rule = await EventEnrichmentRule.findByIdAndUpdate(
@@ -105,7 +105,7 @@ router.post(
                     statusName: statusModel.statusName,
                     field: statusModel.field,
                     equipmentId: equipmentModel._id,
-                    lifecycleId: lifecycleModel._id,
+                    viewId: viewModel._id,
                 },
                 { new: true, upsert: true, runValidators: true }
             );
@@ -117,7 +117,7 @@ router.post(
 );
 
 router.delete(
-    "/:equipmentModelId/lifecycleModels/:lifecycleModelId/statusModels/:statusModelId/rule",
+    "/:equipmentModelId/viewModels/:viewModelId/statusModels/:statusModelId/rule",
     async (req, res, next) => {
         try {
             const result = await EventEnrichmentRule.findByIdAndDelete(req.params.statusModelId);

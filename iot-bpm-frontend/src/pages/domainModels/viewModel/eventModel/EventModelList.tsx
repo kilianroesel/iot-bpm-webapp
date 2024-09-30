@@ -14,11 +14,11 @@ import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiOutlineDocumentArro
 export function EventModelList({
   eventModels,
   equipmentModelId,
-  lifecycleModelId,
+  viewModelId,
 }: {
   eventModels: (GetScalarTriggerEventModel | GetRangeTriggerEventModel)[];
   equipmentModelId: string;
-  lifecycleModelId: string;
+  viewModelId: string;
 }) {
   const [isCreatingOpen, setIsCreatingOpen] = useState(false);
 
@@ -27,13 +27,13 @@ export function EventModelList({
       <ul>
         {eventModels.map((eventModel) => (
           <li key={eventModel._id}>
-            <EventModel equipmentModelId={equipmentModelId} lifecycleModelId={lifecycleModelId} eventModel={eventModel} />
+            <EventModel equipmentModelId={equipmentModelId} viewModelId={viewModelId} eventModel={eventModel} />
           </li>
         ))}
       </ul>
       <div className="flex justify-center">
         {isCreatingOpen && (
-          <EventDescriptionCreate equipmentModelId={equipmentModelId} lifecycleModelId={lifecycleModelId} setIsOpen={setIsCreatingOpen} />
+          <EventDescriptionCreate equipmentModelId={equipmentModelId} viewModelId={viewModelId} setIsOpen={setIsCreatingOpen} />
         )}
         <IconAddButton onClick={() => setIsCreatingOpen(true)} />
       </div>
@@ -44,16 +44,16 @@ export function EventModelList({
 function EventModel({
   eventModel,
   equipmentModelId,
-  lifecycleModelId,
+  viewModelId,
 }: {
   eventModel: GetRangeTriggerEventModel | GetScalarTriggerEventModel;
   equipmentModelId: string;
-  lifecycleModelId: string;
+  viewModelId: string;
 }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const createEventAbstractionRule = useCreateEventAbstractionRule(equipmentModelId, lifecycleModelId, eventModel._id);
-  const deleteEventAbstractionRule = useDeleteEventAbstractionRule(equipmentModelId, lifecycleModelId, eventModel._id);
+  const createEventAbstractionRule = useCreateEventAbstractionRule(equipmentModelId, viewModelId, eventModel._id);
+  const deleteEventAbstractionRule = useDeleteEventAbstractionRule(equipmentModelId, viewModelId, eventModel._id);
 
   const startEdit = () => {
     setIsEditOpen(true);
@@ -111,7 +111,7 @@ function EventModel({
       {isEditOpen && (
         <EventModelEdit
           equipmentModelId={equipmentModelId}
-          lifecycleModelId={lifecycleModelId}
+          viewModelId={viewModelId}
           eventModel={eventModel}
           setIsOpen={setIsEditOpen}
         />
@@ -119,7 +119,7 @@ function EventModel({
       {isDeleteOpen && (
         <EventModelDelete
           equipmentModelId={equipmentModelId}
-          lifecycleModelId={lifecycleModelId}
+          viewModelId={viewModelId}
           eventModel={eventModel}
           setIsOpen={setIsDeleteOpen}
         />

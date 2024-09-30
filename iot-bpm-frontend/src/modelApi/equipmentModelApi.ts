@@ -1,7 +1,7 @@
 import { queryOptions, useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
-import { GetLifecycleModel } from "./lifecycleModelApi";
+import { GetViewModel } from "./viewModelApi";
 
 export interface CreateEquipmentModel {
   equipmentName: string;
@@ -14,7 +14,7 @@ export interface UpdateEquipmentModel extends CreateEquipmentModel {
 export interface GetEquipmentModel extends CreateEquipmentModel {
   _id: string;
   equipmentModels: GetEquipmentModel[];
-  lifecycleModels: GetLifecycleModel[];
+  viewModels: GetViewModel[];
 }
 
 export const equipmentModelQuery = (equipmentModelId: string) =>

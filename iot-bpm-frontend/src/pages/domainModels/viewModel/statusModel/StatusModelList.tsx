@@ -9,11 +9,11 @@ import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiOutlineDocumentArro
 export function StatusModelList({
   statusModels,
   equipmentModelId,
-  lifecycleModelId,
+  viewModelId,
 }: {
   statusModels: GetStatusModel[];
   equipmentModelId: string;
-  lifecycleModelId: string;
+  viewModelId: string;
 }) {
   const [isCreatingOpen, setIsCreatingOpen] = useState(false);
 
@@ -22,14 +22,14 @@ export function StatusModelList({
       <ul>
         {statusModels.map((statusModel) => (
           <li key={statusModel._id}>
-            <StatusModel statusModel={statusModel} equipmentModelId={equipmentModelId} lifecycleModelId={lifecycleModelId} />
+            <StatusModel statusModel={statusModel} equipmentModelId={equipmentModelId} viewModelId={viewModelId} />
           </li>
         ))}
       </ul>
       <div className="flex justify-center">
         <IconAddButton onClick={() => setIsCreatingOpen(true)} />
         {isCreatingOpen && (
-          <StatusCreate setIsOpen={setIsCreatingOpen} equipmentModelId={equipmentModelId} lifecycleModelId={lifecycleModelId} />
+          <StatusCreate setIsOpen={setIsCreatingOpen} equipmentModelId={equipmentModelId} viewModelId={viewModelId} />
         )}
       </div>
     </div>
@@ -39,17 +39,17 @@ export function StatusModelList({
 function StatusModel({
   statusModel,
   equipmentModelId,
-  lifecycleModelId,
+  viewModelId,
 }: {
   statusModel: GetStatusModel;
   equipmentModelId: string;
-  lifecycleModelId: string;
+  viewModelId: string;
 }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const createEventEnrichmentRule = useCreateEventEnrichmentRule(equipmentModelId, lifecycleModelId, statusModel._id);
-  const deleteEventEnrichmentRule = useDeleteEventEnrichmentRule(equipmentModelId, lifecycleModelId, statusModel._id);
+  const createEventEnrichmentRule = useCreateEventEnrichmentRule(equipmentModelId, viewModelId, statusModel._id);
+  const deleteEventEnrichmentRule = useDeleteEventEnrichmentRule(equipmentModelId, viewModelId, statusModel._id);
 
   const startEditStatus = () => {
     setIsEditOpen(true);
@@ -106,7 +106,7 @@ function StatusModel({
         <StatusEdit
           statusModel={statusModel}
           equipmentModelId={equipmentModelId}
-          lifecycleModelId={lifecycleModelId}
+          viewModelId={viewModelId}
           setIsOpen={setIsEditOpen}
         />
       )}
@@ -114,7 +114,7 @@ function StatusModel({
         <StatusDelete
           statusModel={statusModel}
           equipmentModelId={equipmentModelId}
-          lifecycleModelId={lifecycleModelId}
+          viewModelId={viewModelId}
           setIsOpen={setIsDeleteOpen}
         />
       )}

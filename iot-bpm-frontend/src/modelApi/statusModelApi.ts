@@ -21,20 +21,20 @@ export interface GetStatusModel extends GetStatusModelBase {
   ruleStatus: string;
 }
 
-export const useCreateStatusModel = (equipmentModelId: string, lifecycleModelId: string) =>
+export const useCreateStatusModel = (equipmentModelId: string, viewModelId: string) =>
   useMutation({
     mutationFn: async (payload: CreateStatusModel) => {
-      const response = await apiInstance.post<GetStatusModel>(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/statusModels`, payload);
+      const response = await apiInstance.post<GetStatusModel>(`/domain/equipmentModels/${equipmentModelId}/viewModels/${viewModelId}/statusModels`, payload);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),
   });
 
-export const useUpdateStatusModel = (equipmentModelId: string, lifecycleModelId: string, statusModelId: string) =>
+export const useUpdateStatusModel = (equipmentModelId: string, viewModelId: string, statusModelId: string) =>
   useMutation({
     mutationFn: async (payload: UpdateStatusModel) => {
       const response = await apiInstance.post<GetStatusModel>(
-        `/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/statusModels/${statusModelId}`,
+        `/domain/equipmentModels/${equipmentModelId}/viewModels/${viewModelId}/statusModels/${statusModelId}`,
         payload,
       );
       return response.data;
@@ -42,10 +42,10 @@ export const useUpdateStatusModel = (equipmentModelId: string, lifecycleModelId:
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain"] }),
   });
 
-export const useDeleteStatusModel = (equipmentModelId: string, lifecycleModelId: string, statusModelId: string) =>
+export const useDeleteStatusModel = (equipmentModelId: string, viewModelId: string, statusModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/statusModels/${statusModelId}`);
+      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/viewModels/${viewModelId}/statusModels/${statusModelId}`);
       return response.data;
     },
     onSuccess: () => {
@@ -53,19 +53,19 @@ export const useDeleteStatusModel = (equipmentModelId: string, lifecycleModelId:
     },
   });
 
-export const useCreateEventEnrichmentRule = (equipmentModelId: string, lifecycleModelId: string, statusModelId: string) =>
+export const useCreateEventEnrichmentRule = (equipmentModelId: string, viewModelId: string, statusModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/statusModels/${statusModelId}/rule`);
+      const response = await apiInstance.post(`/domain/equipmentModels/${equipmentModelId}/viewModels/${viewModelId}/statusModels/${statusModelId}/rule`);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),
   });
 
-export const useDeleteEventEnrichmentRule = (equipmentModelId: string, lifecycleModelId: string, statusModelId: string) =>
+export const useDeleteEventEnrichmentRule = (equipmentModelId: string, viewModelId: string, statusModelId: string) =>
   useMutation({
     mutationFn: async () => {
-      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/lifecycleModels/${lifecycleModelId}/statusModels/${statusModelId}/rule`);
+      const response = await apiInstance.delete(`/domain/equipmentModels/${equipmentModelId}/viewModels/${viewModelId}/statusModels/${statusModelId}/rule`);
       return response.data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "equipmentModels", equipmentModelId] }),

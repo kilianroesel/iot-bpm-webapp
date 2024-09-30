@@ -5,13 +5,13 @@ import mongoose from "mongoose";
 import mongodb from "../../config/mongoClient";
 import { router as eventModelRouter } from "./eventModels";
 import { router as statusModelRouter } from "./statusModels";
-import { router as lifecycleModelRouter } from "./lifecycleModels";
+import { router as viewModelRouter } from "./viewModels";
 import { EquipmentModel } from "../../models/schemas/models";
 
 export const router = express.Router();
 
 router.use("", statusModelRouter); // "/:equipmentModelId/statusModels"
-router.use("", lifecycleModelRouter);  // "/:equipmentModelId/lifecycleModels"
+router.use("", viewModelRouter);  // "/:equipmentModelId/viewModels"
 router.use("", eventModelRouter); // "/:equipmentModelId/eventModels"
 
 router.get("", async (req, res, next) => {

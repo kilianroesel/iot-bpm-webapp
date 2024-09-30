@@ -1,19 +1,21 @@
 import { FormEvent, SetStateAction, Dispatch } from "react";
-import { Dialog } from "../../../components/forms/Dialog";
-import { CancelButton, DeleteButton } from "../../../components/forms/Buttons";
-import { Form, FormHeader } from "../../../components/forms/Form";
-import { GetLifecycleModel, useDeleteLifecycleModel } from "../../../modelApi/lifecycleModelApi";
+import { Dialog } from "../../../../components/forms/Dialog";
+import { CancelButton, DeleteButton } from "../../../../components/forms/Buttons";
+import { Form, FormHeader } from "../../../../components/forms/Form";
+import { GetStatusModel, useDeleteStatusModel } from "../../../../modelApi/statusModelApi";
 
-export default function LifecycleModelDelete({
+export default function StatusModelDelete({
   setIsOpen,
-  lifecycleModel,
-  equipmentModelId
+  statusModel,
+  equipmentModelId,
+  viewModelId
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  lifecycleModel: GetLifecycleModel;
+  statusModel: GetStatusModel;
   equipmentModelId: string;
+  viewModelId: string;
 }) {
-  const mutate = useDeleteLifecycleModel(equipmentModelId, lifecycleModel._id);
+  const mutate = useDeleteStatusModel(equipmentModelId, viewModelId, statusModel._id);
 
   const stopDeleting = () => {
     setIsOpen(false);
@@ -29,7 +31,7 @@ export default function LifecycleModelDelete({
   return (
     <Dialog>
       <Form onSubmit={submit}>
-        <FormHeader>Delete Lifecycle Model</FormHeader>
+        <FormHeader>Delete StatusField</FormHeader>
         <div className="space-x-4">
           <DeleteButton type="submit" />
           <CancelButton type="button" onClick={stopDeleting}>

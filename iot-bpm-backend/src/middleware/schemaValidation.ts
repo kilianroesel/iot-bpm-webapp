@@ -4,7 +4,7 @@ import { createMachineModel, updateMachineModel } from "../schemas/domain/machin
 import { createEquipmentModel, updateEquipmentModel } from "../schemas/domain/equipmentModelSchema";
 import { createEventModel, updateEventModel } from "../schemas/domain/eventModelSchema";
 import { createStatusModel, updateStatusModel } from "../schemas/domain/statusModelSchema";
-import { createLifecycleModel, updateLifecycleModel } from "../schemas/domain/lifecycleModelSchema";
+import { createViewModel, updateViewModel } from "../schemas/domain/viewModelSchema";
 import { createObjectModel, updateObjectModel } from "../schemas/domain/objectModelSchema";
 
 
@@ -22,8 +22,8 @@ ajv.addSchema(updateEventModel, "updateEventModel");
 ajv.addSchema(createStatusModel, "createStatusModel");
 ajv.addSchema(updateStatusModel, "updateStatusModel");
 
-ajv.addSchema(createLifecycleModel, "createLifecycleModel");
-ajv.addSchema(updateLifecycleModel, "updateLifecycleModel");
+ajv.addSchema(createViewModel, "createViewModel");
+ajv.addSchema(updateViewModel, "updateViewModel");
 
 ajv.addSchema(createObjectModel, "createObjectModel");
 ajv.addSchema(updateObjectModel, "updateObjectModel");

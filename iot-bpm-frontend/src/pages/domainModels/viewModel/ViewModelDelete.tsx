@@ -1,21 +1,19 @@
 import { FormEvent, SetStateAction, Dispatch } from "react";
-import { Dialog } from "../../../../components/forms/Dialog";
-import { CancelButton, DeleteButton } from "../../../../components/forms/Buttons";
-import { Form, FormHeader } from "../../../../components/forms/Form";
-import { GetStatusModel, useDeleteStatusModel } from "../../../../modelApi/statusModelApi";
+import { Dialog } from "../../../components/forms/Dialog";
+import { CancelButton, DeleteButton } from "../../../components/forms/Buttons";
+import { Form, FormHeader } from "../../../components/forms/Form";
+import { GetViewModel, useDeleteViewModel } from "../../../modelApi/viewModelApi";
 
-export default function StatusModelDelete({
+export default function ViewModelDelete({
   setIsOpen,
-  statusModel,
-  equipmentModelId,
-  lifecycleModelId
+  viewModel,
+  equipmentModelId
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  statusModel: GetStatusModel;
+  viewModel: GetViewModel;
   equipmentModelId: string;
-  lifecycleModelId: string;
 }) {
-  const mutate = useDeleteStatusModel(equipmentModelId, lifecycleModelId, statusModel._id);
+  const mutate = useDeleteViewModel(equipmentModelId, viewModel._id);
 
   const stopDeleting = () => {
     setIsOpen(false);
@@ -31,7 +29,7 @@ export default function StatusModelDelete({
   return (
     <Dialog>
       <Form onSubmit={submit}>
-        <FormHeader>Delete StatusField</FormHeader>
+        <FormHeader>Delete View Model</FormHeader>
         <div className="space-x-4">
           <DeleteButton type="submit" />
           <CancelButton type="button" onClick={stopDeleting}>

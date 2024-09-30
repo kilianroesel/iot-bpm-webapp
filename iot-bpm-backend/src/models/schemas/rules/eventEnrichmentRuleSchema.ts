@@ -14,7 +14,7 @@ export const eventEnrichmentRuleSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        lifecycleId: {
+        viewId: {
             type: String,
             required: true,
         }

@@ -9,12 +9,12 @@ export default function StatusEdit({
   setIsOpen,
   statusModel,
   equipmentModelId,
-  lifecycleModelId
+  viewModelId
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   statusModel: GetStatusModel;
   equipmentModelId: string;
-  lifecycleModelId: string;
+  viewModelId: string;
 }) {
   const [updatedStatusField, setUpdatedStatusField] = useState<UpdateStatusModel>({
     _id: statusModel._id,
@@ -22,7 +22,7 @@ export default function StatusEdit({
     statusName: statusModel.statusName,
     field: statusModel.field
   });
-  const mutate = useUpdateStatusModel(equipmentModelId, lifecycleModelId, statusModel._id);
+  const mutate = useUpdateStatusModel(equipmentModelId, viewModelId, statusModel._id);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;

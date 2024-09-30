@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import { MachineModel } from "./machineModelSchema";
-import { lifecycleModelSchema } from "./lifecycleModel";
+import { viewModelSchema } from "./viewModel";
 
 export interface EquipmentModel {
     equipmentName: string;
-    lifecycleModels: any;
+    viewModels: any;
     objectModels: any;
     equipmentModels: EquipmentModel[];
     machineModel: MachineModel;
@@ -18,7 +18,7 @@ export const equipmentModelSchema = new mongoose.Schema<EquipmentModel>(
             type: String,
             required: true,
         },
-        lifecycleModels: [lifecycleModelSchema],
+        viewModels: [viewModelSchema],
         equipmentModels: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -34,12 +34,12 @@ export const equipmentModelSchema = new mongoose.Schema<EquipmentModel>(
 
 equipmentModelSchema.pre("findOne", function () {
     this.populate({ path: "equipmentModels", model: "EquipmentModel" });
-    this.populate({ path: "lifecycleModels.eventModels.ruleStatus"});
-    this.populate({ path: "lifecycleModels.statusModels.ruleStatus"});
+    this.populate({ path: "viewModels.eventModels.ruleStatus"});
+    this.populate({ path: "viewModels.statusModels.ruleStatus"});
 });
 
 equipmentModelSchema.pre("findOne", function () {
     this.populate({ path: "equipmentModels", model: "EquipmentModel" });
-    this.populate({ path: "lifecycleModels.eventModels.ruleStatus"});
-    this.populate({ path: "lifecycleModels.statusModels.ruleStatus"});
+    this.populate({ path: "viewModels.eventModels.ruleStatus"});
+    this.populate({ path: "viewModels.statusModels.ruleStatus"});
 });

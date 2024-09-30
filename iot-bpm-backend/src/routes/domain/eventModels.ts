@@ -6,7 +6,7 @@ import { EquipmentModel, EventAbstractionRule, MachineModel } from "../../models
 export const router = express.Router();
 
 router.post(
-    "/:equipmentModelId/lifecycleModels/:lifecycleModelId/eventModels",
+    "/:equipmentModelId/viewModels/:viewModelId/eventModels",
     validateSchema("createEventModel"),
     async (req, res, next) => {
         try {
@@ -14,10 +14,10 @@ router.post(
             const newEquipmentModel = await EquipmentModel.findOneAndUpdate(
                 {
                     _id: req.params.equipmentModelId,
-                    "lifecycleModels._id": req.params.lifecycleModelId,
+                    "viewModels._id": req.params.viewModelId,
                 },
                 {
-                    $push: { "lifecycleModels.$.eventModels": req.body },
+                    $push: { "viewModels.$.eventModels": req.body },
                 },
                 { new: true, runValidators: true }
             );
@@ -31,7 +31,7 @@ router.post(
 );
 
 router.post(
-    "/:equipmentModelId/lifecycleModels/:lifecycleModelId/eventModels/:eventModelId",
+    "/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelId",
     validateSchema("updateEventModel"),
     async (req, res, next) => {
         try {
@@ -39,12 +39,12 @@ router.post(
                 req.params.equipmentModelId,
                 {
                     $set: {
-                        "lifecycleModels.$[outer].eventModels.$[inner]": req.body,
+                        "viewModels.$[outer].eventModels.$[inner]": req.body,
                     },
                 },
                 {
                     arrayFilters: [
-                        { "outer._id": req.params.lifecycleModelId },
+                        { "outer._id": req.params.viewModelId },
                         { "inner._id": req.params.eventModelId },
                     ],
                     new: true,
@@ -60,7 +60,7 @@ router.post(
 );
 
 router.delete(
-    "/:equipmentModelId/lifecycleModels/:lifecycleModelId/eventModels/:eventModelId",
+    "/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelId",
     async (req, res, next) => {
         try {
             // First delete EventAbstractionRule and remove Event Model, there is no transaction needed
@@ -69,11 +69,11 @@ router.delete(
                 req.params.equipmentModelId,
                 {
                     $pull: {
-                        "lifecycleModels.$[outer].eventModels": { _id: req.params.eventModelId },
+                        "viewModels.$[outer].eventModels": { _id: req.params.eventModelId },
                     },
                 },
                 {
-                    arrayFilters: [{ "outer._id": req.params.lifecycleModelId }],
+                    arrayFilters: [{ "outer._id": req.params.viewModelId }],
                 }
             );
             if (!result) throw new NotFoundError("Event Model not found");
@@ -84,15 +84,15 @@ router.delete(
     }
 );
 
-router.post("/:equipmentModelId/lifecycleModels/:lifecycleModelId/eventModels/:eventModelId/rule", async (req, res, next) => {
+router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelId/rule", async (req, res, next) => {
     try {
-        const lifecycleModelId = req.params.lifecycleModelId;
+        const viewModelId = req.params.viewModelId;
         const eventModelId = req.params.eventModelId;
         const equipmentModel = await EquipmentModel.findById(req.params.equipmentModelId);
         if (!equipmentModel) throw new NotFoundError("Equipment not found");
-        const lifecycleModel = equipmentModel.lifecycleModels.id(lifecycleModelId);
-        if (!lifecycleModel) throw new NotFoundError("Lifecycle Model not found");
-        const eventModel = lifecycleModel.eventModels.id(eventModelId);
+        const viewModel = equipmentModel.viewModels.id(viewModelId);
+        if (!viewModel) throw new NotFoundError("View Model not found");
+        const eventModel = viewModel.eventModels.id(eventModelId);
 
         // Fetch the scope Id, which is the id of the root equipment, i.e. MachineModel
         var scopeId = equipmentModel._id;
@@ -113,7 +113,7 @@ router.post("/:equipmentModelId/lifecycleModels/:lifecycleModelId/eventModels/:e
                         field: eventModel.field,
                         scopeId: scopeId,
                         equipmentId: equipmentModel._id,
-                        lifecycleId: lifecycleModelId,
+                        viewId: viewModelId,
                         triggerCategory: eventModel.triggerCategory,
                         triggerType: eventModel.triggerType,
                         value: eventModel.value,
@@ -129,7 +129,7 @@ router.post("/:equipmentModelId/lifecycleModels/:lifecycleModelId/eventModels/:e
                         field: eventModel.field,
                         scopeId: scopeId,
                         equipmentId: equipmentModel._id,
-                        lifecycleId: lifecycleModelId,
+                        viewId: viewModelId,
                         triggerCategory: eventModel.triggerCategory,
                         triggerType: eventModel.triggerType,
                         from: eventModel.from,
@@ -147,7 +147,7 @@ router.post("/:equipmentModelId/lifecycleModels/:lifecycleModelId/eventModels/:e
     }
 });
 
-router.delete("/:equipmentModelId/lifecycleModels/:lifecycleModelId/eventModels/:eventModelId/rule", async (req, res, next) => {
+router.delete("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelId/rule", async (req, res, next) => {
     try {
         const result = await EventAbstractionRule.findByIdAndDelete(req.params.eventModelId);
         if (!result) throw new NotFoundError("Event Abstraction Rule not found");
