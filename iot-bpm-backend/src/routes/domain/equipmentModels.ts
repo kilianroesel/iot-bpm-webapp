@@ -25,10 +25,7 @@ router.get("", async (req, res, next) => {
 
 router.get("/:equipmentModelId", async (req, res, next) => {
     try {
-        const result = await EquipmentModel.findById(req.params.equipmentModelId).populate({
-            path: 'statusModels.eventEnrichmentRule',
-            model: 'EventEnrichmentRule'
-        });
+        const result = await EquipmentModel.findById(req.params.equipmentModelId);
         if (!result) throw new NotFoundError("Equipment model not found");
         res.send(result);
     } catch (err) {

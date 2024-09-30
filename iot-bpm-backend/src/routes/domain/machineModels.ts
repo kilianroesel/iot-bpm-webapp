@@ -7,7 +7,12 @@ export const router = express.Router();
 
 router.get("", async (req, res, next) => {
     try {
-        const result = await MachineModel.find();
+        const result = await MachineModel.find()
+            // Populate object models here instead of pre findOne hook to avoid circular recursion with the objectModel schema
+            .populate({
+                path: "objectModels",
+                model: "ObjectModel",
+            });
         res.send(result);
     } catch (err) {
         next(err);
@@ -33,7 +38,12 @@ router.post("", validateSchema("createMachineModel"), async (req, res, next) => 
 
 router.get("/:machineModelId", async (req, res, next) => {
     try {
-        const machineModel = await MachineModel.findById(req.params.machineModelId);
+        const machineModel = await MachineModel.findById(req.params.machineModelId)
+            // Populate object models here instead of pre findOne hook to avoid circular recursion with the objectModel schema
+            .populate({
+                path: "objectModels",
+                model: "ObjectModel",
+            });
         if (!machineModel) throw new NotFoundError("Machine Model not found");
         res.send(machineModel);
     } catch (err) {
@@ -104,7 +114,6 @@ router.delete("/:machineModelId/rule", async (req, res, next) => {
     }
 });
 
-
 router.post("/:machineModelId/objectModels", validateSchema("createObjectModel"), async (req, res, next) => {
     try {
         const machineModel = await MachineModel.findById(req.params.machineModelId);
@@ -167,4 +176,3 @@ router.delete("/:machineModelId/objectModels/:objectModelId", async (req, res, n
         next(err);
     }
 });
-

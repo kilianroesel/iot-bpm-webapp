@@ -14,7 +14,7 @@ export function Dialog(props: DetailedHTMLProps<DialogHTMLAttributes<HTMLDialogE
   return (
     <dialog
       ref={ref}
-      className="fixed bottom-0 left-0 right-0 top-0 w-full max-w-3xl rounded-md bg-slate-800 p-4 text-slate-200"
+      className="fixed bottom-0 left-0 right-0 top-0 w-full max-w-4xl rounded-md bg-slate-800 p-4 text-slate-200"
       {...props}
     />
   );

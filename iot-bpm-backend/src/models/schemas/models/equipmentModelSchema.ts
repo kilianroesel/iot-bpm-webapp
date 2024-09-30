@@ -8,7 +8,7 @@ export interface EquipmentModel {
     objectModels: any;
     equipmentModels: EquipmentModel[];
     machineModel: MachineModel;
-    parentEquipmentModel?: MachineModel,
+    parentEquipmentModel?: MachineModel;
     equipmentPath: string;
 }
 
@@ -25,14 +25,6 @@ export const equipmentModelSchema = new mongoose.Schema<EquipmentModel>(
                 ref: "EquipmentModel",
             },
         ],
-        machineModel: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "MachineModel",
-        },
-        parentEquipmentModel: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "MachineModel",
-        },
         equipmentPath: {
             type: String,
         },
@@ -40,35 +32,14 @@ export const equipmentModelSchema = new mongoose.Schema<EquipmentModel>(
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-equipmentModelSchema.pre("find", function () {
-    this.populate("equipmentModels");
-});
 equipmentModelSchema.pre("findOne", function () {
-    this.populate("equipmentModels");
+    this.populate({ path: "equipmentModels", model: "EquipmentModel" });
+    this.populate({ path: "lifecycleModels.eventModels.ruleStatus"});
+    this.populate({ path: "lifecycleModels.statusModels.ruleStatus"});
 });
 
-equipmentModelSchema.pre("find", function () {
-    this.populate({
-        path: "lifecycleModels.statusModels.ruleStatus",
-        model: "EventEnrichmentRule"
-    });
-});
 equipmentModelSchema.pre("findOne", function () {
-    this.populate({
-        path: "lifecycleModels.statusModels.ruleStatus",
-        model: "EventEnrichmentRule"
-    });
-});
-
-equipmentModelSchema.pre("find", function () {
-    this.populate({
-        path: "lifecycleModels.eventModels.ruleStatus",
-        model: "EventAbstractionRule"
-    });
-});
-equipmentModelSchema.pre("findOne", function () {
-    this.populate({
-        path: "lifecycleModels.eventModels.ruleStatus",
-        model: "EventAbstractionRule"
-    });
+    this.populate({ path: "equipmentModels", model: "EquipmentModel" });
+    this.populate({ path: "lifecycleModels.eventModels.ruleStatus"});
+    this.populate({ path: "lifecycleModels.statusModels.ruleStatus"});
 });

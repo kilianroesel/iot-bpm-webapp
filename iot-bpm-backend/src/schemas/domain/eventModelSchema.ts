@@ -50,6 +50,25 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                     ],
                 },
                 value: { type: "number" },
+                relations: {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        properties: {
+                            objectModel: {
+                                type: "string"
+                            },
+                            objectInteractionType: {
+                                type: "string",
+                                enum: ["CREATE", "REFERENCE", "CONSUME"]
+                            },
+                            qualifier: {
+                                type: "string"
+                            }
+                        },
+                        required: ["objectModel", "objectInteractionType", "qualifier", "relations"]
+                    }
+                }
             },
             required: ["eventName", "field", "triggerCategory", "triggerType", "value"],
             additionalProperties: false,
@@ -69,8 +88,27 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                 },
                 from: { type: "number" },
                 to: { type: "number" },
+                relations: {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        properties: {
+                            objectModel: {
+                                type: "string"
+                            },
+                            objectInteractionType: {
+                                type: "string",
+                                enum: ["CREATE", "REFERENCE", "CONSUME"]
+                            },
+                            qualifier: {
+                                type: "string"
+                            }
+                        },
+                        required: ["objectModel", "objectInteractionType", "qualifier"]
+                    }
+                }
             },
-            required: ["eventName", "field", "triggerCategory", "triggerType", "from", "to"],
+            required: ["eventName", "field", "triggerCategory", "triggerType", "from", "to", "relations"],
             additionalProperties: false,
         },
     ],
@@ -111,8 +149,27 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                     ],
                 },
                 value: { type: "number" },
+                relations: {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        properties: {
+                            objectModel: {
+                                type: "string"
+                            },
+                            objectInteractionType: {
+                                type: "string",
+                                enum: ["CREATE", "REFERENCE", "CONSUME"]
+                            },
+                            qualifier: {
+                                type: "string"
+                            }
+                        },
+                        required: ["objectModel", "objectInteractionType", "qualifier"]
+                    }
+                }
             },
-            required: ["_id", "eventName", "field", "triggerCategory", "triggerType", "value"],
+            required: ["eventName", "field", "triggerCategory", "triggerType", "value", "relations"],
             additionalProperties: false,
         },
         {
@@ -131,10 +188,29 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                 },
                 from: { type: "number" },
                 to: { type: "number" },
+                relations: {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        properties: {
+                            objectModel: {
+                                type: "string"
+                            },
+                            objectInteractionType: {
+                                type: "string",
+                                enum: ["CREATE", "REFERENCE", "CONSUME"]
+                            },
+                            qualifier: {
+                                type: "string"
+                            }
+                        },
+                        required: ["objectModel", "objectInteractionType", "qualifier"]
+                    }
+                }
             },
-            required: ["eventName", "field", "triggerCategory", "triggerType", "from", "to", "_id"],
+            required: ["eventName", "field", "triggerCategory", "triggerType", "from", "to", "relations"],
             additionalProperties: false,
         },
     ],
-    required: ["eventName", "field", "_id", "triggerCategory"],
+    required: ["eventName", "field", "triggerCategory"],
 };

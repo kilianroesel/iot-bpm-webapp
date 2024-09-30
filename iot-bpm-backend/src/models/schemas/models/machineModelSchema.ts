@@ -27,7 +27,7 @@ export const machineModelSchema = new mongoose.Schema<MachineModel>(
         machineMasterSoftwareVersion: {
             type: String,
             required: true,
-        }
+        },
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
@@ -41,13 +41,12 @@ machineModelSchema
         this.set({ equipmentName: v });
     });
 
-machineModelSchema
-    .virtual("objectModels", {
-        ref: "ObjectModel",
-        localField: "_id",
-        foreignField: "machineModel",
-        justOne: false,
-    })
+machineModelSchema.virtual("objectModels", {
+    ref: "ObjectModel",
+    localField: "_id",
+    foreignField: "machineModel",
+    justOne: false,
+});
 
 machineModelSchema
     .virtual("ruleStatus", {
@@ -69,30 +68,16 @@ machineModelSchema
         return "UPDATED";
     });
 
-machineModelSchema.pre("find", function () {
-    this.populate({
-        path: "ruleStatus",
-        model: "EventScopingRule",
-    });
-});
-
 machineModelSchema.pre("findOne", function () {
-    this.populate({
-        path: "ruleStatus",
-        model: "EventScopingRule",
-    });
+    this.populate({ path: "ruleStatus" });
+    this.populate({ path: "equipmentModels", model: "EquipmentModel" });
+    this.populate({ path: "lifecycleModels.eventModels.ruleStatus"});
+    this.populate({ path: "lifecycleModels.statusModels.ruleStatus"});
 });
 
 machineModelSchema.pre("find", function () {
-    this.populate({
-        path: "objectModels",
-        model: "ObjectModel",
-    });
-});
-
-machineModelSchema.pre("findOne", function () {
-    this.populate({
-        path: "objectModels",
-        model: "ObjectModel",
-    });
+    this.populate({ path: "ruleStatus" });
+    this.populate({ path: "equipmentModels", model: "EquipmentModel" });
+    this.populate({ path: "lifecycleModels.eventModels.ruleStatus"});
+    this.populate({ path: "lifecycleModels.statusModels.ruleStatus"});
 });

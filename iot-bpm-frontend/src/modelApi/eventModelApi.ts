@@ -33,6 +33,7 @@ export interface GetEventModelBase {
   ruleStatus: string;
   updatedAt: String;
   createdAt: String;
+  relations: EventObjectModelRelation[];
 }
 
 export interface BaseUpdateEventModel {
@@ -41,6 +42,13 @@ export interface BaseUpdateEventModel {
   eventName: string;
   field: string;
   triggerCategory: TriggerCategories;
+  relations: EventObjectModelRelation[];
+}
+
+export interface EventObjectModelRelation {
+  objectModel: string;
+  objectInteractionType: string;
+  qualifier: string;
 }
 
 export interface GetScalarTriggerEventModel extends ScalarTriggerEventExtension, Omit<GetEventModelBase, "triggerCategory"> {}

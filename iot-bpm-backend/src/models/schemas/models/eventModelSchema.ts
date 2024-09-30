@@ -33,6 +33,7 @@ export const eventModelSchema = new mongoose.Schema(
                 objectModel: {
                     type: mongoose.Types.ObjectId,
                     ref: "ObjectModel",
+                    required: true,
                 },
                 objectInteractionType: {
                     // create, consume, reference

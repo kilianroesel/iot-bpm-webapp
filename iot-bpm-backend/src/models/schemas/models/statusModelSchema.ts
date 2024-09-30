@@ -22,9 +22,7 @@ statusModelSchema
         justOne: true,
     })
     .get(function (rule) {
-        if (!rule)
-            return "NOT_RELEASED";
-        if (rule.field == this.field && rule.statusName == this.statusName)
-            return "ACTIVE";
-        return "UPDATED"
+        if (!rule) return "NOT_RELEASED";
+        if (rule.field == this.field && rule.statusName == this.statusName) return "ACTIVE";
+        return "UPDATED";
     });
