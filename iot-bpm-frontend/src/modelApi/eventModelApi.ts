@@ -33,7 +33,7 @@ export interface GetEventModelBase {
   ruleStatus: string;
   updatedAt: String;
   createdAt: String;
-  relations: EventObjectModelRelation[];
+  relations: EventResourceModelRelation[];
 }
 
 export interface BaseUpdateEventModel {
@@ -42,12 +42,12 @@ export interface BaseUpdateEventModel {
   eventName: string;
   field: string;
   triggerCategory: TriggerCategories;
-  relations: EventObjectModelRelation[];
+  relations: EventResourceModelRelation[];
 }
 
-export interface EventObjectModelRelation {
-  objectModel: string;
-  objectInteractionType: string;
+export interface EventResourceModelRelation {
+  resourceModel: string;
+  interactionType: string;
   qualifier: string;
 }
 

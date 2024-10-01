@@ -3,26 +3,26 @@ import { Dialog } from "../../../components/forms/Dialog";
 import { CancelButton, DeleteButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { Input } from "../../../components/forms/Input";
-import { GetObjectModel, UpdateObjectModel, useDeleteObjectModel } from "../../../modelApi/objectModelApi";
+import { GetResourceModel, UpdateResourceModel, useDeleteResourceModel } from "../../../modelApi/resourceModelApi";
 
-export default function ObjectModelEdit({
+export default function ResourceModelEdit({
   setIsOpen,
-  objectModel,
+  resourceModel,
   machineModelId,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  objectModel: GetObjectModel;
+  resourceModel: GetResourceModel;
   machineModelId: string;
 }) {
-  const [newObjectModel, setNewObjectModel] = useState<UpdateObjectModel>({
-    objectModelName: objectModel.objectModelName
+  const [newResourceModel, setNewResourceModel] = useState<UpdateResourceModel>({
+    resourceModelName: resourceModel.resourceModelName
   });
-  const mutate = useDeleteObjectModel(machineModelId, objectModel._id);
+  const mutate = useDeleteResourceModel(machineModelId, resourceModel._id);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setNewObjectModel({
-      ...newObjectModel,
+    setNewResourceModel({
+      ...newResourceModel,
       [name]: value,
     });
   };
@@ -41,10 +41,10 @@ export default function ObjectModelEdit({
   return (
     <Dialog>
       <Form onSubmit={submit}>
-        <FormHeader>Delete Object Model</FormHeader>
+        <FormHeader>Delete Resource Model</FormHeader>
         <FormLabel>
-          <span>Object Model Name</span>
-          <Input type="text" name="objectModelName" onChange={handleChange} value={newObjectModel.objectModelName} />
+          <span>Resource Model Name</span>
+          <Input type="text" name="resourceModelName" onChange={handleChange} value={newResourceModel.resourceModelName} />
         </FormLabel>
         <div className="space-x-4">
           <DeleteButton type="submit">Delete</DeleteButton>

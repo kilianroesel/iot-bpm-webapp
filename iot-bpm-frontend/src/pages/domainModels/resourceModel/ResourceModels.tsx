@@ -1,28 +1,28 @@
 import { useState } from "react";
 import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
-import { GetObjectModel } from "../../../modelApi/objectModelApi";
+import { GetResourceModel } from "../../../modelApi/resourceModelApi";
 import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiRocketLaunch } from "react-icons/hi2";
-import ObjectModelEdit from "./ObjectModelEdit";
-import ObjectModelCreate from "./ObjectModelCreate";
-import ObjectModelDelete from "./ObjectModelDelete";
+import ResourceModelCreate from "./ResourceModelCreate";
+import ResourceModelEdit from "./ResourceModelEdit";
+import ResourceModelDelete from "./ResourceModelDelete";
 
-export function ObjectModels({ objectModels, machineModelId }: { objectModels: GetObjectModel[], machineModelId: string }) {
+export function ResourceModels({ resourceModels, machineModelId }: { resourceModels: GetResourceModel[], machineModelId: string }) {
   const [isCreatingOpen, setIsCreatingOpen] = useState(false);
 
   return (
     <div className="space-y-4 rounded-md bg-slate-900 p-4">
       <div className="flex">
-        <h3 className="flex-grow font-medium">Object Models</h3>
+        <h3 className="flex-grow font-medium">Recource Models</h3>
         <div>
           <IconAddButton onClick={() => setIsCreatingOpen(true)} />
         </div>
-        {isCreatingOpen && <ObjectModelCreate setIsOpen={setIsCreatingOpen} machineModelId={machineModelId} />}
+        {isCreatingOpen && <ResourceModelCreate setIsOpen={setIsCreatingOpen} machineModelId={machineModelId} />}
       </div>
       <div>
         <ul>
-          {objectModels.map((objectModel) => (
-            <li key={objectModel._id}>
-              <ObjectModel machineModelId={machineModelId} objectModel={objectModel} />
+          {resourceModels.map((resourceModel) => (
+            <li key={resourceModel._id}>
+              <ResourceModel machineModelId={machineModelId} resourceModel={resourceModel} />
             </li>
           ))}
         </ul>
@@ -31,11 +31,11 @@ export function ObjectModels({ objectModels, machineModelId }: { objectModels: G
   );
 }
 
-function ObjectModel({
-  objectModel,
+function ResourceModel({
+  resourceModel,
   machineModelId,
 }: {
-  objectModel: GetObjectModel;
+  resourceModel: GetResourceModel;
   machineModelId: string;
 }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -53,25 +53,25 @@ function ObjectModel({
     <>
       <div className="flex">
         <div className="flex-grow flex items-center space-x-4">
-          {objectModel.ruleStatus == "NOT_RELEASED" && (
+          {resourceModel.ruleStatus == "NOT_RELEASED" && (
             <span>
               <HiDocumentPlus className="text-blue-500" size="22" />
             </span>
           )}
-          {objectModel.ruleStatus == "ACTIVE" && (
+          {resourceModel.ruleStatus == "ACTIVE" && (
             <span>
               <HiDocumentCheck className="text-green-500" size="22" />
             </span>
           )}
-          {objectModel.ruleStatus == "UPDATED" && (
+          {resourceModel.ruleStatus == "UPDATED" && (
             <span>
               <HiDocumentMinus className="text-orange-500" size="22" />
             </span>
           )}
-          <span>{objectModel.objectModelName}</span>
+          <span>{resourceModel.resourceModelName}</span>
         </div>
         <div className="flex items-center justify-end space-x-4">
-          {(objectModel.ruleStatus == "NOT_RELEASED" || objectModel.ruleStatus == "UPDATED") && (
+          {(resourceModel.ruleStatus == "NOT_RELEASED" || resourceModel.ruleStatus == "UPDATED") && (
             <IconButton
               onClick={() => console.log("click")}
               className="inline-block h-full text-fuchsia-600 hover:text-fuchsia-500"
@@ -83,8 +83,8 @@ function ObjectModel({
           <IconDeleteButton onClick={startDelete} />
         </div>
       </div>
-      {isEditOpen && <ObjectModelEdit machineModelId={machineModelId} objectModel={objectModel} setIsOpen={setIsEditOpen} />}
-      {isDeleteOpen && <ObjectModelDelete machineModelId={machineModelId} objectModel={objectModel} setIsOpen={setIsDeleteOpen} />}
+      {isEditOpen && <ResourceModelEdit machineModelId={machineModelId} resourceModel={resourceModel} setIsOpen={setIsEditOpen} />}
+      {isDeleteOpen && <ResourceModelDelete machineModelId={machineModelId} resourceModel={resourceModel} setIsOpen={setIsDeleteOpen} />}
     </>
   );
 }

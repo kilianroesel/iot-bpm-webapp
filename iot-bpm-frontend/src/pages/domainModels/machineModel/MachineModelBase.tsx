@@ -5,7 +5,7 @@ import { IconButton, IconEditButton } from "../../../components/links/IconButton
 import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiOutlineDocumentArrowDown, HiOutlineDocumentArrowUp } from "react-icons/hi2";
 import { useState } from "react";
 import MachineModelEdit from "./MachineModelEdit";
-import { ObjectModels } from "../objectModel/ObjectModels";
+import { ResourceModels } from "../resourceModel/ResourceModels";
 
 export default function MachineModelBase() {
   const params = useParams();
@@ -79,7 +79,7 @@ export default function MachineModelBase() {
         </div>
       </div>
       <div>
-        <ObjectModels objectModels={machineModel.objectModels} machineModelId={machineModel._id} />
+        <ResourceModels resourceModels={machineModel.resourceModels} machineModelId={machineModel._id} />
       </div>
     </>
   );

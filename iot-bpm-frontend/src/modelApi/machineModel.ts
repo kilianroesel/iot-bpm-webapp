@@ -2,7 +2,7 @@ import { queryOptions, useMutation } from "@tanstack/react-query";
 import { apiInstance } from "../config/modelApiConfig";
 import { queryClient } from "../config/queryClientConfig";
 import { GetEquipmentModel } from "./equipmentModelApi";
-import { GetObjectModel } from "./objectModelApi";
+import { GetResourceModel } from "./resourceModelApi";
 
 export interface CreateMachineModel {
   machineName: string;
@@ -18,7 +18,7 @@ export interface GetMachineModel extends CreateMachineModel, GetEquipmentModel {
   createdAt: string;
   updatedAt: string;
   ruleStatus: string;
-  objectModels: GetObjectModel[];
+  resourceModels: GetResourceModel[];
 }
 
 export interface UpdateMachineModel extends CreateMachineModel {}

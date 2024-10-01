@@ -15,7 +15,7 @@ import {
 } from "../../../../modelApi/eventModelApi";
 import { IconAddButton, IconDeleteButton } from "../../../../components/links/IconButtons";
 import { useQuery } from "@tanstack/react-query";
-import { objectModelsQuery } from "../../../../modelApi/objectModelApi";
+import { resourceModelsQuery } from "../../../../modelApi/resourceModelApi";
 
 export default function EventModelEdit({
   setIsOpen,
@@ -29,7 +29,7 @@ export default function EventModelEdit({
   viewModelId: string;
 }) {
   const mutate = useUpdateEventModel(equipmentModelId, viewModelId, eventModel._id);
-  const queryObjectModels = useQuery(objectModelsQuery());
+  const queryResourceModels = useQuery(resourceModelsQuery());
 
   const [updatedEventModel, setUpdatedEventModel] = useState<BaseUpdateEventModel>({
     _id: eventModel._id,
@@ -62,15 +62,15 @@ export default function EventModelEdit({
   const handleRelationsChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
     const index = Number(event.target.getAttribute("data-index")) || 0;
-    const newEventObjectModelRelations = [...updatedEventModel.relations];
+    const newEventResourceModelRelations = [...updatedEventModel.relations];
     const newEventModelRelation = {
       ...updatedEventModel.relations[index],
       [name]: value,
     };
-    newEventObjectModelRelations[index] = newEventModelRelation;
+    newEventResourceModelRelations[index] = newEventModelRelation;
     setUpdatedEventModel({
       ...updatedEventModel,
-      relations: newEventObjectModelRelations,
+      relations: newEventResourceModelRelations,
     });
   };
 
@@ -78,23 +78,23 @@ export default function EventModelEdit({
     setIsOpen(false);
   };
 
-  const addEventObjectRelation = () => {
-    const newEventObjectRelation = {
-      objectModel: "",
-      objectInteractionType: "CREATE",
+  const addEventResourceRelation = () => {
+    const newEventResourceRelation = {
+      resourceModel: "",
+      interactionType: "CREATE",
       qualifier: "",
     };
     setUpdatedEventModel({
       ...updatedEventModel,
-      relations: [...updatedEventModel.relations, newEventObjectRelation],
+      relations: [...updatedEventModel.relations, newEventResourceRelation],
     });
   };
 
-  const removeEventObjectRelation = (index: number) => {
-    const newEventObjectRelation = updatedEventModel.relations.filter((_, i) => i !== index);
+  const removeEventResourceRelation = (index: number) => {
+    const newEventResourceRelation = updatedEventModel.relations.filter((_, i) => i !== index);
     setUpdatedEventModel({
       ...updatedEventModel,
-      relations: newEventObjectRelation,
+      relations: newEventResourceRelation,
     });
   };
 
@@ -152,20 +152,20 @@ export default function EventModelEdit({
         <div className="space-y-2">
           <div className="flex items-center space-x-2">
             <span>Resource relations</span>
-            <IconAddButton onClick={addEventObjectRelation} />
+            <IconAddButton onClick={addEventResourceRelation} />
           </div>
           {updatedEventModel.relations.map((relation, index) => (
             <FormLabel className="flex items-center space-x-2" key={index}>
-              <Select name="objectModel" value={relation.objectModel} data-index={index} onChange={handleRelationsChange}>
-                {queryObjectModels.data?.map((objectModel) => (
-                  <option key={objectModel._id} value={objectModel._id}>
-                    {objectModel.objectModelName} - {objectModel.machineModel?.machineName}
+              <Select name="resourceModel" value={relation.resourceModel} data-index={index} onChange={handleRelationsChange}>
+                {queryResourceModels.data?.map((resourceModel) => (
+                  <option key={resourceModel._id} value={resourceModel._id}>
+                    {resourceModel.resourceModelName} - {resourceModel.machineModel?.machineName}
                   </option>
                 ))}
               </Select>
               <Select
-                name="objectInteractionType"
-                value={relation.objectInteractionType}
+                name="interactionType"
+                value={relation.interactionType}
                 data-index={index}
                 onChange={handleRelationsChange}
               >
@@ -173,7 +173,7 @@ export default function EventModelEdit({
                 <option value="CONSUME">CONSUME</option>
               </Select>
               <Input type="text" name="qualifier" value={relation.qualifier} data-index={index} onChange={handleRelationsChange} />
-              <IconDeleteButton onClick={() => removeEventObjectRelation(index)} />
+              <IconDeleteButton onClick={() => removeEventResourceRelation(index)} />
             </FormLabel>
           ))}
         </div>

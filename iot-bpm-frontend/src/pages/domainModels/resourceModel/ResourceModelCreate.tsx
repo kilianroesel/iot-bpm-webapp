@@ -3,26 +3,24 @@ import { Dialog } from "../../../components/forms/Dialog";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { Input } from "../../../components/forms/Input";
-import { GetObjectModel, UpdateObjectModel, useUpdateObjectModel } from "../../../modelApi/objectModelApi";
+import { CreateResourceModel, useCreateResourceModel } from "../../../modelApi/resourceModelApi";
 
-export default function ObjectModelEdit({
+export default function ResourceModelCreate({
   setIsOpen,
-  objectModel,
   machineModelId,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  objectModel: GetObjectModel;
   machineModelId: string;
 }) {
-  const [newObjectModel, setNewObjectModel] = useState<UpdateObjectModel>({
-    objectModelName: objectModel.objectModelName
+  const [newResourceModel, setNewResourceModel] = useState<CreateResourceModel>({
+    resourceModelName: ""
   });
-  const mutate = useUpdateObjectModel(machineModelId, objectModel._id);
+  const mutate = useCreateResourceModel(machineModelId);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setNewObjectModel({
-      ...newObjectModel,
+    setNewResourceModel({
+      ...newResourceModel,
       [name]: value,
     });
   };
@@ -33,7 +31,7 @@ export default function ObjectModelEdit({
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutate.mutate(newObjectModel, {
+    mutate.mutate(newResourceModel, {
       onSuccess: stopCreating,
     });
   };
@@ -41,10 +39,10 @@ export default function ObjectModelEdit({
   return (
     <Dialog>
       <Form onSubmit={submit}>
-        <FormHeader>Edit Object Model</FormHeader>
+        <FormHeader>Add Resource Model</FormHeader>
         <FormLabel>
-          <span>Object Model Name</span>
-          <Input type="text" name="objectModelName" onChange={handleChange} value={newObjectModel.objectModelName} />
+          <span>Resource Model Name</span>
+          <Input type="text" name="resourceModelName" onChange={handleChange} value={newResourceModel.resourceModelName} />
         </FormLabel>
         <div className="space-x-4">
           <SubmitButton type="submit">Save</SubmitButton>
