@@ -1,6 +1,22 @@
 import mongoose from "mongoose";
+import { IResourceModel } from "./resourceModelSchema";
 
-export const eventModelSchema = new mongoose.Schema(
+export interface IEventModel {
+    eventName: string;
+    field: string;
+    triggerType: string;
+    triggerCategory: string;
+    value?: string;
+    from?: string;
+    to?: string;
+    relations: {
+        resourceModel: IResourceModel,
+        resourceInteractionType: string;
+        qualifier: string;
+    }[]
+}
+
+export const eventModelSchema = new mongoose.Schema<IEventModel>(
     {
         eventName: {
             type: String,
@@ -20,7 +36,6 @@ export const eventModelSchema = new mongoose.Schema(
         },
         value: {
             type: Number,
-            required: true,
         },
         from: {
             type: Number,
@@ -30,13 +45,13 @@ export const eventModelSchema = new mongoose.Schema(
         },
         relations: [
             {
-                objectModel: {
+                resourceModel: {
                     type: mongoose.Types.ObjectId,
-                    ref: "ObjectModel",
+                    ref: "ResourceModel",
                     required: true,
                 },
-                objectInteractionType: {
-                    // create, consume, reference
+                resourceInteractionType: {
+                    // create, consume
                     type: String,
                     required: true,
                 },

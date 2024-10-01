@@ -1,17 +1,17 @@
 import express from "express";
 import validateSchema from "../../middleware/schemaValidation";
 import { NotFoundError } from "../../middleware/errorhandling";
-import { EventScopingRule, MachineModel, ObjectModel } from "../../models/schemas/models";
+import { EventScopingRule, MachineModel, ResourceModel } from "../../models/schemas/models";
 
 export const router = express.Router();
 
 router.get("", async (req, res, next) => {
     try {
         const result = await MachineModel.find()
-            // Populate object models here instead of pre findOne hook to avoid circular recursion with the objectModel schema
+            // Populate resource models here instead of pre findOne hook to avoid circular recursion with the resourceModel schema
             .populate({
-                path: "objectModels",
-                model: "ObjectModel",
+                path: "resourceModels",
+                model: "ResourceModel",
             });
         res.send(result);
     } catch (err) {
@@ -39,10 +39,10 @@ router.post("", validateSchema("createMachineModel"), async (req, res, next) => 
 router.get("/:machineModelId", async (req, res, next) => {
     try {
         const machineModel = await MachineModel.findById(req.params.machineModelId)
-            // Populate object models here instead of pre findOne hook to avoid circular recursion with the objectModel schema
+            // Populate object models here instead of pre findOne hook to avoid circular recursion with the resourceModel schema
             .populate({
-                path: "objectModels",
-                model: "ObjectModel",
+                path: "resourceModels",
+                model: "ResourceModel",
             });
         if (!machineModel) throw new NotFoundError("Machine Model not found");
         res.send(machineModel);
@@ -114,64 +114,64 @@ router.delete("/:machineModelId/rule", async (req, res, next) => {
     }
 });
 
-router.post("/:machineModelId/objectModels", validateSchema("createObjectModel"), async (req, res, next) => {
+router.post("/:machineModelId/resourceModels", validateSchema("createResourceModel"), async (req, res, next) => {
     try {
         const machineModel = await MachineModel.findById(req.params.machineModelId);
         if (!machineModel) throw new NotFoundError("Machine model not found");
 
-        const objectModel = {
-            objectModelName: req.body.objectModelName,
+        const resourceModel = {
+            resourceModelName: req.body.resourceModelName,
             machineModel: machineModel._id,
         };
 
-        const newObjectModel = await ObjectModel.create([objectModel], {
+        const newResourceModel = await ResourceModel.create([resourceModel], {
             new: true,
             runValidators: true,
         });
 
-        res.status(201).send(newObjectModel);
+        res.status(201).send(newResourceModel);
     } catch (err) {
         next(err);
     }
 });
 
 router.post(
-    "/:machineModelId/objectModels/:objectModelId",
-    validateSchema("updateObjectModel"),
+    "/:machineModelId/resourceModels/:resourceModelId",
+    validateSchema("updateResourceModel"),
     async (req, res, next) => {
         try {
-            const objectModel = {
-                objectModelName: req.body.objectModelName,
+            const resourceModel = {
+                resourceModelName: req.body.resourceModelName,
             };
 
-            const updatedObjectModel = await ObjectModel.findOneAndUpdate(
+            const updatedResourceModel = await ResourceModel.findOneAndUpdate(
                 {
-                    _id: req.params.objectModelId,
+                    _id: req.params.resourceModelId,
                     machineModel: req.params.machineModelId,
                 },
-                objectModel,
+                resourceModel,
                 { new: true, runValidators: true }
             );
 
-            if (!updatedObjectModel) throw new NotFoundError("Object model not found");
+            if (!updatedResourceModel) throw new NotFoundError("Object model not found");
 
-            res.status(201).send(updatedObjectModel);
+            res.status(201).send(updatedResourceModel);
         } catch (err) {
             next(err);
         }
     }
 );
 
-router.delete("/:machineModelId/objectModels/:objectModelId", async (req, res, next) => {
+router.delete("/:machineModelId/resourceModels/:resourceModelId", async (req, res, next) => {
     try {
-        const deletedObjectModel = await ObjectModel.findOneAndDelete({
-            _id: req.params.objectModelId,
+        const deletedResourceModel = await ResourceModel.findOneAndDelete({
+            _id: req.params.resourceModelId,
             machineModel: req.params.machineModelId,
         });
 
-        if (!deletedObjectModel) throw new NotFoundError("Object model not found");
+        if (!deletedResourceModel) throw new NotFoundError("Object model not found");
 
-        res.send(deletedObjectModel);
+        res.send(deletedResourceModel);
     } catch (err) {
         next(err);
     }

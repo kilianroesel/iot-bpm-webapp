@@ -93,6 +93,7 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
         const viewModel = equipmentModel.viewModels.id(viewModelId);
         if (!viewModel) throw new NotFoundError("View Model not found");
         const eventModel = viewModel.eventModels.id(eventModelId);
+        if (!eventModel) throw new NotFoundError("Event Model not found");
 
         // Fetch the scope Id, which is the id of the root equipment, i.e. MachineModel
         var scopeId = equipmentModel._id;
@@ -104,6 +105,12 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
         }
 
         var rule;
+        const relations = eventModel.relations.map((relation) => ({
+            resourceModel: relation,
+            resourceInteractionType: relation.resourceInteractionType,
+            qualifier: relation.qualifier
+        }))
+
         switch (eventModel.triggerCategory) {
             case "SCALAR_TRIGGER":
                 rule = await EventAbstractionRule.findByIdAndUpdate(
@@ -117,6 +124,7 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
                         triggerCategory: eventModel.triggerCategory,
                         triggerType: eventModel.triggerType,
                         value: eventModel.value,
+                        relations: eventModel.relations,
                     },
                     { new: true, upsert: true, runValidators: true }
                 );
@@ -134,6 +142,7 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
                         triggerType: eventModel.triggerType,
                         from: eventModel.from,
                         to: eventModel.to,
+                        relations: eventModel.relations
                     },
                     { new: true, upsert: true, runValidators: true }
                 );

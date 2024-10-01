@@ -1,16 +1,14 @@
 import mongoose from "mongoose";
-import { EquipmentModel } from "./equipmentModelSchema";
+import { IEquipmentModel } from "./equipmentModelSchema";
 
-export interface MachineModel {
-    machineName: string;
+export interface IMachineModel extends IEquipmentModel {
     versionCsiStd: string;
     versionCsiSpecific: string;
     machineSoftwareVersion: string;
     machineMasterSoftwareVersion: string;
-    objectModels: any[];
 }
 
-export const machineModelSchema = new mongoose.Schema<MachineModel>(
+export const machineModelSchema = new mongoose.Schema<IMachineModel>(
     {
         versionCsiStd: {
             type: String,
@@ -29,20 +27,20 @@ export const machineModelSchema = new mongoose.Schema<MachineModel>(
             required: true,
         },
     },
-    { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+    { toJSON: { virtuals: true }, toObject: { virtuals: true }}
 );
 
 machineModelSchema
     .virtual("machineName")
-    .get(function (this: EquipmentModel) {
+    .get(function (this) {
         return this.equipmentName;
     })
     .set(function (v) {
         this.set({ equipmentName: v });
     });
 
-machineModelSchema.virtual("objectModels", {
-    ref: "ObjectModel",
+machineModelSchema.virtual("resourceModels", {
+    ref: "ResourceModel",
     localField: "_id",
     foreignField: "machineModel",
     justOne: false,
@@ -58,7 +56,7 @@ machineModelSchema
     .get(function (rule) {
         if (!rule) return "NOT_RELEASED";
         if (
-            rule.machineName == this.machineName &&
+            rule.machineName == this.equipmentName &&
             rule.versionCsiStd == this.versionCsiStd &&
             rule.versionCsiSpecific == this.versionCsiSpecific &&
             rule.machineSoftwareVersion == this.machineSoftwareVersion &&

@@ -5,7 +5,7 @@ import { createEquipmentModel, updateEquipmentModel } from "../schemas/domain/eq
 import { createEventModel, updateEventModel } from "../schemas/domain/eventModelSchema";
 import { createStatusModel, updateStatusModel } from "../schemas/domain/statusModelSchema";
 import { createViewModel, updateViewModel } from "../schemas/domain/viewModelSchema";
-import { createObjectModel, updateObjectModel } from "../schemas/domain/objectModelSchema";
+import { createResourceModel, updateResourceModel } from "../schemas/domain/resourceModelSchema";
 
 
 const ajv = new Ajv();
@@ -25,8 +25,8 @@ ajv.addSchema(updateStatusModel, "updateStatusModel");
 ajv.addSchema(createViewModel, "createViewModel");
 ajv.addSchema(updateViewModel, "updateViewModel");
 
-ajv.addSchema(createObjectModel, "createObjectModel");
-ajv.addSchema(updateObjectModel, "updateObjectModel");
+ajv.addSchema(createResourceModel, "createResourceModel");
+ajv.addSchema(updateResourceModel, "updateResourceModel");
 
 export default function validateSchema(schema: string) {
     return (req: Request, res: Response, next: NextFunction) => {

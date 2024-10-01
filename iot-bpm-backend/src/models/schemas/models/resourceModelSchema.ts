@@ -1,8 +1,14 @@
 import mongoose from "mongoose";
+import { IMachineModel } from "./machineModelSchema";
 
-export const objectModelSchema = new mongoose.Schema(
+export interface IResourceModel {
+    resourceModelName: string;
+    machineModel: IMachineModel;
+}
+
+export const resourceModelSchema = new mongoose.Schema<IResourceModel>(
     {
-        objectModelName: {
+        resourceModelName: {
             type: String,
             required: true,
         },

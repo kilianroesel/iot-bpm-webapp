@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
-export const statusModelSchema = new mongoose.Schema(
+export interface IStatusModel {
+    statusName: string;
+    field: string;
+}
+
+export const statusModelSchema = new mongoose.Schema<IStatusModel>(
     {
         statusName: {
             type: String,

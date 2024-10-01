@@ -55,10 +55,10 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                     items: {
                         type: "object",
                         properties: {
-                            objectModel: {
+                            resourceModel: {
                                 type: "string"
                             },
-                            objectInteractionType: {
+                            resourceInteractionType: {
                                 type: "string",
                                 enum: ["CREATE", "REFERENCE", "CONSUME"]
                             },
@@ -66,7 +66,7 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                                 type: "string"
                             }
                         },
-                        required: ["objectModel", "objectInteractionType", "qualifier", "relations"]
+                        required: ["resourceModel", "resourceInteractionType", "qualifier", "relations"]
                     }
                 }
             },
@@ -93,10 +93,10 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                     items: {
                         type: "object",
                         properties: {
-                            objectModel: {
+                            resourceModel: {
                                 type: "string"
                             },
-                            objectInteractionType: {
+                            resourceInteractionType: {
                                 type: "string",
                                 enum: ["CREATE", "REFERENCE", "CONSUME"]
                             },
@@ -104,7 +104,7 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                                 type: "string"
                             }
                         },
-                        required: ["objectModel", "objectInteractionType", "qualifier"]
+                        required: ["resourceModel", "resourceInteractionType", "qualifier"]
                     }
                 }
             },
@@ -154,10 +154,10 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                     items: {
                         type: "object",
                         properties: {
-                            objectModel: {
+                            resourceModel: {
                                 type: "string"
                             },
-                            objectInteractionType: {
+                            resourceInteractionType: {
                                 type: "string",
                                 enum: ["CREATE", "REFERENCE", "CONSUME"]
                             },
@@ -165,7 +165,7 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                                 type: "string"
                             }
                         },
-                        required: ["objectModel", "objectInteractionType", "qualifier"]
+                        required: ["resourceModel", "resourceInteractionType", "qualifier"]
                     }
                 }
             },
@@ -193,10 +193,10 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                     items: {
                         type: "object",
                         properties: {
-                            objectModel: {
+                            resourceModel: {
                                 type: "string"
                             },
-                            objectInteractionType: {
+                            resourceInteractionType: {
                                 type: "string",
                                 enum: ["CREATE", "REFERENCE", "CONSUME"]
                             },
@@ -204,7 +204,7 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                                 type: "string"
                             }
                         },
-                        required: ["objectModel", "objectInteractionType", "qualifier"]
+                        required: ["resourceModel", "resourceInteractionType", "qualifier"]
                     }
                 }
             },

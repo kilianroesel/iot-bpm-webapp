@@ -1,7 +1,7 @@
 import express from "express";
 import { NotFoundError } from "../../middleware/errorhandling";
 import validateSchema from "../../middleware/schemaValidation";
-import { EquipmentModel, EventEnrichmentRule } from "../../models/schemas/models";
+import { EventEnrichmentRule, EquipmentModel } from "../../models/schemas/models";
 
 export const router = express.Router();
 

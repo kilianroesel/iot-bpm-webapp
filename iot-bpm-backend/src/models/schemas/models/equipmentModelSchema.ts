@@ -1,18 +1,21 @@
 import mongoose from "mongoose";
-import { MachineModel } from "./machineModelSchema";
-import { viewModelSchema } from "./viewModel";
+import { IViewModel, THydratedViewModelDocument, viewModelSchema } from "./viewModel";
 
-export interface EquipmentModel {
+export interface IEquipmentModel {
     equipmentName: string;
-    viewModels: any;
-    objectModels: any;
-    equipmentModels: EquipmentModel[];
-    machineModel: MachineModel;
-    parentEquipmentModel?: MachineModel;
+    viewModels: IViewModel[];
+    equipmentModels: IEquipmentModel[];
     equipmentPath: string;
 }
 
-export const equipmentModelSchema = new mongoose.Schema<EquipmentModel>(
+export type THydratedEquipmentModelDocument = {
+    equipmentName: string;
+    viewModels: mongoose.Types.DocumentArray<THydratedViewModelDocument>,
+    equipmentModels: mongoose.Types.DocumentArray<THydratedEquipmentModelDocument>
+    equipmentPath: string;
+}
+
+export const equipmentModelSchema = new mongoose.Schema<IEquipmentModel, {}, {}, {}, {}, {}, {}, THydratedEquipmentModelDocument>(
     {
         equipmentName: {
             type: String,
