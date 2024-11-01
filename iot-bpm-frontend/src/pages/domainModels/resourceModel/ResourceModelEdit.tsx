@@ -3,7 +3,7 @@ import { Dialog } from "../../../components/forms/Dialog";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { Input } from "../../../components/forms/Input";
-import { GetResourceModel, UpdateResourceModel, useUpdateResourceModel } from "../../../modelApi/resourceModelApi";
+import { GetResourceModel, UpsertResourceModel, useUpdateResourceModel } from "../../../modelApi/resourceModelApi";
 
 export default function ResourceModelEdit({
   setIsOpen,
@@ -14,7 +14,7 @@ export default function ResourceModelEdit({
   resourceModel: GetResourceModel;
   machineModelId: string;
 }) {
-  const [newResourceModel, setNewResourceModel] = useState<UpdateResourceModel>({
+  const [newResourceModel, setNewResourceModel] = useState<UpsertResourceModel>({
     resourceModelName: resourceModel.resourceModelName
   });
   const mutate = useUpdateResourceModel(machineModelId, resourceModel._id);

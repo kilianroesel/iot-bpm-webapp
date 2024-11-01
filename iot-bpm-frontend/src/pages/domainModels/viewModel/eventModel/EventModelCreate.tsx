@@ -56,7 +56,7 @@ export default function EventModelCreate({
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    var payload: CreateScalarTriggerEventModel | CreateRangeTriggerEventModel;
+    let payload: CreateScalarTriggerEventModel | CreateRangeTriggerEventModel;
     switch (newEventModel.triggerCategory) {
       case "SCALAR_TRIGGER":
         payload = {

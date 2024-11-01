@@ -2,9 +2,9 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../config/queryClientConfig";
 import { apiInstance } from "../config/modelApiConfig";
 
-const triggerCategories = ["SCALAR_TRIGGER", "RANGE_TRIGGER"] as const;
+export const triggerCategories = ["SCALAR_TRIGGER", "RANGE_TRIGGER"] as const;
 type TriggerCategories = (typeof triggerCategories)[number];
-const scalarTriggerTypes = [
+export const scalarTriggerTypes = [
   "CHANGES_TO",
   "CHANGES_FROM",
   "INCREASES_BY",
@@ -15,7 +15,7 @@ const scalarTriggerTypes = [
 ] as const;
 type ScalarTriggerTypes = (typeof scalarTriggerTypes)[number];
 
-const rangeTriggerTypes = ["ENTERS_RANGE_FROM_TO", "LEAVES_RANGE_FROM_TO"] as const;
+export const rangeTriggerTypes = ["ENTERS_RANGE_FROM_TO", "LEAVES_RANGE_FROM_TO"] as const;
 type RangeTriggerTypes = (typeof rangeTriggerTypes)[number];
 
 export interface CreateEventModelBase {
@@ -31,8 +31,8 @@ export interface GetEventModelBase {
   field: string;
   triggerCategory: TriggerCategories;
   ruleStatus: string;
-  updatedAt: String;
-  createdAt: String;
+  updatedAt: string;
+  createdAt: string;
   relations: EventResourceModelRelation[];
 }
 

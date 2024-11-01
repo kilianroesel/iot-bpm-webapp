@@ -3,14 +3,14 @@ import { Dialog } from "../../../components/forms/Dialog";
 import { Input } from "../../../components/forms/Input";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
-import { CreateMachineModel, useCreateMachineModel } from "../../../modelApi/machineModel";
+import { UpsertMachineModel, useCreateMachineModel } from "../../../modelApi/machineModel";
 
 export default function MachineModelCreate({
   setIsOpen
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [newMachineDescription, setNewMachineDescription] = useState<CreateMachineModel>({
+  const [newMachineDescription, setNewMachineDescription] = useState<UpsertMachineModel>({
     machineName: "",
     versionCsiStd: "",
     versionCsiSpecific: "",

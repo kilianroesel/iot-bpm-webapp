@@ -21,7 +21,7 @@ export const equipmentModelQuery = (equipmentModelId: string) =>
   queryOptions({
     queryKey: ["domain", "equipmentModel", equipmentModelId],
     queryFn: async () => {
-      const response = await apiInstance.get<any>(`/domain/equipmentModels/${equipmentModelId}`);
+      const response = await apiInstance.get<GetEquipmentModel>(`/domain/equipmentModels/${equipmentModelId}`);
       return response.data;
     },
   });

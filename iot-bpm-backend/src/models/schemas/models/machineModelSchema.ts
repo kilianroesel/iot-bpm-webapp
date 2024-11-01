@@ -1,14 +1,44 @@
 import mongoose from "mongoose";
-import { IEquipmentModel } from "./equipmentModelSchema";
+import { EquipmentModelRawDocType, EquipmentModelHydratedDocumentType } from "./equipmentModelSchema";
 
-export interface IMachineModel extends IEquipmentModel {
+export interface MachineModelRawDocType extends EquipmentModelRawDocType {
     versionCsiStd: string;
     versionCsiSpecific: string;
     machineSoftwareVersion: string;
     machineMasterSoftwareVersion: string;
 }
 
-export const machineModelSchema = new mongoose.Schema<IMachineModel>(
+export type HydratedMachineModelDocument = EquipmentModelHydratedDocumentType & {
+    machineName: string;
+    versionCsiStd: string;
+    versionCsiSpecific: string;
+    machineSoftwareVersion: string;
+    machineMasterSoftwareVersion: string;
+};
+
+type MachineModelType = mongoose.Model<
+  MachineModelRawDocType,
+  {},
+  {},
+  MachineModelVirtuals,
+  HydratedMachineModelDocument // THydratedDocumentType
+>;
+
+interface MachineModelVirtuals {
+    machineName: string;
+}
+
+export const machineModelSchema = new mongoose.Schema<
+    MachineModelRawDocType,
+    MachineModelType,
+    {},
+    {},
+    MachineModelVirtuals,
+    {},
+    mongoose.DefaultSchemaOptions,
+    MachineModelRawDocType,
+    HydratedMachineModelDocument
+>(
     {
         versionCsiStd: {
             type: String,
@@ -27,7 +57,7 @@ export const machineModelSchema = new mongoose.Schema<IMachineModel>(
             required: true,
         },
     },
-    { toJSON: { virtuals: true }, toObject: { virtuals: true }}
+    { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 machineModelSchema
@@ -69,13 +99,13 @@ machineModelSchema
 machineModelSchema.pre("findOne", function () {
     this.populate({ path: "ruleStatus" });
     this.populate({ path: "equipmentModels", model: "EquipmentModel" });
-    this.populate({ path: "viewModels.eventModels.ruleStatus"});
-    this.populate({ path: "viewModels.statusModels.ruleStatus"});
+    this.populate({ path: "viewModels.eventModels.ruleStatus" });
+    this.populate({ path: "viewModels.statusModels.ruleStatus" });
 });
 
 machineModelSchema.pre("find", function () {
     this.populate({ path: "ruleStatus" });
     this.populate({ path: "equipmentModels", model: "EquipmentModel" });
-    this.populate({ path: "viewModels.eventModels.ruleStatus"});
-    this.populate({ path: "viewModels.statusModels.ruleStatus"});
+    this.populate({ path: "viewModels.eventModels.ruleStatus" });
+    this.populate({ path: "viewModels.statusModels.ruleStatus" });
 });

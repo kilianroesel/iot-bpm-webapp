@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
-import { IResourceModel } from "./resourceModelSchema";
+import { ResourceModelRawDocType } from "./resourceModelSchema";
+import { log } from "console";
 
-export interface IEventModel {
+export interface EventModelRawDocType {
     eventName: string;
     field: string;
     triggerType: string;
@@ -10,13 +11,46 @@ export interface IEventModel {
     from?: string;
     to?: string;
     relations: {
-        resourceModel: IResourceModel,
-        resourceInteractionType: string;
+        resourceModel: mongoose.Types.ObjectId;
+        interactionType: string;
         qualifier: string;
-    }[]
+    }[];
 }
 
-export const eventModelSchema = new mongoose.Schema<IEventModel>(
+export type EventModelHydratedDocumentType = mongoose.HydratedDocument<EventModelRawDocType, {
+    eventName: string;
+    field: string;
+    triggerType: string;
+    triggerCategory: string;
+    value?: string;
+    from?: string;
+    to?: string;
+    relations: mongoose.Types.DocumentArray<{
+        resourceModel: mongoose.Types.ObjectId;
+        interactionType: string;
+        qualifier: string;
+    }>;
+}>;
+
+type EventModelType = mongoose.Model<
+    EventModelRawDocType,
+    {},
+    {},
+    {},
+    EventModelHydratedDocumentType
+>;
+
+export const eventModelSchema = new mongoose.Schema<
+    EventModelRawDocType,
+    EventModelType,
+    {},
+    {},
+    {},
+    {},
+    mongoose.DefaultSchemaOptions,
+    EventModelHydratedDocumentType,
+    EventModelHydratedDocumentType
+>(
     {
         eventName: {
             type: String,
@@ -43,24 +77,22 @@ export const eventModelSchema = new mongoose.Schema<IEventModel>(
         to: {
             type: Number,
         },
-        relations: [
-            {
-                resourceModel: {
-                    type: mongoose.Types.ObjectId,
-                    ref: "ResourceModel",
-                    required: true,
-                },
-                resourceInteractionType: {
-                    // create, consume
-                    type: String,
-                    required: true,
-                },
-                qualifier: {
-                    type: String,
-                    required: true,
-                },
+        relations: [{
+            resourceModel: {
+                type: mongoose.Types.ObjectId,
+                ref: "ResourceModel",
+                required: true,
             },
-        ],
+            interactionType: {
+                // CREATE, CONSUME
+                type: String,
+                required: true,
+            },
+            qualifier: {
+                type: String,
+                required: true,
+            },
+        }],
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
@@ -75,15 +107,26 @@ eventModelSchema
     .get(function (rule) {
         if (!rule) return "NOT_RELEASED";
         if (
-            rule.eventName == this.eventName &&
-            rule.field == this.field &&
-            rule.triggerCategory == this.triggerCategory &&
-            rule.triggerType == this.triggerType &&
-            rule.value == this.value &&
-            rule.from == this.from &&
-            rule.to == this.to
+            rule.eventName !== this.eventName ||
+            rule.field !== this.field ||
+            rule.triggerCategory !== this.triggerCategory ||
+            rule.triggerType !== this.triggerType ||
+            rule.value !== this.value ||
+            rule.from !== this.from ||
+            rule.to !== this.to ||
+            rule.relations.length !== this.relations.length
         ) {
-            return "ACTIVE";
+            return "UPDATED";
         }
-        return "UPDATED";
+
+        for (let i = 0; i < rule.relations.length; i++) {
+            if (
+                rule.relations[i].resourceModelId !== this.relations[i].resourceModel.toString() ||
+                rule.relations[i].interactionType !== this.relations[i].interactionType ||
+                rule.relations[i].qualifier !== this.relations[i].qualifier
+            ) {
+                return "UPDATED";
+            }
+        }
+        return "ACTIVE";
     });

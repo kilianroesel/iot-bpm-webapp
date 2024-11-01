@@ -2,10 +2,10 @@ import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query
 import { apiInstance } from "../config/modelApiConfig";
 import { GetMachineModel } from "./machineModel";
 
-export interface CreateResourceModel {
+export interface UpsertResourceModel {
   resourceModelName: string;
 }
-export interface GetResourceModel extends CreateResourceModel {
+export interface GetResourceModel extends UpsertResourceModel {
   _id: string;
   __t: string;
   updatedAt: string;
@@ -13,8 +13,6 @@ export interface GetResourceModel extends CreateResourceModel {
   ruleStatus: string;
   machineModel?: GetMachineModel;
 }
-
-export interface UpdateResourceModel extends CreateResourceModel {}
 
 export const resourceModelsQuery = () =>
   queryOptions({
@@ -28,7 +26,7 @@ export const resourceModelsQuery = () =>
 export const useCreateResourceModel = (machineModelId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (payload: CreateResourceModel) => {
+    mutationFn: async (payload: UpsertResourceModel) => {
       const response = await apiInstance.post(`/domain/machineModels/${machineModelId}/resourceModels`, payload);
       return response.data;
     },
@@ -39,7 +37,7 @@ export const useCreateResourceModel = (machineModelId: string) => {
 export const useUpdateResourceModel = (machineModelId: string, resourceModelId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (payload: CreateResourceModel) => {
+    mutationFn: async (payload: UpsertResourceModel) => {
       const response = await apiInstance.post(`/domain/machineModels/${machineModelId}/resourceModels/${resourceModelId}`, payload);
       return response.data;
     },

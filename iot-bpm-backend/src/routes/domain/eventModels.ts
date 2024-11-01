@@ -43,10 +43,7 @@ router.post(
                     },
                 },
                 {
-                    arrayFilters: [
-                        { "outer._id": req.params.viewModelId },
-                        { "inner._id": req.params.eventModelId },
-                    ],
+                    arrayFilters: [{ "outer._id": req.params.viewModelId }, { "inner._id": req.params.eventModelId }],
                     new: true,
                     runValidators: true,
                 }
@@ -59,30 +56,27 @@ router.post(
     }
 );
 
-router.delete(
-    "/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelId",
-    async (req, res, next) => {
-        try {
-            // First delete EventAbstractionRule and remove Event Model, there is no transaction needed
-            await EventAbstractionRule.findByIdAndDelete(req.params.eventModelId);
-            const result = await EquipmentModel.findByIdAndUpdate(
-                req.params.equipmentModelId,
-                {
-                    $pull: {
-                        "viewModels.$[outer].eventModels": { _id: req.params.eventModelId },
-                    },
+router.delete("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelId", async (req, res, next) => {
+    try {
+        // First delete EventAbstractionRule and remove Event Model, there is no transaction needed
+        await EventAbstractionRule.findByIdAndDelete(req.params.eventModelId);
+        const result = await EquipmentModel.findByIdAndUpdate(
+            req.params.equipmentModelId,
+            {
+                $pull: {
+                    "viewModels.$[outer].eventModels": { _id: req.params.eventModelId },
                 },
-                {
-                    arrayFilters: [{ "outer._id": req.params.viewModelId }],
-                }
-            );
-            if (!result) throw new NotFoundError("Event Model not found");
-            res.send(result);
-        } catch (err) {
-            next(err);
-        }
+            },
+            {
+                arrayFilters: [{ "outer._id": req.params.viewModelId }],
+            }
+        );
+        if (!result) throw new NotFoundError("Event Model not found");
+        res.send(result);
+    } catch (err) {
+        next(err);
     }
-);
+});
 
 router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelId/rule", async (req, res, next) => {
     try {
@@ -105,11 +99,13 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
         }
 
         var rule;
-        const relations = eventModel.relations.map((relation) => ({
-            resourceModel: relation,
-            resourceInteractionType: relation.resourceInteractionType,
-            qualifier: relation.qualifier
-        }))
+        const relations = eventModel.relations.map((relation) => {
+            return {
+                resourceModelId: relation.resourceModel.toString(),
+                interactionType: relation.interactionType,
+                qualifier: relation.qualifier,
+            };
+        });
 
         switch (eventModel.triggerCategory) {
             case "SCALAR_TRIGGER":
@@ -124,7 +120,7 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
                         triggerCategory: eventModel.triggerCategory,
                         triggerType: eventModel.triggerType,
                         value: eventModel.value,
-                        relations: eventModel.relations,
+                        relations: relations,
                     },
                     { new: true, upsert: true, runValidators: true }
                 );
@@ -142,7 +138,7 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
                         triggerType: eventModel.triggerType,
                         from: eventModel.from,
                         to: eventModel.to,
-                        relations: eventModel.relations
+                        relations: relations,
                     },
                     { new: true, upsert: true, runValidators: true }
                 );

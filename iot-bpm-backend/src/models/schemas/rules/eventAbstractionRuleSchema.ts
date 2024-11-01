@@ -39,20 +39,22 @@ export const eventAbstractionRuleSchema = new mongoose.Schema(
         to: {
             type: Number,
         },
-        relations: {
-            resourceModelId: {
-                type: String,
-                required: true,
+        relations: [
+            {
+                resourceModelId: {
+                    type: String,
+                    required: true,
+                },
+                interactionType: {
+                    type: String,
+                    required: true,
+                },
+                qualifier: {
+                    type: String,
+                    required: true,
+                },
             },
-            resourceInteractionType: {
-                type: String,
-                required: true,
-            },
-            qualifier: {
-                type: String,
-                required: true,
-            },
-        }
+        ],
     },
     { timestamps: true }
 );

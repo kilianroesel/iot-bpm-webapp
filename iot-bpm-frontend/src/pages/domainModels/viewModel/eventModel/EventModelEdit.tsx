@@ -101,7 +101,7 @@ export default function EventModelEdit({
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    var payload: UpdateScalarTriggerEventModel | UpdateRangeTriggerEventModel;
+    let payload: UpdateScalarTriggerEventModel | UpdateRangeTriggerEventModel;
     switch (updatedEventModel.triggerCategory) {
       case "SCALAR_TRIGGER":
         payload = {
@@ -193,7 +193,7 @@ function ScalarTriggerEdit({
   setScalarTrigger,
 }: {
   scalarTrigger: ScalarTriggerEventExtensionForm;
-  setScalarTrigger: Dispatch<SetStateAction<any>>;
+  setScalarTrigger: Dispatch<SetStateAction<ScalarTriggerEventExtensionForm>>;
 }) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -230,14 +230,14 @@ function RangeTriggerEdit({
   setRangeTrigger,
 }: {
   rangeTrigger: RangeTriggerEventExtensionForm;
-  setRangeTrigger: Dispatch<SetStateAction<any>>;
+  setRangeTrigger: Dispatch<SetStateAction<RangeTriggerEventExtensionForm>>;
 }) {
   useEffect(() => {
     setRangeTrigger({
       ...rangeTrigger,
       triggerType: "ENTERS_RANGE_FROM_TO",
     });
-  }, []);
+  }, [setRangeTrigger, rangeTrigger]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = event.target;

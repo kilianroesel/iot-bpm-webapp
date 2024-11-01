@@ -4,7 +4,7 @@ import { queryClient } from "../config/queryClientConfig";
 import { GetEquipmentModel } from "./equipmentModelApi";
 import { GetResourceModel } from "./resourceModelApi";
 
-export interface CreateMachineModel {
+export interface UpsertMachineModel {
   machineName: string;
   versionCsiStd: string;
   versionCsiSpecific: string;
@@ -12,7 +12,7 @@ export interface CreateMachineModel {
   machineMasterSoftwareVersion: string;
 }
 
-export interface GetMachineModel extends CreateMachineModel, GetEquipmentModel {
+export interface GetMachineModel extends UpsertMachineModel, GetEquipmentModel {
   _id: string;
   __t: string;
   createdAt: string;
@@ -20,8 +20,6 @@ export interface GetMachineModel extends CreateMachineModel, GetEquipmentModel {
   ruleStatus: string;
   resourceModels: GetResourceModel[];
 }
-
-export interface UpdateMachineModel extends CreateMachineModel {}
 
 export const machineModelsQuery = () =>
   queryOptions({
@@ -34,7 +32,7 @@ export const machineModelsQuery = () =>
 
 export const useCreateMachineModel = () =>
   useMutation({
-    mutationFn: async (payload: CreateMachineModel) => {
+    mutationFn: async (payload: UpsertMachineModel) => {
       const response = await apiInstance.post(`/domain/machineModels`, payload);
       return response.data;
     },
@@ -52,7 +50,7 @@ export const machineModelQuery = (machineModelId: string) =>
 
 export const useUpdateMachineModel = (machineModelId: string) =>
   useMutation({
-    mutationFn: async (payload: UpdateMachineModel) => {
+    mutationFn: async (payload: UpsertMachineModel) => {
       const response = await apiInstance.post(`/domain/machineModels/${machineModelId}`, payload);
       return response.data;
     },

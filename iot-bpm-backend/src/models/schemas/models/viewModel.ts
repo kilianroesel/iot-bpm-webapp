@@ -1,20 +1,20 @@
 import mongoose from "mongoose";
-import { eventModelSchema, IEventModel } from "./eventModelSchema";
-import { IStatusModel, statusModelSchema } from "./statusModelSchema";
+import { eventModelSchema, EventModelRawDocType, EventModelHydratedDocumentType } from "./eventModelSchema";
+import { StatusModelHydratedDocumentType, StatusModelRawDocType, statusModelSchema } from "./statusModelSchema";
 
-export interface IViewModel {
+export interface ViewModelRawDocType {
     viewName: string;
-    eventModels: IEventModel[];
-    statusModels: IStatusModel[];
+    eventModels: EventModelRawDocType[];
+    statusModels: StatusModelRawDocType[];
 }
 
-export type THydratedViewModelDocument = {
+export type ViewModelHydratedDocumentType = {
     viewName: string;
-    eventModels: mongoose.Types.DocumentArray<IEventModel>,
-    statusModels: mongoose.Types.DocumentArray<IStatusModel>
+    eventModels: mongoose.Types.DocumentArray<EventModelHydratedDocumentType>,
+    statusModels: mongoose.Types.DocumentArray<StatusModelHydratedDocumentType>
 }
 
-export const viewModelSchema = new mongoose.Schema<IViewModel, {}, {}, {}, {}, {}, {}, THydratedViewModelDocument>(
+export const viewModelSchema = new mongoose.Schema<ViewModelRawDocType, {}, {}, {}, {}, {}, {}, ViewModelRawDocType, ViewModelHydratedDocumentType>(
     {
         viewName: {
             type: String,

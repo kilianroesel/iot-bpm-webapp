@@ -1,12 +1,35 @@
 import mongoose from "mongoose";
-import { IMachineModel } from "./machineModelSchema";
+import { MachineModelRawDocType, HydratedMachineModelDocument } from "./machineModelSchema";
 
-export interface IResourceModel {
+export interface ResourceModelRawDocType {
     resourceModelName: string;
-    machineModel: IMachineModel;
+    machineModel: MachineModelRawDocType;
 }
 
-export const resourceModelSchema = new mongoose.Schema<IResourceModel>(
+export type ResourceModelHydratedDocumentType = {
+    resourceModelName: string;
+    machineModel: mongoose.Types.Subdocument<HydratedMachineModelDocument>;
+};
+
+type ResourceModelType = mongoose.Model<
+    ResourceModelRawDocType,
+    {},
+    {},
+    {},
+    ResourceModelHydratedDocumentType
+>;
+
+export const resourceModelSchema = new mongoose.Schema<
+    ResourceModelRawDocType,
+    ResourceModelType,
+    {},
+    {},
+    {},
+    {},
+    mongoose.DefaultSchemaOptions,
+    ResourceModelRawDocType,
+    ResourceModelHydratedDocumentType
+>(
     {
         resourceModelName: {
             type: String,
@@ -19,4 +42,3 @@ export const resourceModelSchema = new mongoose.Schema<IResourceModel>(
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
-

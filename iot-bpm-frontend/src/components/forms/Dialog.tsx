@@ -5,9 +5,10 @@ export function Dialog(props: DetailedHTMLProps<DialogHTMLAttributes<HTMLDialogE
 
   // By opening and closing the html dialog element programatically it prevents the user to interact with elements outside of the dialog
   useEffect(() => {
+    const myRef = ref;
     ref.current?.showModal();
     return () => {
-      ref.current?.close();
+      myRef.current?.close();
     };
   }, []);
 

@@ -3,7 +3,7 @@ import { Dialog } from "../../../components/forms/Dialog";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
 import { Input } from "../../../components/forms/Input";
-import { CreateResourceModel, useCreateResourceModel } from "../../../modelApi/resourceModelApi";
+import { UpsertResourceModel, useCreateResourceModel } from "../../../modelApi/resourceModelApi";
 
 export default function ResourceModelCreate({
   setIsOpen,
@@ -12,7 +12,7 @@ export default function ResourceModelCreate({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   machineModelId: string;
 }) {
-  const [newResourceModel, setNewResourceModel] = useState<CreateResourceModel>({
+  const [newResourceModel, setNewResourceModel] = useState<UpsertResourceModel>({
     resourceModelName: ""
   });
   const mutate = useCreateResourceModel(machineModelId);

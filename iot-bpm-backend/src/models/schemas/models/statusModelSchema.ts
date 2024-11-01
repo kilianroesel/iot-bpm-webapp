@@ -1,11 +1,16 @@
 import mongoose from "mongoose";
 
-export interface IStatusModel {
+export interface StatusModelRawDocType {
     statusName: string;
     field: string;
 }
 
-export const statusModelSchema = new mongoose.Schema<IStatusModel>(
+export interface StatusModelHydratedDocumentType {
+    statusName: string;
+    field: string;
+}
+
+export const statusModelSchema = new mongoose.Schema<StatusModelRawDocType>(
     {
         statusName: {
             type: String,

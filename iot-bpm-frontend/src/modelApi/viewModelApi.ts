@@ -7,21 +7,19 @@ import { GetStatusModel } from "./statusModelApi";
 export interface CreateViewModel {
   viewName: string;
 }
-export interface GetViewModelBase extends CreateViewModel {
+export interface GetViewModel extends CreateViewModel {
   _id: string;
   __t: string;
   eventModels: (GetScalarTriggerEventModel | GetRangeTriggerEventModel)[];
   statusModels: GetStatusModel[];
-  updatedAt: String;
-  createdAt: String;
+  updatedAt: string;
+  createdAt: string;
 }
 export interface UpdateViewModel extends CreateViewModel {
   _id: string;
   __t: string;
 }
-export interface GetViewModel extends GetViewModelBase {}
-
-export interface GetPopulatedViewModel extends GetViewModelBase {
+export interface GetPopulatedViewModel extends GetViewModel {
   ruleStatus: string;
 }
 

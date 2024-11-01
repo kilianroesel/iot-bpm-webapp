@@ -9,8 +9,8 @@ export interface CreateStatusModel {
 export interface GetStatusModelBase extends CreateStatusModel {
   _id: string;
   __t: string;
-  updatedAt: String;
-  createdAt: String;
+  updatedAt: string;
+  createdAt: string;
 }
 export interface UpdateStatusModel extends CreateStatusModel {
   _id: string;

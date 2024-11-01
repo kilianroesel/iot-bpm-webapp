@@ -58,7 +58,7 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                             resourceModel: {
                                 type: "string"
                             },
-                            resourceInteractionType: {
+                            interactionType: {
                                 type: "string",
                                 enum: ["CREATE", "REFERENCE", "CONSUME"]
                             },
@@ -66,7 +66,7 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                                 type: "string"
                             }
                         },
-                        required: ["resourceModel", "resourceInteractionType", "qualifier", "relations"]
+                        required: ["resourceModel", "interactionType", "qualifier", "relations"]
                     }
                 }
             },
@@ -96,7 +96,7 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                             resourceModel: {
                                 type: "string"
                             },
-                            resourceInteractionType: {
+                            interactionType: {
                                 type: "string",
                                 enum: ["CREATE", "REFERENCE", "CONSUME"]
                             },
@@ -104,7 +104,7 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                                 type: "string"
                             }
                         },
-                        required: ["resourceModel", "resourceInteractionType", "qualifier"]
+                        required: ["resourceModel", "interactionType", "qualifier"]
                     }
                 }
             },
@@ -157,7 +157,7 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                             resourceModel: {
                                 type: "string"
                             },
-                            resourceInteractionType: {
+                            interactionType: {
                                 type: "string",
                                 enum: ["CREATE", "REFERENCE", "CONSUME"]
                             },
@@ -165,7 +165,7 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                                 type: "string"
                             }
                         },
-                        required: ["resourceModel", "resourceInteractionType", "qualifier"]
+                        required: ["resourceModel", "interactionType", "qualifier"]
                     }
                 }
             },
@@ -196,7 +196,7 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                             resourceModel: {
                                 type: "string"
                             },
-                            resourceInteractionType: {
+                            interactionType: {
                                 type: "string",
                                 enum: ["CREATE", "REFERENCE", "CONSUME"]
                             },
@@ -204,7 +204,7 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                                 type: "string"
                             }
                         },
-                        required: ["resourceModel", "resourceInteractionType", "qualifier"]
+                        required: ["resourceModel", "interactionType", "qualifier"]
                     }
                 }
             },

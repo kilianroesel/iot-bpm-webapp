@@ -103,7 +103,7 @@ function RecursiveEquipmentBreadCrumbs() {
   const pathSegments = location.pathname.split("/").filter((segment) => segment);
   const curPathSegment = pathSegments.splice(0, 1);
 
-  var curPathname = "/" + curPathSegment.join("/");
+  let curPathname = "/" + curPathSegment.join("/");
   return (
     <ol className="flex items-center">
       {pathSegments.map((equipmentModelId, index) => {

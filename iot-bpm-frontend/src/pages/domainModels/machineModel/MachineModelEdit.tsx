@@ -3,7 +3,7 @@ import { Dialog } from "../../../components/forms/Dialog";
 import { Input } from "../../../components/forms/Input";
 import { CancelButton, SubmitButton } from "../../../components/forms/Buttons";
 import { Form, FormHeader, FormLabel } from "../../../components/forms/Form";
-import { GetMachineModel, UpdateMachineModel, useUpdateMachineModel } from "../../../modelApi/machineModel";
+import { GetMachineModel, UpsertMachineModel, useUpdateMachineModel } from "../../../modelApi/machineModel";
 
 export default function MachineModelEdit({
   setIsOpen,
@@ -12,7 +12,7 @@ export default function MachineModelEdit({
   machineModel: GetMachineModel,
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [newMachineDescription, setNewMachineDescription] = useState<UpdateMachineModel>({
+  const [newMachineDescription, setNewMachineDescription] = useState<UpsertMachineModel>({
     machineName: machineModel.machineName,
     versionCsiStd: machineModel.versionCsiStd,
     versionCsiSpecific: machineModel.versionCsiSpecific,
