@@ -4,8 +4,6 @@ interface CreateMachineModel {
     machineName: string;
     versionCsiStd: string;
     versionCsiSpecific: string;
-    machineSoftwareVersion: string;
-    machineMasterSoftwareVersion: string;
 }
 
 export const createMachineModel: JSONSchemaType<CreateMachineModel> = {
@@ -14,15 +12,11 @@ export const createMachineModel: JSONSchemaType<CreateMachineModel> = {
         machineName: { type: "string" },
         versionCsiStd: { type: "string" },
         versionCsiSpecific: { type: "string" },
-        machineSoftwareVersion: { type: "string" },
-        machineMasterSoftwareVersion: { type: "string" },
     },
     required: [
         "machineName",
         "versionCsiStd",
         "versionCsiSpecific",
-        "machineSoftwareVersion",
-        "machineMasterSoftwareVersion",
     ],
     additionalProperties: false,
 };
@@ -38,15 +32,11 @@ export const updateMachineModel: JSONSchemaType<UpdateMachineModel> = {
         machineName: { type: "string" },
         versionCsiStd: { type: "string" },
         versionCsiSpecific: { type: "string" },
-        machineSoftwareVersion: { type: "string" },
-        machineMasterSoftwareVersion: { type: "string" },
     },
     required: [
         "machineName",
         "versionCsiStd",
         "versionCsiSpecific",
-        "machineSoftwareVersion",
-        "machineMasterSoftwareVersion",
     ],
     additionalProperties: false,
 };

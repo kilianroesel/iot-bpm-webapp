@@ -1,7 +1,7 @@
 import express from "express";
 import validateSchema from "../../middleware/schemaValidation";
 import { NotFoundError } from "../../middleware/errorhandling";
-import { EventScopingRule, MachineModel, ResourceModel } from "../../models/schemas/models";
+import { EventScopingRule, MachineModel, ResourceModel, ResourceNameRule } from "../../models/schemas/models";
 
 export const router = express.Router();
 
@@ -25,9 +25,7 @@ router.post("", validateSchema("createMachineModel"), async (req, res, next) => 
             equipmentName: req.body.machineName, // The machine and equipment name are the same for the MachineModel root equipment
             machineName: req.body.machineName,
             versionCsiStd: req.body.versionCsiStd,
-            versionCsiSpecific: req.body.versionCsiSpecific,
-            machineSoftwareVersion: req.body.machineSoftwareVersion,
-            machineMasterSoftwareVersion: req.body.machineMasterSoftwareVersion,
+            versionCsiSpecific: req.body.versionCsiSpecific
         };
         const newMachineModel = await MachineModel.create([machineModel], { new: true, runValidators: true });
         res.status(201).send(newMachineModel);
@@ -174,3 +172,4 @@ router.delete("/:machineModelId/resourceModels/:resourceModelId", async (req, re
         next(err);
     }
 });
+
