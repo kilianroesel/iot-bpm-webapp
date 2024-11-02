@@ -4,16 +4,12 @@ import { EquipmentModelRawDocType, EquipmentModelHydratedDocumentType } from "./
 export interface MachineModelRawDocType extends EquipmentModelRawDocType {
     versionCsiStd: string;
     versionCsiSpecific: string;
-    machineSoftwareVersion: string;
-    machineMasterSoftwareVersion: string;
 }
 
 export type HydratedMachineModelDocument = EquipmentModelHydratedDocumentType & {
     machineName: string;
     versionCsiStd: string;
     versionCsiSpecific: string;
-    machineSoftwareVersion: string;
-    machineMasterSoftwareVersion: string;
 };
 
 type MachineModelType = mongoose.Model<
@@ -47,15 +43,7 @@ export const machineModelSchema = new mongoose.Schema<
         versionCsiSpecific: {
             type: String,
             required: true,
-        },
-        machineSoftwareVersion: {
-            type: String,
-            required: true,
-        },
-        machineMasterSoftwareVersion: {
-            type: String,
-            required: true,
-        },
+        }
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
@@ -88,9 +76,7 @@ machineModelSchema
         if (
             rule.machineName == this.equipmentName &&
             rule.versionCsiStd == this.versionCsiStd &&
-            rule.versionCsiSpecific == this.versionCsiSpecific &&
-            rule.machineSoftwareVersion == this.machineSoftwareVersion &&
-            rule.machineMasterSoftwareVersion == this.machineMasterSoftwareVersion
+            rule.versionCsiSpecific == this.versionCsiSpecific
         )
             return "ACTIVE";
         return "UPDATED";

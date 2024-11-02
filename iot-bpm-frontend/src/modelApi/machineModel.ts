@@ -8,8 +8,6 @@ export interface UpsertMachineModel {
   machineName: string;
   versionCsiStd: string;
   versionCsiSpecific: string;
-  machineSoftwareVersion: string;
-  machineMasterSoftwareVersion: string;
 }
 
 export interface GetMachineModel extends UpsertMachineModel, GetEquipmentModel {

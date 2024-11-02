@@ -67,10 +67,6 @@ export default function MachineModelBase() {
             <div>{machineModel.versionCsiStd}</div>
             <div>Version Csi Specific</div>
             <div>{machineModel.versionCsiSpecific}</div>
-            <div>Machine Software Version</div>
-            <div>{machineModel.machineSoftwareVersion}</div>
-            <div>Machine Master Software Version</div>
-            <div>{machineModel.machineMasterSoftwareVersion}</div>
           </div>
         </div>
         {isEditOpen && <MachineModelEdit machineModel={machineModel} setIsOpen={setIsEditOpen} />}

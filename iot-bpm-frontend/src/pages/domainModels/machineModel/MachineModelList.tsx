@@ -24,11 +24,9 @@ export default function MachineModelsList() {
             <tr>
               <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Machine Name</th>
               <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Version Csi Std</th>
-              <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Version Csi Specific</th>
-              <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Machine Software Version</th>
               <th className="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">
-                <div className="flex items-center space-x-4">
-                  <span className="flex-grow">Machine Master Software Version</span>
+              <div className="flex items-center space-x-4">
+                  <span className="flex-grow">Version Csi Specific</span>
                   <IconAddButton onClick={startCreate} />
                 </div>
               </th>
@@ -47,8 +45,6 @@ export default function MachineModelsList() {
                 </td>
                 <td className="whitespace-nowrap px-6 py-4">{machineModel.versionCsiStd}</td>
                 <td className="whitespace-nowrap px-6 py-4">{machineModel.versionCsiSpecific}</td>
-                <td className="whitespace-nowrap px-6 py-4">{machineModel.machineSoftwareVersion}</td>
-                <td className="whitespace-nowrap px-6 py-4">{machineModel.machineMasterSoftwareVersion}</td>
               </tr>
             ))}
           </tbody>

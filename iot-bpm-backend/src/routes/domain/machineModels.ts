@@ -91,9 +91,7 @@ router.post("/:machineModelId/rule", async (req, res, next) => {
             {
                 machineName: machineModel.machineName,
                 versionCsiStd: machineModel.versionCsiStd,
-                versionCsiSpecific: machineModel.versionCsiSpecific,
-                machineSoftwareVersion: machineModel.machineSoftwareVersion,
-                machineMasterSoftwareVersion: machineModel.machineMasterSoftwareVersion,
+                versionCsiSpecific: machineModel.versionCsiSpecific
             },
             { new: true, upsert: true, runValidators: true }
         );

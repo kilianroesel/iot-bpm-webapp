@@ -15,9 +15,7 @@ export default function MachineModelEdit({
   const [newMachineDescription, setNewMachineDescription] = useState<UpsertMachineModel>({
     machineName: machineModel.machineName,
     versionCsiStd: machineModel.versionCsiStd,
-    versionCsiSpecific: machineModel.versionCsiSpecific,
-    machineSoftwareVersion: machineModel.machineSoftwareVersion,
-    machineMasterSoftwareVersion: machineModel.machineMasterSoftwareVersion,
+    versionCsiSpecific: machineModel.versionCsiSpecific
   });
   const mutate = useUpdateMachineModel(machineModel._id);
 
@@ -55,14 +53,6 @@ export default function MachineModelEdit({
         <FormLabel>
           <span>Version CSI Specific</span>
           <Input type="text" name="versionCsiSpecific" onChange={handleChange} value={newMachineDescription.versionCsiSpecific} />
-        </FormLabel>
-        <FormLabel>
-          <span>Machine Software Version</span>
-          <Input type="text" name="machineSoftwareVersion" onChange={handleChange} value={newMachineDescription.machineSoftwareVersion} />
-        </FormLabel>
-        <FormLabel>
-          <span>Machine Master Software Version</span>
-          <Input type="text" name="machineMasterSoftwareVersion" onChange={handleChange} value={newMachineDescription.machineMasterSoftwareVersion} />
         </FormLabel>
         <div className="space-x-4">
           <SubmitButton type="submit">Save</SubmitButton>
