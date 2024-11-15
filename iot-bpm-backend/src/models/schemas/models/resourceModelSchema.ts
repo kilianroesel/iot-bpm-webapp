@@ -11,13 +11,7 @@ export type ResourceModelHydratedDocumentType = {
     machineModel: mongoose.Types.Subdocument<HydratedMachineModelDocument>;
 };
 
-type ResourceModelType = mongoose.Model<
-    ResourceModelRawDocType,
-    {},
-    {},
-    {},
-    ResourceModelHydratedDocumentType
->;
+type ResourceModelType = mongoose.Model<ResourceModelRawDocType, {}, {}, {}, ResourceModelHydratedDocumentType>;
 
 export const resourceModelSchema = new mongoose.Schema<
     ResourceModelRawDocType,
@@ -42,3 +36,24 @@ export const resourceModelSchema = new mongoose.Schema<
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+resourceModelSchema
+    .virtual("ruleStatus", {
+        ref: "ResourceNameRule",
+        localField: "_id",
+        foreignField: "_id",
+        justOne: true,
+    })
+    .get(function (rule) {
+        if (!rule) return "NOT_RELEASED";
+        if (rule.resourceModelName == this.resourceModelName) return "ACTIVE";
+        return "UPDATED";
+    });
+
+resourceModelSchema.pre("findOne", function () {
+    this.populate({ path: "ruleStatus" });
+});
+
+resourceModelSchema.pre("find", function () {
+    this.populate({ path: "ruleStatus" });
+});

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { IconAddButton, IconButton, IconDeleteButton, IconEditButton } from "../../../components/links/IconButtons";
-import { GetResourceModel } from "../../../modelApi/resourceModelApi";
-import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiRocketLaunch } from "react-icons/hi2";
+import { GetResourceModel, useCreateResourceNameRule, useDeleteResourceNameRule } from "../../../modelApi/resourceModelApi";
+import { HiDocumentCheck, HiDocumentMinus, HiDocumentPlus, HiOutlineDocumentArrowDown, HiOutlineDocumentArrowUp } from "react-icons/hi2";
 import ResourceModelCreate from "./ResourceModelCreate";
 import ResourceModelEdit from "./ResourceModelEdit";
 import ResourceModelDelete from "./ResourceModelDelete";
 
-export function ResourceModels({ resourceModels, machineModelId }: { resourceModels: GetResourceModel[], machineModelId: string }) {
+export function ResourceModelList({ resourceModels, machineModelId }: { resourceModels: GetResourceModel[]; machineModelId: string }) {
   const [isCreatingOpen, setIsCreatingOpen] = useState(false);
 
   return (
@@ -31,15 +31,12 @@ export function ResourceModels({ resourceModels, machineModelId }: { resourceMod
   );
 }
 
-function ResourceModel({
-  resourceModel,
-  machineModelId,
-}: {
-  resourceModel: GetResourceModel;
-  machineModelId: string;
-}) {
+function ResourceModel({ resourceModel, machineModelId }: { resourceModel: GetResourceModel; machineModelId: string }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  const createEventEnrichmentRule = useCreateResourceNameRule(machineModelId, resourceModel._id);
+  const deleteEventEnrichmentRule = useDeleteResourceNameRule(machineModelId, resourceModel._id);
 
   const startEdit = () => {
     setIsEditOpen(true);
@@ -52,7 +49,7 @@ function ResourceModel({
   return (
     <>
       <div className="flex">
-        <div className="flex-grow flex items-center space-x-4">
+        <div className="flex flex-grow items-center space-x-4">
           {resourceModel.ruleStatus == "NOT_RELEASED" && (
             <span>
               <HiDocumentPlus className="text-blue-500" size="22" />
@@ -72,11 +69,13 @@ function ResourceModel({
         </div>
         <div className="flex items-center justify-end space-x-4">
           {(resourceModel.ruleStatus == "NOT_RELEASED" || resourceModel.ruleStatus == "UPDATED") && (
-            <IconButton
-              onClick={() => console.log("click")}
-              className="inline-block h-full text-fuchsia-600 hover:text-fuchsia-500"
-            >
-              <HiRocketLaunch size="22" />
+            <IconButton onClick={() => createEventEnrichmentRule.mutate()} className="inline-block h-full text-emerald-600 hover:text-emerald-500">
+              <HiOutlineDocumentArrowUp size="22" />
+            </IconButton>
+          )}
+          {(resourceModel.ruleStatus == "ACTIVE" || resourceModel.ruleStatus == "UPDATED") && (
+            <IconButton onClick={() => deleteEventEnrichmentRule.mutate()} className="inline-block h-full text-amber-600 hover:text-amber-500">
+              <HiOutlineDocumentArrowDown size="22" />
             </IconButton>
           )}
           <IconEditButton onClick={startEdit} />

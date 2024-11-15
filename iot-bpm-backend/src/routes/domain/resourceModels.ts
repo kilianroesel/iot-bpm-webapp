@@ -20,16 +20,23 @@ router.get("", async (req, res, next) => {
 
 router.post("/:resourceModelId/rule", async (req, res, next) => {
     try {
-        const resourceModelId = req.params.resourceModelId;
-        const rule = await ResourceNameRule.findByIdAndDelete(resourceModelId);
-        if (!rule) throw new NotFoundError("Resource Name Rule not found");
-        res.status(204).send();
-    } catch (err) {
+        const resourceModel = await ResourceModel.findById(req.params.resourceModelId);
+        if (!resourceModel) throw new NotFoundError("Resource Model not found");
+      
+        const rule = await ResourceNameRule.findByIdAndUpdate(
+            req.params.resourceModelId,
+            {
+                resourceModelName: resourceModel.resourceModelName
+            },
+            { new: true, upsert: true, runValidators: true }
+        );
+        res.status(202).send(rule);
+      } catch (err) {
         next(err);
-    }
+      }
 });
 
-router.delete("/:machineModelId/resourceModels/:resourceModelId/rule", async (req, res, next) => {
+router.delete("/:resourceModelId/rule", async (req, res, next) => {
     try {
         const resourceModelId = req.params.resourceModelId;
         const rule = await ResourceNameRule.findByIdAndDelete(resourceModelId);

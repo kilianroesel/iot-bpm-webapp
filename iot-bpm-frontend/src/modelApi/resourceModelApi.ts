@@ -55,3 +55,25 @@ export const useDeleteResourceModel = (machineModelId: string, resourceModelId: 
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["domain", "machineModels", machineModelId] }),
   });
 };
+
+export const useCreateResourceNameRule = (machineModelId: string, resourceModelId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const response = await apiInstance.post(`/domain/resourceModels/${resourceModelId}/rule`);
+      return response.data;
+    },
+    onSuccess: () =>  queryClient.invalidateQueries({ queryKey: ["domain", "machineModels", machineModelId] }),
+  });
+};
+
+export const useDeleteResourceNameRule = (machineModelId: string, resourceModelId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const response = await apiInstance.delete(`/domain/resourceModels/${resourceModelId}/rule`);
+      return response.data;
+    },
+    onSuccess: () =>  queryClient.invalidateQueries({ queryKey: ["domain", "machineModels", machineModelId] }),
+  });
+};

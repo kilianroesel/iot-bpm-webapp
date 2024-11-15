@@ -15,7 +15,7 @@ export default function ResourceModelEdit({
   machineModelId: string;
 }) {
   const [newResourceModel, setNewResourceModel] = useState<UpsertResourceModel>({
-    resourceModelName: resourceModel.resourceModelName
+    resourceModelName: resourceModel.resourceModelName,
   });
   const mutate = useUpdateResourceModel(machineModelId, resourceModel._id);
 
