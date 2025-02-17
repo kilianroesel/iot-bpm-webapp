@@ -2,7 +2,7 @@ import express from "express";
 import validateSchema from "../../middleware/schemaValidation";
 import { NotFoundError } from "../../middleware/errorhandling";
 import mongoose from "mongoose";
-import mongodb from "../../config/mongoClient";
+import { modeldb } from "../../config/mongoClient";
 import { router as eventModelRouter } from "./eventModels";
 import { router as statusModelRouter } from "./statusModels";
 import { router as viewModelRouter } from "./viewModels";
@@ -48,7 +48,7 @@ router.post("/:equipmentModelId", validateSchema("updateEquipmentModel"), async 
 
 router.delete("/:equipmentModelId", async (req, res, next) => {
     res.status(202).send();
-    const session = await mongodb.startSession();
+    const session = await modeldb.startSession();
     try {
         session.startTransaction();
         const mainEquipment = await EquipmentModel.findByIdAndDelete(req.params.equipmentModelId, { session });
@@ -69,7 +69,7 @@ router.delete("/:equipmentModelId", async (req, res, next) => {
 
 router.post("/:equipmentModelId/equipmentModels", validateSchema("createEquipmentModel"), async (req, res, next) => {
     try {
-        const session = await mongodb.startSession();
+        const session = await modeldb.startSession();
         try {
             session.startTransaction();
 

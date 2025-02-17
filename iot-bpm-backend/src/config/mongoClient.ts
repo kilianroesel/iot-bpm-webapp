@@ -15,5 +15,5 @@ mongoose
         logger.error("Failed to connect to MongoDB");
     });
 
-const mongodb = mongoose.connection;
-export default mongodb;
+export const modeldb = mongoose.connection.useDb("bpm_event_processing");
+export const eventdb = mongoose.connection.useDb("bpm_ocel");

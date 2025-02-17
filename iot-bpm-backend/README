@@ -24,3 +24,7 @@ db.runCommand({
 })
 
 docker exec -it mongo1 mongosh --eval "rs.status()"
+
+az acr login -n acrbpmeventprocessingdev
+docker build . -t acrbpmeventprocessingdev.azurecr.io/iot-bpm-backend:dev-release-1.0.0
+docker push acrbpmeventprocessingdev.azurecr.io/iot-bpm-backend:dev-release-1.0.0

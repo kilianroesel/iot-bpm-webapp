@@ -10,13 +10,14 @@ import cors from "cors";
 import { errorHandler } from "./middleware/errorhandling";
 import { logging } from "./middleware/logging";
 import winston from "winston";
+import { router as eventRouter } from "./routes/bpm/eventRouter";
 
 const logger = winston.loggers.get("systemLogger");
 const port = appConfig.port;
 const host = appConfig.host;
 const app = express();
-const topics = ["eh-bpm-rules-prod"];
-export const kafkaClient = new KafkaClient(topics);
+const topics = ["eh-bpm-heuristicnet-prod"];
+const kafkaClient = new KafkaClient(topics);
 const webSocketTopicServer = new WebSocketTopicServer(topics);
 
 kafkaClient.on("message", (topic: string, message: any) => {
@@ -28,13 +29,13 @@ app.use(logging);
 app.use(express.json());
 
 app.use("/domain", domainRouter);
+app.use("/events", eventRouter)
 
 app.use(errorHandler);
 
 const server = app.listen(port, host, async () => {
     logger.info(`Server is running on port ${port} and host ${host}`);
-    // await kafkaClient.connectConsumer();
-    // await kafkaClient.connectProducer();
+    await kafkaClient.connectConsumer();
 });
 
 server.on("upgrade", (request, socket, head) => {

@@ -108,7 +108,7 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                     }
                 }
             },
-            required: ["eventName", "field", "triggerCategory", "triggerType", "from", "to", "relations"],
+            required: ["eventName", "field", "triggerCategory", "triggerType", "from", "to"],
             additionalProperties: false,
         },
     ],

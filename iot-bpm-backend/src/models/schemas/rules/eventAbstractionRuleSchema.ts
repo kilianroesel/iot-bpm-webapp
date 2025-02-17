@@ -14,6 +14,10 @@ export const eventAbstractionRuleSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        equipmentPath: {
+            type: String,
+            required: true,
+        },
         viewId: {
             type: String,
             required: true,

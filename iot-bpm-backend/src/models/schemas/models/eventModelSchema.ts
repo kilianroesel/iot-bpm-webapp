@@ -1,7 +1,4 @@
-import mongoose from "mongoose";
-import { ResourceModelRawDocType } from "./resourceModelSchema";
-import { log } from "console";
-
+import mongoose from "mongoose";{}
 export interface EventModelRawDocType {
     eventName: string;
     field: string;

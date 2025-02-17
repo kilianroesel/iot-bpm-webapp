@@ -107,6 +107,13 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
             };
         });
 
+        let equipmentPath;
+        if (!equipmentModel.equipmentPath)
+            equipmentPath = `,${equipmentModel._id},`;
+        else
+            equipmentPath = `${equipmentModel.equipmentPath}${equipmentModel._id},`;
+
+
         switch (eventModel.triggerCategory) {
             case "SCALAR_TRIGGER":
                 rule = await EventAbstractionRule.findByIdAndUpdate(
@@ -116,6 +123,7 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
                         field: eventModel.field,
                         scopeId: scopeId,
                         equipmentId: equipmentModel._id,
+                        equipmentPath: equipmentPath,
                         viewId: viewModelId,
                         triggerCategory: eventModel.triggerCategory,
                         triggerType: eventModel.triggerType,
@@ -133,6 +141,7 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
                         field: eventModel.field,
                         scopeId: scopeId,
                         equipmentId: equipmentModel._id,
+                        equipmentPath: equipmentModel.equipmentPath,
                         viewId: viewModelId,
                         triggerCategory: eventModel.triggerCategory,
                         triggerType: eventModel.triggerType,

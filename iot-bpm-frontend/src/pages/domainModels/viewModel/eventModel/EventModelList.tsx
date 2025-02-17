@@ -65,8 +65,8 @@ function EventModel({
 
   return (
     <>
-      <div className="grid grid-cols-11">
-        <div className="col-span-4 flex items-center space-x-4">
+      <div className="grid grid-cols-10 gap-2">
+        <div className="col-span-2 flex items-center space-x-4">
           {eventModel.ruleStatus == "NOT_RELEASED" && (
             <span>
               <HiDocumentPlus className="text-blue-500" size="22" />
@@ -87,6 +87,14 @@ function EventModel({
         <div className="col-span-4 truncate">{eventModel.field}</div>
         <div className="col-span-1 truncate">{eventModel.triggerCategory}</div>
         <div className="col-span-1 truncate">{eventModel.triggerType}</div>
+        <div className="col-span-1 truncate">
+          {eventModel.triggerCategory === "SCALAR_TRIGGER" && <span>{eventModel.value}</span>}
+          {eventModel.triggerCategory === "RANGE_TRIGGER" && (
+            <span>
+              {eventModel.from} to {eventModel.to}
+            </span>
+          )}
+        </div>
         <div className="col-span-1 flex items-center justify-end space-x-4">
           {(eventModel.ruleStatus == "NOT_RELEASED" || eventModel.ruleStatus == "UPDATED") && (
             <IconButton
@@ -109,12 +117,7 @@ function EventModel({
         </div>
       </div>
       {isEditOpen && (
-        <EventModelEdit
-          equipmentModelId={equipmentModelId}
-          viewModelId={viewModelId}
-          eventModel={eventModel}
-          setIsOpen={setIsEditOpen}
-        />
+        <EventModelEdit equipmentModelId={equipmentModelId} viewModelId={viewModelId} eventModel={eventModel} setIsOpen={setIsEditOpen} />
       )}
       {isDeleteOpen && (
         <EventModelDelete

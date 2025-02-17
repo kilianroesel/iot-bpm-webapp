@@ -9,6 +9,9 @@ import MachineModelBase from "./pages/domainModels/machineModel/MachineModelBase
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient } from "./config/queryClientConfig";
 import { RecursiveEquipmentRouter } from "./routes/RecursiveEquipmentRouter";
+import HNetContextProvided from "./components/hnet/HeuristicNetContextProvided";
+import LineList from "./pages/eventExplorer/LineList";
+import { HiExclamationTriangle } from "react-icons/hi2";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -16,12 +19,30 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <Routes>
           <Route path={"/"} element={<MainLayout />}>
-            <Route index element={<div>Overview</div>} />
-            <Route path={"event-explorer"} element={<div>Eventexplorer</div>} />
-            <Route path={"domain-models"} element={<Outlet/>}>
+            <Route index element={<div></div>} />
+            <Route path={"event-explorer"} element={<HNetContextProvided />} />
+            <Route path={"events"} element={<LineList />} />
+            <Route path={"domain-models"} element={<Outlet />}>
               <Route index element={<MachineDescriptionsList />} />
-              <Route path={":equipmentModelId/*"} element={<div className="p-4 space-y-4"><MachineModelBase /><RecursiveEquipmentRouter queryClient={queryClient} /></div>} />
+              <Route
+                path={":equipmentModelId/*"}
+                element={
+                  <div className="space-y-4 p-4">
+                    <MachineModelBase />
+                    <RecursiveEquipmentRouter queryClient={queryClient} />
+                  </div>
+                }
+              />
             </Route>
+            <Route
+              path="*"
+              element={
+                <div className="flex items-center space-x-2 group-hover:text-white">
+                  <HiExclamationTriangle size="18" />
+                  <div>Page not found</div>
+                </div>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>

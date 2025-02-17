@@ -32,7 +32,6 @@ export default function EquipmentModelEdit({
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(newEquipmentModel);
     mutate.mutate(newEquipmentModel, {
       onSuccess: stopCreating,
     });
