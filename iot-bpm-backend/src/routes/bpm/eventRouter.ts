@@ -1,11 +1,12 @@
 import express from "express";
-import { eventdb } from "../../config/mongoClient";
+import { DbClient } from "../../config/DbClient";
 
 export const router = express.Router();
+const mongoClient = DbClient.instance;
 
 router.get("/lines", async (req, res, next) => {
     try {
-        const collections = await eventdb.listCollections();
+        const collections = await mongoClient.useEventDb().listCollections();
         console.log(collections);
         const collectionNames = collections.map((collection) => {
             return { name: collection.name };

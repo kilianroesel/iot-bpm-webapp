@@ -1,18 +1,21 @@
-import { Consumer, Kafka, Producer } from "kafkajs";
+import { Consumer, Kafka } from "kafkajs";
 import EventEmitter from "events";
+import winston from "winston";
 
 const kafkaClientId = process.env.KAFKA_CLIENTID || "";
 const kafkaBroker = process.env.KAFKA_BROKER || "";
 const kafkaUsername = process.env.KAFKA_USERNAME || "";
 const kafkaPassword = process.env.KAFKA_PASSWORD || "";
 
+
+const logger = winston.loggers.get("systemLogger");
 export class KafkaClient extends EventEmitter {
+    static #instance: KafkaClient;
     private kafka: Kafka;
     private consumer: Consumer;
-    private producer: Producer;
     private topics: string[];
 
-    constructor(topics: string[]) {
+    private constructor(topics: string[]) {
         super();
         this.kafka = new Kafka({
             clientId: kafkaClientId,
@@ -24,36 +27,40 @@ export class KafkaClient extends EventEmitter {
                 password: kafkaPassword,
             },
         });
-        this.consumer = this.kafka.consumer({ groupId: "WEBAPP" });
-        this.producer = this.kafka.producer();
+        this.consumer = this.kafka.consumer({ groupId: "iot-bpm-webapp" });
         this.topics = topics;
     }
 
-    async connectConsumer() {
+    public static get instance(): KafkaClient {
+        const topics = ["eh-bpm-event-processing-prod"];
+
+        if (!KafkaClient.#instance) {
+            KafkaClient.#instance = new KafkaClient(topics);
+        }
+        return KafkaClient.#instance;
+    }
+
+    async connect() {
         await this.consumer.connect();
-        await this.consumer.subscribe({ topics: this.topics, fromBeginning: true });
+        logger.info("Kafka Consumer connected");
+        await this.consumer.subscribe({ topics: this.topics, fromBeginning: false });
+        logger.info("Kafka Consumer subscribed");
 
         this.consumer.run({
             eachMessage: async ({ topic, partition, message }) => {
-                console.log(message.value?.toString())
-                this.emit("message", topic, message.value?.toString());
+                if (message.value)
+                    try {
+                        const jsonMessage = JSON.parse(message.value.toString());
+                        this.emit("message", topic, jsonMessage);
+                    } catch (error) {
+                    }
             },
         });
     }
 
-    async connectProducer() {
-        await this.producer.connect();
-    }
-
-    async sendMessage(topic: string, message: string) {
-        await this.producer.send({
-            topic: topic,
-            messages: [{ value: message }],
-        });
-    }
-
     async disconnect() {
+        await this.consumer.stop();
         await this.consumer.disconnect();
-        await this.producer.disconnect();
+        logger.info("Kafka Consumer disconnected");
     }
 }

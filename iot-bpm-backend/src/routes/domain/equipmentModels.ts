@@ -2,12 +2,13 @@ import express from "express";
 import validateSchema from "../../middleware/schemaValidation";
 import { NotFoundError } from "../../middleware/errorhandling";
 import mongoose from "mongoose";
-import { modeldb } from "../../config/mongoClient";
 import { router as eventModelRouter } from "./eventModels";
 import { router as statusModelRouter } from "./statusModels";
 import { router as viewModelRouter } from "./viewModels";
 import { EquipmentModel } from "../../models/schemas/models";
+import { DbClient } from "../../config/DbClient";
 
+const mongoClient = DbClient.instance;
 export const router = express.Router();
 
 router.use("", statusModelRouter); // "/:equipmentModelId/statusModels"
@@ -48,7 +49,7 @@ router.post("/:equipmentModelId", validateSchema("updateEquipmentModel"), async 
 
 router.delete("/:equipmentModelId", async (req, res, next) => {
     res.status(202).send();
-    const session = await modeldb.startSession();
+    const session = await mongoClient.useModelDb().startSession();
     try {
         session.startTransaction();
         const mainEquipment = await EquipmentModel.findByIdAndDelete(req.params.equipmentModelId, { session });
@@ -69,7 +70,7 @@ router.delete("/:equipmentModelId", async (req, res, next) => {
 
 router.post("/:equipmentModelId/equipmentModels", validateSchema("createEquipmentModel"), async (req, res, next) => {
     try {
-        const session = await modeldb.startSession();
+        const session = await mongoClient.useModelDb().startSession();
         try {
             session.startTransaction();
 
