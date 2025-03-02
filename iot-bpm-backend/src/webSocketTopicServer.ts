@@ -3,14 +3,22 @@ import { EventEmitter } from "stream";
 import WebSocket, { WebSocketServer } from "ws";
 
 export class WebSocketTopicServer extends EventEmitter {
+  static #instance: WebSocketTopicServer;
   private wsServer: WebSocketServer;
   private topicMap: Map<string, Set<WebSocket>>;
 
-  constructor() {
+  private constructor() {
     super();
     this.wsServer = new WebSocketServer({ noServer: true });
     this.topicMap = new Map();
   }
+
+  public static get instance(): WebSocketTopicServer {
+    if (!WebSocketTopicServer.#instance) {
+        WebSocketTopicServer.#instance = new WebSocketTopicServer();
+    }
+    return WebSocketTopicServer.#instance;
+}
 
   private onConnection(ws: WebSocket, req: IncomingMessage) {
     if (!req.url) {
@@ -19,7 +27,6 @@ export class WebSocketTopicServer extends EventEmitter {
     }
 
     const topic = req.url.split("?")[0].slice(1);
-    console.log(topic)
     var clients = this.topicMap.get(topic);
     if (clients == null) {
       clients = new Set();
@@ -47,10 +54,18 @@ export class WebSocketTopicServer extends EventEmitter {
       return;
     }
     clients.forEach((client) => {
-      console.log(client.readyState)
       if (client.readyState === WebSocket.OPEN) {
         client.send(message);
       }
     });
+  }
+
+  public async close() {
+    this.topicMap.forEach((clientSet) => {
+      clientSet.forEach((client) => {
+        client.close(1001, 'Application shutting down');
+      })
+    });
+    this.wsServer.close();
   }
 }

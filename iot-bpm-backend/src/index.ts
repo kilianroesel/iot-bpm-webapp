@@ -1,4 +1,3 @@
-import wtfnode from "wtfnode";
 import "dotenv/config";
 import "./config/loggers";
 import "./config/DbClient";
@@ -17,21 +16,18 @@ import http from "http";
 
 const logger = winston.loggers.get("systemLogger");
 const port = appConfig.port;
-const host = appConfig.host;
 const app = express();
 const dbClient = DbClient.instance;
 const kafkaClient = KafkaClient.instance;
-const webSocketTopicServer = new WebSocketTopicServer();
+const webSocketTopicServer = WebSocketTopicServer.instance;
 
-// const kafkaClient = new KafkaClient(topics);
-
-// kafkaClient.on("message", (_: string, message: any) => {
-//     if (message.schemaVersion == "1.0" && message.payloadType == "csi:1.0") {
-//         if (message.payload.edgeDeviceId) {
-//             webSocketTopicServer.sendMessageToTopic("devices/" + message.payload.edgeDeviceId, message);
-//         }
-//     }
-// });
+kafkaClient.on("message", (_: string, message: any) => {
+    if (message.schemaVersion == "1.0" && message.payloadType == "csi:1.0") {
+        if (message.payload.edgeDeviceId) {
+            webSocketTopicServer.sendMessageToTopic("devices/" + message.payload.edgeDeviceId, message);
+        }
+    }
+});
 
 app.use(cors(appConfig.corsOptions));
 app.use(logging);
@@ -43,28 +39,45 @@ app.use("/events", eventRouter);
 app.use(errorHandler);
 
 const server = http.createServer(app);
-
 server.on("upgrade", (request, socket, head) => {
     webSocketTopicServer.handleUpgrade(request, socket as any, head);
 });
 
 async function startup() {
-    await dbClient.connect();
-    await kafkaClient.connect();
-    server.listen(port, () => {
-        logger.info(`Server running on port ${port}`);
-    });
+    try {
+        await dbClient.connect();               // Connect database
+        logger.info("Connected database");
+        await kafkaClient.connect();            // Connect kafka client
+        logger.info("Connected kafka");
+        server.listen(port, () => {             // Finally start listening for connections
+            logger.info(`Server running on port ${port}`);
+        });
+    } catch (error) {
+        logger.error("Could not start application")
+    }
 }
 
-async function exitHandler() {
-    server.close();
-    await dbClient.close();
-    await kafkaClient.disconnect();
-    logger.info("Application has shut down");
+async function shutdown() {
+    logger.info("Shutting down application");
+    try {
+        server.close();                               // Stop accepting new connections
+        logger.info("Closed server");
+        await webSocketTopicServer.close();           // Close websocket connections
+        logger.info("Closed websocket");
+        await dbClient.close();
+        logger.info("Closed database");
+        await kafkaClient.disconnect()
+        logger.info("Disconnected kafka");
+        logger.info("Application has shut down");
+    } catch (error) {
+        logger.error("Application shut down with errors");
+        process.exit(1);
+    }
+    process.exit(0);
 }
 
-process.on("SIGTERM", exitHandler);
-process.on("SIGINT", exitHandler);
-process.on("SIGUSR2", exitHandler);
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
+process.on("SIGUSR2", shutdown);
 
 startup();

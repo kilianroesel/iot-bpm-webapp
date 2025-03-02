@@ -42,11 +42,8 @@ export class KafkaClient extends EventEmitter {
 
     async connect() {
         await this.consumer.connect();
-        logger.info("Kafka Consumer connected");
         await this.consumer.subscribe({ topics: this.topics, fromBeginning: false });
-        logger.info("Kafka Consumer subscribed");
-
-        this.consumer.run({
+        await this.consumer.run({
             eachMessage: async ({ topic, partition, message }) => {
                 if (message.value)
                     try {
@@ -59,8 +56,6 @@ export class KafkaClient extends EventEmitter {
     }
 
     async disconnect() {
-        await this.consumer.stop();
         await this.consumer.disconnect();
-        logger.info("Kafka Consumer disconnected");
     }
 }
