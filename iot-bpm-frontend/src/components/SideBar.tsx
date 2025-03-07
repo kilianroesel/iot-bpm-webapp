@@ -6,9 +6,9 @@ export default function SideBar() {
     <div className="w-18 h-full shrink-0 flex-col space-y-4 bg-slate-900 p-4 shadow-lg lg:w-64">
       <SideBarElement to={"/"} icon={<HiOutlineChartPie className="text-orange-400" size="26" />} text="Overview" />
       <SideBarElement
-        to={"/event-explorer"}
+        to={"/lines"}
         icon={<HiOutlineSquare3Stack3D className="text-lime-500" size="26" />}
-        text="Event Explorer"
+        text="Lines"
       />
       <SideBarElement
         to={"/domain-models"}

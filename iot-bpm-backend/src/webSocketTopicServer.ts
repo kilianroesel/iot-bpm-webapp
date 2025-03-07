@@ -2,40 +2,40 @@ import { IncomingMessage } from "http";
 import { EventEmitter } from "stream";
 import WebSocket, { WebSocketServer } from "ws";
 
-export class WebSocketTopicServer extends EventEmitter {
-  static #instance: WebSocketTopicServer;
+export class WebSocketSubscriptionServer extends EventEmitter {
+  static #instance: WebSocketSubscriptionServer;
   private wsServer: WebSocketServer;
-  private topicMap: Map<string, Set<WebSocket>>;
+  private endpointMap: Map<string, Set<WebSocket>>;
 
   private constructor() {
     super();
     this.wsServer = new WebSocketServer({ noServer: true });
-    this.topicMap = new Map();
+    this.endpointMap = new Map();
   }
 
-  public static get instance(): WebSocketTopicServer {
-    if (!WebSocketTopicServer.#instance) {
-        WebSocketTopicServer.#instance = new WebSocketTopicServer();
+  public static get instance(): WebSocketSubscriptionServer {
+    if (!WebSocketSubscriptionServer.#instance) {
+        WebSocketSubscriptionServer.#instance = new WebSocketSubscriptionServer();
     }
-    return WebSocketTopicServer.#instance;
+    return WebSocketSubscriptionServer.#instance;
 }
 
   private onConnection(ws: WebSocket, req: IncomingMessage) {
     if (!req.url) {
-      ws.close(1008, "Specify a topic");
+      ws.close(1008, "Specify an endpoint");
       return;
     }
 
-    const topic = req.url.split("?")[0].slice(1);
-    var clients = this.topicMap.get(topic);
+    const endpoint = req.url.split("?")[0].slice(1);
+    var clients = this.endpointMap.get(endpoint);
     if (clients == null) {
       clients = new Set();
     }
     clients.add(ws);
-    this.topicMap.set(topic, clients);
+    this.endpointMap.set(endpoint, clients);
 
     ws.on("close", () => {
-      const clients = this.topicMap.get(topic);
+      const clients = this.endpointMap.get(endpoint);
       if (clients != null) {
         clients.delete(ws);
       }
@@ -48,20 +48,20 @@ export class WebSocketTopicServer extends EventEmitter {
     });
   }
 
-  public sendMessageToTopic(topic: string, message: string) {
-    const clients = this.topicMap.get(topic);
-    if (clients == null) {
+  public sendMessageToEndpoint(endpoint: string, message: string) {
+    const clients = this.endpointMap.get(endpoint);
+    if (!clients) {
       return;
     }
     clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
+      if (client.readyState == WebSocket.OPEN) {
+        client.send(JSON.stringify(message));
       }
     });
   }
 
   public async close() {
-    this.topicMap.forEach((clientSet) => {
+    this.endpointMap.forEach((clientSet) => {
       clientSet.forEach((client) => {
         client.close(1001, 'Application shutting down');
       })

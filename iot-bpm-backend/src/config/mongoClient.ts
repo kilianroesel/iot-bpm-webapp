@@ -6,9 +6,14 @@ const logger = winston.loggers.get("systemLogger");
 export class DbClient {
     static #instance: DbClient;
     private uri: string;
+    public modelDb;
+    public eventDb;
+
 
     private constructor(uri: string) {
         this.uri = uri;
+        this.modelDb = mongoose.connection.useDb("bpm_event_processing");
+        this.eventDb = mongoose.connection.useDb("bpm_ocel");
     }
 
     public static get instance(): DbClient {
@@ -19,14 +24,6 @@ export class DbClient {
             DbClient.#instance = new DbClient(uri);
         }
         return DbClient.#instance;
-    }
-
-    public useModelDb(): mongoose.Connection {
-        return mongoose.connection.useDb("bpm_event_processing");
-    }
-
-    public useEventDb(): mongoose.Connection {
-        return mongoose.connection.useDb("bpm_ocel");
     }
 
     public async connect() {

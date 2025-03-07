@@ -12,6 +12,7 @@ import { RecursiveEquipmentRouter } from "./routes/RecursiveEquipmentRouter";
 import HNetContextProvided from "./components/hnet/HeuristicNetContextProvided";
 import LineList from "./pages/eventExplorer/LineList";
 import { HiExclamationTriangle } from "react-icons/hi2";
+import Line from "./pages/eventExplorer/line/Line";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -20,8 +21,18 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path={"/"} element={<MainLayout />}>
             <Route index element={<div></div>} />
-            <Route path={"event-explorer"} element={<HNetContextProvided />} />
-            <Route path={"events"} element={<LineList />} />
+            {/* <Route path={"event-explorer"} element={<HNetContextProvided />} /> */}
+            <Route path={"lines"} element={<Outlet />}>
+              <Route index element={<LineList />} />
+              <Route
+                path={":lineId"}
+                element={
+                  <div className="space-y-4 p-4">
+                    <Line />
+                  </div>
+                }
+              />
+            </Route>
             <Route path={"domain-models"} element={<Outlet />}>
               <Route index element={<MachineDescriptionsList />} />
               <Route

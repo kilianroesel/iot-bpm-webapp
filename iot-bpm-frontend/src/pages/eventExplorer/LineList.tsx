@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { HiArrowTopRightOnSquare } from "react-icons/hi2";
-import { linesQuery } from "../../eventApi/lineApi";
+import { linesQuery } from "../../bpmApi/lineApi";
 
 export default function MachineModelsList() {
   const { data: lines } = useSuspenseQuery(linesQuery());

@@ -32,7 +32,7 @@ export class KafkaClient extends EventEmitter {
     }
 
     public static get instance(): KafkaClient {
-        const topics = ["eh-bpm-event-processing-prod"];
+        const topics = ["eh-bpm-event-processing-prod", "eh-bpm-ocelevents-prod"];
 
         if (!KafkaClient.#instance) {
             KafkaClient.#instance = new KafkaClient(topics);

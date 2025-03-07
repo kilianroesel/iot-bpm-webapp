@@ -60,12 +60,12 @@ export default function MachineModelBase() {
             )}
             <IconEditButton onClick={() => startEditStatus()} />
           </div>
-          <div className="grid grid-cols-2">
-            <div className="">Machine Name</div>
+          <div className="grid grid-cols-3">
+            <div className="font-semibold">Machine Name</div>
+            <div className="font-semibold">Version Csi Standard</div>
+            <div className="font-semibold">Version Csi Specific</div>
             <div>{machineModel.machineName}</div>
-            <div>Version Csi Standard</div>
             <div>{machineModel.versionCsiStd}</div>
-            <div>Version Csi Specific</div>
             <div>{machineModel.versionCsiSpecific}</div>
           </div>
         </div>

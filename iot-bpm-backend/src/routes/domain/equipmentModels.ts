@@ -6,7 +6,7 @@ import { router as eventModelRouter } from "./eventModels";
 import { router as statusModelRouter } from "./statusModels";
 import { router as viewModelRouter } from "./viewModels";
 import { EquipmentModel } from "../../models/schemas/models";
-import { DbClient } from "../../config/DbClient";
+import { DbClient } from "../../config/mongoClient";
 
 const mongoClient = DbClient.instance;
 export const router = express.Router();
@@ -49,7 +49,7 @@ router.post("/:equipmentModelId", validateSchema("updateEquipmentModel"), async 
 
 router.delete("/:equipmentModelId", async (req, res, next) => {
     res.status(202).send();
-    const session = await mongoClient.useModelDb().startSession();
+    const session = await mongoClient.modelDb.startSession();
     try {
         session.startTransaction();
         const mainEquipment = await EquipmentModel.findByIdAndDelete(req.params.equipmentModelId, { session });
@@ -70,7 +70,7 @@ router.delete("/:equipmentModelId", async (req, res, next) => {
 
 router.post("/:equipmentModelId/equipmentModels", validateSchema("createEquipmentModel"), async (req, res, next) => {
     try {
-        const session = await mongoClient.useModelDb().startSession();
+        const session = await mongoClient.modelDb.startSession();
         try {
             session.startTransaction();
 
