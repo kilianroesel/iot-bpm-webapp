@@ -57,6 +57,13 @@ export const eventAbstractionRuleSchema = new mongoose.Schema(
                     type: String,
                     required: true,
                 },
+                quantity: {
+                    type: Number,
+                    required: true,
+                },
+                lifespan: {
+                    type: Number,
+                },
             },
         ],
     },

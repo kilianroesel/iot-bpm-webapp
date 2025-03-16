@@ -1,5 +1,8 @@
 export interface HeuristicNet {
+  startTime?: number;
+  endTime?: number;
   processedEvents: number;
+  device: string;
   objectView: string;
   nodes: HeuristicNetNode[];
   edges: HeuristicNetEdge[];
@@ -23,7 +26,140 @@ interface HeuristicNetEdge {
 }
 
 export const heuristicNet: HeuristicNet = {
+  startTime: 1741940152.957,
+  endTime: 1741959144.132,
+  processedEvents: 146,
+  objectView: "viewId",
+  device: "23005663",
+  nodes: [
+    { activity: "Ready", occurences: 5, inputBindings: ["Preparing"], outputBindings: ["Running"] },
+    { activity: "Restarting", occurences: 1, inputBindings: ["Held"], outputBindings: ["Running"] },
+    { activity: "Stopped", occurences: 4, inputBindings: ["Completed", "Stopping"], outputBindings: ["Preparing"] },
+    { activity: "Held", occurences: 38, inputBindings: ["Holding"], outputBindings: ["Running", "Restarting"] },
+    { activity: "Completed", occurences: 1, inputBindings: ["Stopping"], outputBindings: ["Stopped"] },
+    { activity: "Running", occurences: 46, inputBindings: ["Held", "Ready", "Restarting"], outputBindings: ["Stopping", "Holding"] },
+    { activity: "Holding", occurences: 42, inputBindings: ["Running"], outputBindings: ["Held"] },
+    { activity: "Stopping", occurences: 4, inputBindings: ["Running"], outputBindings: ["Completed", "Stopped"] },
+    { activity: "Preparing", occurences: 5, inputBindings: ["Stopped"], outputBindings: ["Ready"] },
+  ],
+  edges: [
+    { sourceNode: "Stopping", targetNode: "Completed", duration: 8.641, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "Completed", targetNode: "Stopped", duration: 0.2, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "Stopping", targetNode: "Stopped", duration: 8.578, dfgValue: 3, dependencyValue: 0.75 },
+    { sourceNode: "Held", targetNode: "Running", duration: 86.174805547, dfgValue: 36, dependencyValue: 0.972972972972973 },
+    { sourceNode: "Held", targetNode: "Restarting", duration: 1.406, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "Holding", targetNode: "Held", duration: 1.263763148, dfgValue: 38, dependencyValue: 0.9743589743589743 },
+    { sourceNode: "Ready", targetNode: "Running", duration: 3.577199999, dfgValue: 5, dependencyValue: 0.8333333333333334 },
+    { sourceNode: "Restarting", targetNode: "Running", duration: 0.201, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "Running", targetNode: "Holding", duration: 237.326642847, dfgValue: 42, dependencyValue: 0.8085106382978723 },
+    { sourceNode: "Running", targetNode: "Stopping", duration: 393.60575, dfgValue: 4, dependencyValue: 0.8 },
+    { sourceNode: "Preparing", targetNode: "Ready", duration: 52.727199999, dfgValue: 5, dependencyValue: 0.8333333333333334 },
+    { sourceNode: "Stopped", targetNode: "Preparing", duration: 994.39875, dfgValue: 4, dependencyValue: 0.8 },
+  ],
+  sourceNodes: ["Preparing"],
+  sinkNodes: ["Held"],
+};
+
+export const heuristicNe4: HeuristicNet = {
+  processedEvents: 7040,
+  objectView: "equipmentId",
+  device: "23005663",
+  nodes: [
+    {
+      activity: "Stopped",
+      occurences: 17,
+      inputBindings: ["Stopped", "Aborted", "Completed", "Running", "Stopping"],
+      outputBindings: ["Production", "Stopped", "Cleaning", "Manual", "Preparing"],
+    },
+    {
+      activity: "Weighed Portion",
+      occurences: 1050,
+      inputBindings: ["OptiSlicer cut portion", "Weighed Portion"],
+      outputBindings: ["Weighed Portion"],
+    },
+    { activity: "Holding", occurences: 10, inputBindings: ["Running"], outputBindings: ["Held"] },
+    { activity: "Stopping", occurences: 2, inputBindings: ["Running"], outputBindings: ["Stopped"] },
+    { activity: "Manual", occurences: 2, inputBindings: ["Stopped"], outputBindings: ["Running"] },
+    { activity: "Cleaning", occurences: 1, inputBindings: ["Stopped"], outputBindings: ["Running"] },
+    { activity: "Preparing", occurences: 3, inputBindings: ["Stopped"], outputBindings: ["Production"] },
+    { activity: "Aborted", occurences: 1, inputBindings: ["Running"], outputBindings: ["Stopped"] },
+    { activity: "Ready", occurences: 6, inputBindings: ["Production"], outputBindings: ["Running"] },
+    { activity: "Production", occurences: 8, inputBindings: ["Stopped", "Preparing"], outputBindings: ["Ready"] },
+    { activity: "Held", occurences: 34, inputBindings: ["Holding"], outputBindings: ["Running"] },
+    { activity: "Scanned Product", occurences: 91, inputBindings: ["Scanned Product"], outputBindings: ["Scanned Product"] },
+    {
+      activity: "Running",
+      occurences: 48,
+      inputBindings: ["Held", "Ready", "Running", "Manual", "Cleaning"],
+      outputBindings: ["Aborted", "Stopping", "Running", "Completed", "Holding", "Stopped"],
+    },
+    { activity: "Completed", occurences: 1, inputBindings: ["Running"], outputBindings: ["Stopped"] },
+    {
+      activity: "OptiSlicer cut portion",
+      occurences: 5764,
+      inputBindings: ["OptiSlicer cut portion"],
+      outputBindings: ["Weighed Portion", "OptiSlicer cut portion"],
+    },
+    {
+      activity: "OptiSlicer made idle Cut",
+      occurences: 2,
+      inputBindings: ["OptiSlicer made idle Cut"],
+      outputBindings: ["OptiSlicer made idle Cut"],
+    },
+  ],
+  edges: [
+    { sourceNode: "Aborted", targetNode: "Stopped", duration: 0.402, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "Manual", targetNode: "Running", duration: 1.508, dfgValue: 2, dependencyValue: 0.6666666666666666 },
+    { sourceNode: "Running", targetNode: "Completed", duration: 1079.252, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "Cleaning", targetNode: "Running", duration: 29.94, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "Running", targetNode: "Running", duration: 207.822333333, dfgValue: 3, dependencyValue: 0.75 },
+    { sourceNode: "Completed", targetNode: "Stopped", duration: 0.2, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "Stopped", targetNode: "Manual", duration: 50.8415, dfgValue: 2, dependencyValue: 0.6666666666666666 },
+    { sourceNode: "Running", targetNode: "Stopped", duration: 339.766199999, dfgValue: 5, dependencyValue: 0.8333333333333334 },
+    {
+      sourceNode: "OptiSlicer cut portion",
+      targetNode: "OptiSlicer cut portion",
+      duration: 10.305207993,
+      dfgValue: 5763,
+      dependencyValue: 0.9998265093684942,
+    },
+    { sourceNode: "Holding", targetNode: "Held", duration: 1.405749998, dfgValue: 8, dependencyValue: 0.8888888888888888 },
+    { sourceNode: "Stopped", targetNode: "Cleaning", duration: 32.756, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "OptiSlicer cut portion", targetNode: "Weighed Portion", duration: 2556.979, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "Stopped", targetNode: "Preparing", duration: 2180.676666666, dfgValue: 3, dependencyValue: 0.75 },
+    { sourceNode: "Stopped", targetNode: "Stopped", duration: 0.0, dfgValue: 6, dependencyValue: 0.8571428571428571 },
+    { sourceNode: "Stopped", targetNode: "Production", duration: 8124.7066, dfgValue: 5, dependencyValue: 0.375 },
+    { sourceNode: "Held", targetNode: "Running", duration: 91.679499993, dfgValue: 34, dependencyValue: 0.15 },
+    {
+      sourceNode: "Weighed Portion",
+      targetNode: "Weighed Portion",
+      duration: 3.062350559,
+      dfgValue: 1049,
+      dependencyValue: 0.9990476190476191,
+    },
+    { sourceNode: "OptiSlicer made idle Cut", targetNode: "OptiSlicer made idle Cut", duration: 7181.9, dfgValue: 1, dependencyValue: 0.5 },
+    { sourceNode: "Ready", targetNode: "Running", duration: 3.450166665, dfgValue: 6, dependencyValue: 0.8571428571428571 },
+    { sourceNode: "Stopping", targetNode: "Stopped", duration: 8.4445, dfgValue: 2, dependencyValue: 0.6666666666666666 },
+    { sourceNode: "Production", targetNode: "Ready", duration: 45.014166666, dfgValue: 6, dependencyValue: 0.8571428571428571 },
+    {
+      sourceNode: "Scanned Product",
+      targetNode: "Scanned Product",
+      duration: 95.122511086,
+      dfgValue: 90,
+      dependencyValue: 0.989010989010989,
+    },
+    { sourceNode: "Running", targetNode: "Holding", duration: 253.435699998, dfgValue: 10, dependencyValue: 0.6153846153846154 },
+    { sourceNode: "Preparing", targetNode: "Production", duration: 0.0, dfgValue: 3, dependencyValue: 0.75 },
+    { sourceNode: "Running", targetNode: "Stopping", duration: 594.736, dfgValue: 2, dependencyValue: 0.6666666666666666 },
+    { sourceNode: "Running", targetNode: "Aborted", duration: 14.464, dfgValue: 1, dependencyValue: 0.5 },
+  ],
+  sourceNodes: ["Held", "Scanned Product", "OptiSlicer cut portion", "OptiSlicer made idle Cut"],
+  sinkNodes: ["Scanned Product", "Weighed Portion", "Running", "OptiSlicer made idle Cut"],
+};
+
+export const heuristicNet3: HeuristicNet = {
   processedEvents: 71300,
+  device: "23005663",
   objectView: "66eaf794107015112cbeee44Production",
   nodes: [
     {
@@ -111,6 +247,7 @@ export const heuristicNet: HeuristicNet = {
 
 export const heuristicNet4: HeuristicNet = {
   processedEvents: 60935,
+  device: "23005663",
   objectView: "item",
   nodes: [
     {
@@ -335,6 +472,7 @@ export const heuristicNet4: HeuristicNet = {
 export const heuristicNet1: HeuristicNet = {
   processedEvents: 60935,
   objectView: "item",
+  device: "23005663",
   nodes: [
     {
       activity: "send package",
@@ -586,6 +724,7 @@ export const heuristicNet1: HeuristicNet = {
 
 export const heuristicNet2: HeuristicNet = {
   processedEvents: 60935,
+  device: "23005663",
   objectView: "item",
   nodes: [
     {

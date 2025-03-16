@@ -104,6 +104,8 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
                 resourceModelId: relation.resourceModel.toString(),
                 interactionType: relation.interactionType,
                 qualifier: relation.qualifier,
+                quantity: relation.quantity,
+                lifespan: relation.lifespan
             };
         });
 

@@ -3,6 +3,7 @@ import { HeuristicNetEdgeType } from "../HeuristicNetContext";
 
 export default function HeuristicNetEdge(props: EdgeProps<HeuristicNetEdgeType>) {
   const section = props.pathOptions.sections[0];
+  const label = props.pathOptions.labels[0];
   var bendPoints = section.bendPoints;
   if (!bendPoints) {
     bendPoints = [];
@@ -12,7 +13,20 @@ export default function HeuristicNetEdge(props: EdgeProps<HeuristicNetEdgeType>)
 
   const edgePath = generateBezierPathWithDeCasteljau(bendPoints, 100);
 
-  return <BaseEdge path={edgePath} markerEnd={props.markerEnd} />;
+  return (
+    <g>
+      <BaseEdge path={edgePath} markerEnd={props.markerEnd} labelX={label.x}/>
+      <text
+        x={label.x}
+        y={label.y}
+        fill="white"
+        fontSize="12"
+        textAnchor="start"
+      >
+        {label.text}
+      </text>
+    </g>
+  );
 }
 
 function deCasteljau(points: { x: number; y: number }[], t: number): { x: number; y: number } {

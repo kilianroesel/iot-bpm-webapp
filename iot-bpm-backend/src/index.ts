@@ -54,7 +54,7 @@ async function startup() {
     try {
         await dbClient.connect();               // Connect database
         logger.info("Connected database");
-        await kafkaClient.connect();            // Connect kafka client
+        // await kafkaClient.connect();            // Connect kafka client
         logger.info("Connected kafka");
         server.listen(port, () => {             // Finally start listening for connections
             logger.info(`Server running on port ${port}`);

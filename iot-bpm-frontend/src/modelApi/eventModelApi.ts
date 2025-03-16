@@ -45,11 +45,22 @@ export interface BaseUpdateEventModel {
   relations: EventResourceModelRelation[];
 }
 
-export interface EventResourceModelRelation {
+interface CreationalEventResourceRelation {
+  interactionType: "CREATE" | "PROVIDE",
   resourceModel: string;
-  interactionType: string;
   qualifier: string;
+  quantity: number;
+  lifespan: number;
 }
+
+interface ConsumingEventResourceRelation {
+  interactionType: "CONSUME" | "USE",
+  resourceModel: string;
+  qualifier: string;
+  quantity: number;
+}
+
+export type EventResourceModelRelation = CreationalEventResourceRelation | ConsumingEventResourceRelation
 
 export interface GetScalarTriggerEventModel extends ScalarTriggerEventExtension, Omit<GetEventModelBase, "triggerCategory"> {}
 export interface GetRangeTriggerEventModel extends RangeTriggerEventExtension, Omit<GetEventModelBase, "triggerCategory"> {}

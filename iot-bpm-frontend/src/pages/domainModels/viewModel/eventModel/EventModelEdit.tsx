@@ -5,6 +5,7 @@ import { Dialog } from "../../../../components/forms/Dialog";
 import { Form, FormHeader, FormLabel } from "../../../../components/forms/Form";
 import {
   BaseUpdateEventModel,
+  EventResourceModelRelation,
   GetRangeTriggerEventModel,
   GetScalarTriggerEventModel,
   RangeTriggerEventExtensionForm,
@@ -60,14 +61,24 @@ export default function EventModelEdit({
   };
 
   const handleRelationsChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = event.target;
+    const { name, value, type } = event.target;
     const index = Number(event.target.getAttribute("data-index")) || 0;
     const newEventResourceModelRelations = [...updatedEventModel.relations];
-    const newEventModelRelation = {
-      ...updatedEventModel.relations[index],
-      [name]: value,
-    };
-    newEventResourceModelRelations[index] = newEventModelRelation;
+    console.log(type)
+    if (type == "number") {
+      const newNumber = value ? Number(value) : "";
+      const newEventModelRelation = {
+        ...updatedEventModel.relations[index],
+        [name]: newNumber,
+      };
+      newEventResourceModelRelations[index] = newEventModelRelation;
+    } else {
+      const newEventModelRelation = {
+        ...updatedEventModel.relations[index],
+        [name]: value,
+      };
+      newEventResourceModelRelations[index] = newEventModelRelation;
+    }
     setUpdatedEventModel({
       ...updatedEventModel,
       relations: newEventResourceModelRelations,
@@ -79,10 +90,12 @@ export default function EventModelEdit({
   };
 
   const addEventResourceRelation = () => {
-    const newEventResourceRelation = {
-      resourceModel: "",
+    const newEventResourceRelation: EventResourceModelRelation = {
       interactionType: "CREATE",
+      resourceModel: "",
       qualifier: "",
+      quantity: 1,
+      lifespan: 60,
     };
     setUpdatedEventModel({
       ...updatedEventModel,
@@ -156,23 +169,41 @@ export default function EventModelEdit({
           </div>
           {updatedEventModel.relations.map((relation, index) => (
             <FormLabel className="flex items-center space-x-2" key={index}>
-              <Select name="resourceModel" value={relation.resourceModel} data-index={index} onChange={handleRelationsChange}>
-                {queryResourceModels.data?.map((resourceModel) => (
-                  <option key={resourceModel._id} value={resourceModel._id}>
-                    {resourceModel.resourceModelName} - {resourceModel.machineModel?.machineName}
-                  </option>
-                ))}
-              </Select>
-              <Select
-                name="interactionType"
-                value={relation.interactionType}
-                data-index={index}
-                onChange={handleRelationsChange}
-              >
-                <option value="CREATE">CREATE</option>
-                <option value="CONSUME">CONSUME</option>
-              </Select>
-              <Input type="text" name="qualifier" value={relation.qualifier} data-index={index} onChange={handleRelationsChange} />
+              <div className="flex flex-col">
+                <FormLabel>InteractionType</FormLabel>
+                <Select name="interactionType" value={relation.interactionType} data-index={index} onChange={handleRelationsChange}>
+                  <option value="CREATE">CREATE</option>
+                  <option value="PROVIDE">PROVIDE</option>
+                  <option value="CONSUME">CONSUME</option>
+                  <option value="USE">USE</option>
+                </Select>
+              </div>
+              <div className="flex flex-col">
+                <FormLabel>ResourceModel</FormLabel>
+                <Select name="resourceModel" value={relation.resourceModel} data-index={index} onChange={handleRelationsChange}>
+                  {queryResourceModels.data?.map((resourceModel) => (
+                    <option key={resourceModel._id} value={resourceModel._id}>
+                      {resourceModel.resourceModelName} - {resourceModel.machineModel?.machineName}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              {(relation.interactionType === "CREATE" || relation.interactionType === "PROVIDE") && (
+                <div className="flex flex-col">
+                  <FormLabel>Lifespan</FormLabel>
+                  <Input type="number" name="lifespan" value={relation.lifespan} data-index={index} onChange={handleRelationsChange} />
+                </div>
+              )}
+              <div className="flex flex-col">
+                <FormLabel>Qualifier</FormLabel>
+                <Input type="text" name="qualifier" value={relation.qualifier} data-index={index} onChange={handleRelationsChange} />
+              </div>
+              {(relation.interactionType === "CREATE" || relation.interactionType === "CONSUME") && (
+                <div className="flex flex-col">
+                  <FormLabel>Quantity</FormLabel>
+                  <Input type="number" name="quantity" value={relation.quantity} data-index={index} onChange={handleRelationsChange} />
+                </div>
+              )}
               <IconDeleteButton onClick={() => removeEventResourceRelation(index)} />
             </FormLabel>
           ))}

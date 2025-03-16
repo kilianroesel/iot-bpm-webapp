@@ -12,6 +12,8 @@ const layoutOptions: ElkLayoutArguments = {
     "org.eclipse.elk.layered.spacing.edgeEdgeBetweenLayers": "20",
     "org.eclipse.elk.layered.spacing.edgeNodeBetweenLayers": "20",
 
+    "org.eclipse.elk.edgeLabels.placement": "CENTER",
+
     "org.eclipse.elk.spacing.edgeEdge": "20",
     "org.eclipse.elk.spacing.nodeSelfLoop": "20",
   },
@@ -20,13 +22,6 @@ const layoutOptions: ElkLayoutArguments = {
 const elk = new ELK();
 
 export const getLayoutedGraph = async (nodes: HeuristicNetNodeType[], edges: HeuristicNetEdgeType[]) => {
-  const labels: ElkLabel[] = [
-    {
-      width: 20,
-      height: 10,
-    },
-  ];
-
   const graph: ElkNode = {
     id: "root",
     children: nodes.map((n) => {
@@ -67,6 +62,16 @@ export const getLayoutedGraph = async (nodes: HeuristicNetNodeType[], edges: Heu
       return elkNode;
     }),
     edges: edges.map((e) => {
+      const labels: ElkLabel[] = [];
+      if (e.data) {
+        const duration = formatDuration(e.data?.duration);
+        labels.push({
+          width: getTextWidth(duration),
+          height: 15,
+          text: duration
+        });
+      }
+
       return {
         id: e.id,
         labels: labels,
@@ -104,4 +109,31 @@ export const getLayoutedGraph = async (nodes: HeuristicNetNodeType[], edges: Heu
   });
 
   return { layoutedNodes: layoutedNodes, layoutedEdges: layoutedEdges };
+};
+
+function formatDuration(seconds: number) {
+  const days = Math.floor(seconds / (24 * 60 * 60));
+  const hours = Math.floor((seconds % (24 * 60 * 60)) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = Number((seconds % 60).toFixed(2));
+
+  let result = "";
+
+  if (days > 0) result += days + "d ";
+  if (hours > 0) result += hours + "h ";
+  if (minutes > 0) result += minutes + "m ";
+  if (remainingSeconds > 0 || result === "") result += remainingSeconds + "s"; // Include seconds if no larger units
+
+  return result;
+}
+
+const getTextWidth = (text: string, font: string = "12px Arial"): number => {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  if (!context) {
+    throw new Error("Canvas context not supported");
+  }
+  context.font = font;
+  console.log(text + context.measureText(text).width);
+  return context.measureText(text).width;
 };

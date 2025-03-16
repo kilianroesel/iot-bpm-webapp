@@ -21,7 +21,7 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route path={"/"} element={<MainLayout />}>
             <Route index element={<div></div>} />
-            {/* <Route path={"event-explorer"} element={<HNetContextProvided />} /> */}
+            <Route path={"event-explorer"} element={<HNetContextProvided />} />
             <Route path={"lines"} element={<Outlet />}>
               <Route index element={<LineList />} />
               <Route

@@ -60,13 +60,20 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                             },
                             interactionType: {
                                 type: "string",
-                                enum: ["CREATE", "REFERENCE", "CONSUME"]
+                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE"]
                             },
                             qualifier: {
                                 type: "string"
+                            },
+                            quantity: {
+                                type: "number"
+                            },
+                            lifespan: {
+                                type: "number"
                             }
                         },
-                        required: ["resourceModel", "interactionType", "qualifier", "relations"]
+                        required: ["resourceModel", "interactionType", "qualifier"],
+                        additionalProperties: true
                     }
                 }
             },
@@ -98,10 +105,16 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                             },
                             interactionType: {
                                 type: "string",
-                                enum: ["CREATE", "REFERENCE", "CONSUME"]
+                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE"]
                             },
                             qualifier: {
                                 type: "string"
+                            },
+                            quantity: {
+                                type: "number"
+                            },
+                            lifespan: {
+                                type: "number"
                             }
                         },
                         required: ["resourceModel", "interactionType", "qualifier"]
@@ -159,10 +172,16 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                             },
                             interactionType: {
                                 type: "string",
-                                enum: ["CREATE", "REFERENCE", "CONSUME"]
+                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE"]
                             },
                             qualifier: {
                                 type: "string"
+                            },
+                            quantity: {
+                                type: "number"
+                            },
+                            lifespan: {
+                                type: "number"
                             }
                         },
                         required: ["resourceModel", "interactionType", "qualifier"]
@@ -198,10 +217,16 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                             },
                             interactionType: {
                                 type: "string",
-                                enum: ["CREATE", "REFERENCE", "CONSUME"]
+                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE"]
                             },
                             qualifier: {
                                 type: "string"
+                            },
+                            quantity: {
+                                type: "number"
+                            },
+                            lifespan: {
+                                type: "number"
                             }
                         },
                         required: ["resourceModel", "interactionType", "qualifier"]

@@ -26,6 +26,8 @@ export type EventModelHydratedDocumentType = mongoose.HydratedDocument<EventMode
         resourceModel: mongoose.Types.ObjectId;
         interactionType: string;
         qualifier: string;
+        quantity: number;
+        lifespan: number;
     }>;
 }>;
 
@@ -81,7 +83,7 @@ export const eventModelSchema = new mongoose.Schema<
                 required: true,
             },
             interactionType: {
-                // CREATE, CONSUME
+                // CREATE, PROVIDE, CONSUME, USE
                 type: String,
                 required: true,
             },
@@ -89,6 +91,14 @@ export const eventModelSchema = new mongoose.Schema<
                 type: String,
                 required: true,
             },
+            quantity: {
+                type: Number,
+                required: true
+            },
+            lifespan: {
+                type: Number,
+                optional: true
+            }
         }],
     },
     { toJSON: { virtuals: true }, toObject: { virtuals: true } }
@@ -120,7 +130,9 @@ eventModelSchema
             if (
                 rule.relations[i].resourceModelId !== this.relations[i].resourceModel.toString() ||
                 rule.relations[i].interactionType !== this.relations[i].interactionType ||
-                rule.relations[i].qualifier !== this.relations[i].qualifier
+                rule.relations[i].qualifier !== this.relations[i].qualifier ||
+                rule.relations[i].quantity !== this.relations[i].quantity ||
+                rule.relations[i].lifespan !== this.relations[i].lifespan
             ) {
                 return "UPDATED";
             }

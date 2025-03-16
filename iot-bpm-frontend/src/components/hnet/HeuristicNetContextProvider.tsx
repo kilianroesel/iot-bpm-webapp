@@ -18,6 +18,11 @@ export default function HNetContextProvider({ children }: { children: React.Reac
         sourceHandle: `${edge.sourceNode}-s-${edge.targetNode}`,
         target: edge.targetNode,
         targetHandle: `${edge.sourceNode}-t-${edge.targetNode}`,
+        data: {
+          duration: edge.duration,
+          dfgValue: edge.dfgValue,
+          dependencyValue: edge.dependencyValue
+        },
         markerEnd: {
           type: MarkerType.ArrowClosed,
           width: 20,
