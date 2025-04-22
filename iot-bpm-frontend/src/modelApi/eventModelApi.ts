@@ -48,19 +48,31 @@ export interface BaseUpdateEventModel {
 interface CreationalEventResourceRelation {
   interactionType: "CREATE" | "PROVIDE",
   resourceModel: string;
-  qualifier: string;
   quantity: number;
   lifespan: number;
 }
 
+interface ReferenceEventResourceRelation {
+  interactionType: "REFERENCE" | "REUSE",
+  resourceModel: string;
+  quantity: number;
+  lifespan: number;
+  referenceModel: string;
+}
+
+interface ReuseEventResourceRelation {
+  interactionType: "REUSE",
+  resourceModel: string;
+  lifespan: number;
+  referenceModel: string;
+}
 interface ConsumingEventResourceRelation {
   interactionType: "CONSUME" | "USE",
   resourceModel: string;
-  qualifier: string;
   quantity: number;
 }
 
-export type EventResourceModelRelation = CreationalEventResourceRelation | ConsumingEventResourceRelation
+export type EventResourceModelRelation = CreationalEventResourceRelation | ConsumingEventResourceRelation | ReferenceEventResourceRelation | ReuseEventResourceRelation
 
 export interface GetScalarTriggerEventModel extends ScalarTriggerEventExtension, Omit<GetEventModelBase, "triggerCategory"> {}
 export interface GetRangeTriggerEventModel extends RangeTriggerEventExtension, Omit<GetEventModelBase, "triggerCategory"> {}

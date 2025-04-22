@@ -19,7 +19,7 @@ export default function HeuristicNetEdge(props: EdgeProps<HeuristicNetEdgeType>)
       <text
         x={label.x}
         y={label.y}
-        fill="white"
+        fill="black"
         fontSize="12"
         textAnchor="start"
       >

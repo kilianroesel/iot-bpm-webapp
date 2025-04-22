@@ -53,10 +53,6 @@ export const eventAbstractionRuleSchema = new mongoose.Schema(
                     type: String,
                     required: true,
                 },
-                qualifier: {
-                    type: String,
-                    required: true,
-                },
                 quantity: {
                     type: Number,
                     required: true,
@@ -64,6 +60,9 @@ export const eventAbstractionRuleSchema = new mongoose.Schema(
                 lifespan: {
                     type: Number,
                 },
+                referenceModelId: {
+                    type: String,
+                }
             },
         ],
     },

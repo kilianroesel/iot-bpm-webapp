@@ -13,7 +13,7 @@ export default function ViewModelList({ equipmentModel }: { equipmentModel: GetE
   const [isCreatingOpen, setIsCreatingOpen] = useState(false);
 
   return (
-    <div className="space-y-4 rounded-md bg-slate-900 p-4">
+    <div className="space-y-4 rounded-md border border-black p-4">
       <div className="flex">
         <h3 className="flex-grow font-medium">View Models</h3>
         <div>

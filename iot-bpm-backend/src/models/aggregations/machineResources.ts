@@ -10,7 +10,7 @@ export const getMachineResourcePipeline = (machineId: string) => {
         { $replaceRoot: {
             "newRoot": "$resourceModel"
           }},
-        { $match: { interactionType: { "$in": ["CREATE", "PROVIDE"] }}}
+        { $match: { interactionType: { "$in": ["CREATE", "PROVIDE", "REFERENCE"] }}}
         
       ]
 }
@@ -28,6 +28,6 @@ export const getAllMachineResources = () => {
     { $replaceRoot: {
         "newRoot": "$resourceModel"
       }},
-    { $match: { interactionType: { "$in": ["CREATE", "PROVIDE"] }}}
+    { $match: { interactionType: { "$in": ["CREATE", "PROVIDE", "REFERENCE"] }}}
   ]
 }

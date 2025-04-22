@@ -60,19 +60,19 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                             },
                             interactionType: {
                                 type: "string",
-                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE"]
-                            },
-                            qualifier: {
-                                type: "string"
+                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE", "REFERENCE", "REUSE"]
                             },
                             quantity: {
                                 type: "number"
                             },
                             lifespan: {
                                 type: "number"
+                            },
+                            referenceModel: {
+                                type: "string"
                             }
                         },
-                        required: ["resourceModel", "interactionType", "qualifier"],
+                        required: ["resourceModel", "interactionType"],
                         additionalProperties: true
                     }
                 }
@@ -105,19 +105,20 @@ export const createEventModel: JSONSchemaType<ScalarTrigger | RangeTrigger> = {
                             },
                             interactionType: {
                                 type: "string",
-                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE"]
-                            },
-                            qualifier: {
-                                type: "string"
+                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE", "REFERENCE", "REUSE"]
                             },
                             quantity: {
                                 type: "number"
                             },
                             lifespan: {
                                 type: "number"
+                            },
+                            referenceModel: {
+                                type: "string"
                             }
                         },
-                        required: ["resourceModel", "interactionType", "qualifier"]
+                        required: ["resourceModel", "interactionType"],
+                        additionalProperties: true
                     }
                 }
             },
@@ -172,19 +173,20 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                             },
                             interactionType: {
                                 type: "string",
-                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE"]
-                            },
-                            qualifier: {
-                                type: "string"
+                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE", "REFERENCE", "REUSE"]
                             },
                             quantity: {
                                 type: "number"
                             },
                             lifespan: {
                                 type: "number"
+                            },
+                            referenceModel: {
+                                type: "string"
                             }
                         },
-                        required: ["resourceModel", "interactionType", "qualifier"]
+                        required: ["resourceModel", "interactionType"],
+                        additionalProperties: true
                     }
                 }
             },
@@ -217,19 +219,20 @@ export const updateEventModel: JSONSchemaType<UpdateScalarTriggerModel | UpdateR
                             },
                             interactionType: {
                                 type: "string",
-                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE"]
-                            },
-                            qualifier: {
-                                type: "string"
+                                enum: ["CREATE", "PROVIDE", "CONSUME", "USE", "REFERENCE", "REUSE"]
                             },
                             quantity: {
                                 type: "number"
                             },
                             lifespan: {
                                 type: "number"
+                            },
+                            referenceModel: {
+                                type: "string"
                             }
                         },
-                        required: ["resourceModel", "interactionType", "qualifier"]
+                        required: ["resourceModel", "interactionType"],
+                        additionalProperties: true
                     }
                 }
             },

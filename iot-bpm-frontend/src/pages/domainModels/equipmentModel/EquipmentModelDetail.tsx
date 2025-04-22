@@ -44,7 +44,7 @@ function EquipmentOverview({ equipmentModel }: { equipmentModel: GetEquipmentMod
 
   return (
     <div className="space-y-4">
-      <div className="space-y-4 rounded-md bg-slate-900 p-4">
+      <div className="space-y-4 rounded-md border border-black p-4">
         <div className="flex">
           <h3 className="flex-grow font-medium">Summary</h3>
           <div className="space-x-4 justify-self-center">
@@ -78,7 +78,7 @@ function ChildEquipment({equipmentModel}: {equipmentModel: GetEquipmentModel}) {
 
   return (
     <>
-      <div className="space-y-4 rounded-md bg-slate-900 p-4">
+      <div className="space-y-4 rounded-md p-4 border border-black">
         <div className="space-y-4">
           <div className="flex items-center space-x-4">
             <h3 className="flex-grow font-medium">Child Equipment</h3>

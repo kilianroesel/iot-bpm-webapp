@@ -5,7 +5,7 @@ import { Suspense } from "react";
 
 export default function MainLayout() {
   return (
-    <div className="flex h-dvh flex-col overflow-y-scroll text-slate-200">
+    <div className="flex h-dvh flex-col overflow-y-scroll text-black">
       <NavigationBar />
       <div className="flex grow">
         <SideBar />

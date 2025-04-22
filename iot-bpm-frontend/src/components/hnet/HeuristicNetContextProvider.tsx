@@ -1,12 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 import { HeuristicNetContext, HeuristicNetEdgeType, HeuristicNetNodeType } from "./HeuristicNetContext";
 import { MarkerType, ReactFlowProvider } from "@xyflow/react";
-import { heuristicNet } from "./hnet";
+// import { heuristicNet } from "./hnets/powerpakMachineStateRunning";
 import { getLayoutedGraph } from "./util/getLayoutedNodes";
 import HeuristicNetNode from "./GraphElements/HeuristiceNetNode";
 import HeuristicNetEdge from "./GraphElements/HeuristicNetEdge";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { heuristicNetQuery } from "../../bpmApi/lineApi";
+import { useParams } from "react-router-dom";
 
 export default function HNetContextProvider({ children }: { children: React.ReactNode }) {
+  const params = useParams();
+  if (!params.lineId) throw new Error("No Line ID provided");
+  if (!params.modelId) throw new Error("No Model ID provided");
+  const { data: heuristicNet } = useSuspenseQuery(heuristicNetQuery(params.lineId, params.modelId));
+
+
   const [layoutedNodes, setLayoutedNodes] = useState<HeuristicNetNodeType[]>();
   const [layoutedEdges, setLayoutedEdges] = useState<HeuristicNetEdgeType[]>();
 

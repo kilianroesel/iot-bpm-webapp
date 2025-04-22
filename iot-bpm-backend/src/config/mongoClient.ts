@@ -8,12 +8,14 @@ export class DbClient {
     private uri: string;
     public modelDb;
     public eventDb;
+    public heuristicNetDb;
 
 
     private constructor(uri: string) {
         this.uri = uri;
         this.modelDb = mongoose.connection.useDb("bpm_event_processing");
         this.eventDb = mongoose.connection.useDb("bpm_ocel");
+        this.heuristicNetDb = mongoose.connection.useDb("heuristic_net");
     }
 
     public static get instance(): DbClient {

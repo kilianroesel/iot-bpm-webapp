@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { lineMachineQuery } from "../../../bpmApi/lineApi";
 import React from "react";
 import LineEvents from "./LineEvents";
+import LineModels from "./LineModels";
 
 export default function Line() {
   const params = useParams();
@@ -10,17 +11,14 @@ export default function Line() {
   const { data: machineModels } = useSuspenseQuery(lineMachineQuery(params.lineId));
 
   return (
-    <>
+    <div className="space-y-4 p-4">
       <div className="grid grid-cols-3 gap-4">
-        <div className="space-y-4 rounded-md bg-slate-900 p-4">
+        <div className="space-y-4 rounded-md border border-black p-4">
           <div className="flex items-center space-x-4">
-            <h3 className="grow text-3xl font-medium">Line Id: {params.lineId}</h3>
+            <h3 className="grow text-3xl font-medium">Line Id: {12321123}</h3>
           </div>
           <div>
             <div className="grid grid-cols-3">
-              <div className="font-semibold">Machine Name</div>
-              <div className="font-semibold">Version Csi Standard</div>
-              <div className="font-semibold">Version Csi Specific</div>
               {machineModels.map((machineModel) => (
                 <React.Fragment key={machineModel._id}>
                   <div>{machineModel.machineName}</div>
@@ -33,6 +31,7 @@ export default function Line() {
         </div>
         <LineEvents />
       </div>
-    </>
+      <LineModels />
+    </div>
   );
 }

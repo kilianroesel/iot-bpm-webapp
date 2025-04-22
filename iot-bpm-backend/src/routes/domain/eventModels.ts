@@ -103,7 +103,7 @@ router.post("/:equipmentModelId/viewModels/:viewModelId/eventModels/:eventModelI
             return {
                 resourceModelId: relation.resourceModel.toString(),
                 interactionType: relation.interactionType,
-                qualifier: relation.qualifier,
+                referenceModelId: relation.referenceModel?.toString(),
                 quantity: relation.quantity,
                 lifespan: relation.lifespan
             };

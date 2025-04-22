@@ -24,7 +24,7 @@ export default function MachineModelBase() {
   return (
     <>
       <div className="grid grid-cols-3 gap-4">
-        <div className="space-y-4 rounded-md bg-slate-900 p-4">
+        <div className="space-y-4 col-span-3 rounded-md border border-black p-4">
           <div className="flex items-center space-x-4">
             {machineModel.ruleStatus == "NOT_RELEASED" && (
               <span>
@@ -70,9 +70,6 @@ export default function MachineModelBase() {
           </div>
         </div>
         {isEditOpen && <MachineModelEdit machineModel={machineModel} setIsOpen={setIsEditOpen} />}
-        <div className="col-span-2 rounded-md bg-slate-900 p-4">
-          <h3 className="text-3xl font-medium">Topology</h3>
-        </div>
       </div>
       <div>
         <ResourceModelList resourceModels={machineModel.resourceModels} machineModelId={machineModel._id} />

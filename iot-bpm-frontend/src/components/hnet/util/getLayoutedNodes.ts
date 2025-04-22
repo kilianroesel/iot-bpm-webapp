@@ -8,14 +8,14 @@ const layoutOptions: ElkLayoutArguments = {
     "org.eclipse.elk.edgeRouting": "SPLINES",
 
     "org.eclipse.elk.layered.nodePlacement.strategy": "BRANDES_KOEPF",
-    "org.eclipse.elk.layered.spacing.nodeNodeBetweenLayers": "20",
-    "org.eclipse.elk.layered.spacing.edgeEdgeBetweenLayers": "20",
-    "org.eclipse.elk.layered.spacing.edgeNodeBetweenLayers": "20",
+    "org.eclipse.elk.layered.spacing.nodeNodeBetweenLayers": "10",
+    "org.eclipse.elk.layered.spacing.edgeEdgeBetweenLayers": "10",
+    "org.eclipse.elk.layered.spacing.edgeNodeBetweenLayers": "10",
 
     "org.eclipse.elk.edgeLabels.placement": "CENTER",
 
-    "org.eclipse.elk.spacing.edgeEdge": "20",
-    "org.eclipse.elk.spacing.nodeSelfLoop": "20",
+    "org.eclipse.elk.spacing.edgeEdge": "10",
+    "org.eclipse.elk.spacing.nodeSelfLoop": "10",
   },
 };
 
@@ -64,7 +64,8 @@ export const getLayoutedGraph = async (nodes: HeuristicNetNodeType[], edges: Heu
     edges: edges.map((e) => {
       const labels: ElkLabel[] = [];
       if (e.data) {
-        const duration = formatDuration(e.data?.duration);
+        const duration = formatDuration(e.data.duration);
+        // const duration = e.data.dfgValue.toString();
         labels.push({
           width: getTextWidth(duration),
           height: 15,

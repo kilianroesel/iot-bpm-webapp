@@ -3,10 +3,10 @@ import { HeuristicNetNodeType } from "../HeuristicNetContext";
 
 export default function HeuristicNetNode(props: NodeProps<HeuristicNetNodeType>) {
   return (
-    <div className="h-12 w-32 rounded-md border border-gray-500 bg-slate-900 p-1">
+    <div className="h-12 w-32 rounded-md border border-black bg-slate-50 p-1">
       <div className="text-center">
         <div className="truncate text-sm">{props.data.activity}</div>
-        <div className="truncate text-xs text-gray-500">{props.data.occurences}</div>
+        <div className="truncate text-xs text-black">{props.data.occurences}</div>
       </div>
       
       {props.data.sourceLoopHandles.map((handle) => (

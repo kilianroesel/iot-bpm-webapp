@@ -64,7 +64,6 @@ export default function EventModelEdit({
     const { name, value, type } = event.target;
     const index = Number(event.target.getAttribute("data-index")) || 0;
     const newEventResourceModelRelations = [...updatedEventModel.relations];
-    console.log(type)
     if (type == "number") {
       const newNumber = value ? Number(value) : "";
       const newEventModelRelation = {
@@ -93,7 +92,6 @@ export default function EventModelEdit({
     const newEventResourceRelation: EventResourceModelRelation = {
       interactionType: "CREATE",
       resourceModel: "",
-      qualifier: "",
       quantity: 1,
       lifespan: 60,
     };
@@ -113,7 +111,6 @@ export default function EventModelEdit({
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     let payload: UpdateScalarTriggerEventModel | UpdateRangeTriggerEventModel;
     switch (updatedEventModel.triggerCategory) {
       case "SCALAR_TRIGGER":
@@ -174,8 +171,10 @@ export default function EventModelEdit({
                 <Select name="interactionType" value={relation.interactionType} data-index={index} onChange={handleRelationsChange}>
                   <option value="CREATE">CREATE</option>
                   <option value="PROVIDE">PROVIDE</option>
+                  <option value="REFERENCE">REFERENCE</option>
                   <option value="CONSUME">CONSUME</option>
                   <option value="USE">USE</option>
+                  <option value="REUSE">REUSE</option>
                 </Select>
               </div>
               <div className="flex flex-col">
@@ -188,17 +187,25 @@ export default function EventModelEdit({
                   ))}
                 </Select>
               </div>
-              {(relation.interactionType === "CREATE" || relation.interactionType === "PROVIDE") && (
+              {(relation.interactionType === "REFERENCE" || relation.interactionType == "REUSE") && (
+                <div className="flex flex-col">
+                  <FormLabel>Referenced Model</FormLabel>
+                  <Select name="referenceModel" value={relation.referenceModel} data-index={index} onChange={handleRelationsChange}>
+                  {queryResourceModels.data?.map((resourceModel) => (
+                    <option key={resourceModel._id} value={resourceModel._id}>
+                      {resourceModel.resourceModelName} - {resourceModel.machineModel?.machineName}
+                    </option>
+                  ))}
+                </Select>
+                </div>
+              )}
+              {(relation.interactionType === "CREATE" || relation.interactionType === "PROVIDE" || relation.interactionType === "REFERENCE" ||  relation.interactionType === "REUSE") && (
                 <div className="flex flex-col">
                   <FormLabel>Lifespan</FormLabel>
                   <Input type="number" name="lifespan" value={relation.lifespan} data-index={index} onChange={handleRelationsChange} />
                 </div>
               )}
-              <div className="flex flex-col">
-                <FormLabel>Qualifier</FormLabel>
-                <Input type="text" name="qualifier" value={relation.qualifier} data-index={index} onChange={handleRelationsChange} />
-              </div>
-              {(relation.interactionType === "CREATE" || relation.interactionType === "CONSUME") && (
+              {(relation.interactionType === "CREATE" || relation.interactionType === "CONSUME" || relation.interactionType === "REFERENCE") && (
                 <div className="flex flex-col">
                   <FormLabel>Quantity</FormLabel>
                   <Input type="number" name="quantity" value={relation.quantity} data-index={index} onChange={handleRelationsChange} />

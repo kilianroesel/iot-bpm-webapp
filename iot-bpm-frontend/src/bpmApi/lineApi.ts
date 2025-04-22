@@ -2,6 +2,7 @@ import { queryOptions, useQueryClient } from "@tanstack/react-query";
 import { apiInstance, wssInstance } from "../config/modelApiConfig";
 import { GetMachineModel } from "../modelApi/machineModel";
 import { useEffect } from "react";
+import { HeuristicNet } from "../components/hnet/hnet";
 
 export interface GetLine {
   name: string;
@@ -63,7 +64,7 @@ export const lineOcelEventSubscription = (lineId: string) => {
 
       queryClient.setQueryData<OcelEvent[]>(queryKey, (oldData) => {
         if (oldData) {
-          return [ocelEvent, ...oldData].slice(0,10);
+          return [ocelEvent, ...oldData].slice(0, 10);
         }
         return [ocelEvent];
       });
@@ -73,3 +74,21 @@ export const lineOcelEventSubscription = (lineId: string) => {
     };
   }, [queryClient, lineId]);
 };
+
+export const heuristicNetsByLineQuery = (lineId: string) =>
+  queryOptions({
+    queryKey: ["bpm", "lines", lineId, "heuristicNets"],
+    queryFn: async () => {
+      const response = await apiInstance.get<string[]>(`/bpm/lines/${lineId}/heuristicNets`);
+      return response.data;
+    },
+  });
+
+export const heuristicNetQuery = (lineId: string, modelId: string) =>
+  queryOptions({
+    queryKey: ["bpm", "lines", lineId, "heuristicNets", modelId],
+    queryFn: async () => {
+      const response = await apiInstance.get<HeuristicNet>(`/bpm/lines/${lineId}/heuristicNets/${modelId}`);
+      return response.data;
+    },
+  });

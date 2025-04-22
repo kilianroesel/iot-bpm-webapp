@@ -39,3 +39,17 @@ router.get("/lines/:lineId/machines", async (req, res, next) => {
     }
 });
 
+router.get("/lines/:lineId/heuristicNets", async (req, res, next) => {
+    const heuristicNetCollection = mongoClient.heuristicNetDb.collection(req.params.lineId);
+    const result = await heuristicNetCollection.find().project({ "objectView": 1, "_id": 0 }).toArray();
+    const heuristicNets = result.map((net) => net.objectView);
+    res.json(heuristicNets);
+});
+
+router.get("/lines/:lineId/heuristicNets/:objectView", async (req, res, next) => {
+    const heuristicNetCollection = mongoClient.heuristicNetDb.collection(req.params.lineId);
+    const objectView = req.params.objectView;
+    const recentEvents = await heuristicNetCollection.findOne({objectView: objectView});
+    res.json(recentEvents);
+});
+

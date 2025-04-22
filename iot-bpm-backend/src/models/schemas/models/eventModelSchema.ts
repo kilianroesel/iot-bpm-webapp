@@ -10,7 +10,6 @@ export interface EventModelRawDocType {
     relations: {
         resourceModel: mongoose.Types.ObjectId;
         interactionType: string;
-        qualifier: string;
     }[];
 }
 
@@ -25,9 +24,9 @@ export type EventModelHydratedDocumentType = mongoose.HydratedDocument<EventMode
     relations: mongoose.Types.DocumentArray<{
         resourceModel: mongoose.Types.ObjectId;
         interactionType: string;
-        qualifier: string;
         quantity: number;
         lifespan: number;
+        referenceModel: mongoose.Types.ObjectId
     }>;
 }>;
 
@@ -83,11 +82,7 @@ export const eventModelSchema = new mongoose.Schema<
                 required: true,
             },
             interactionType: {
-                // CREATE, PROVIDE, CONSUME, USE
-                type: String,
-                required: true,
-            },
-            qualifier: {
+                // CREATE, PROVIDE, CONSUME, USE, REFERENCE, REUSE
                 type: String,
                 required: true,
             },
@@ -98,6 +93,11 @@ export const eventModelSchema = new mongoose.Schema<
             lifespan: {
                 type: Number,
                 optional: true
+            },
+            referenceModel: {
+                type: mongoose.Types.ObjectId,
+                ref: "ResourceModel",
+                required: false,
             }
         }],
     },
@@ -130,9 +130,9 @@ eventModelSchema
             if (
                 rule.relations[i].resourceModelId !== this.relations[i].resourceModel.toString() ||
                 rule.relations[i].interactionType !== this.relations[i].interactionType ||
-                rule.relations[i].qualifier !== this.relations[i].qualifier ||
                 rule.relations[i].quantity !== this.relations[i].quantity ||
-                rule.relations[i].lifespan !== this.relations[i].lifespan
+                rule.relations[i].lifespan !== this.relations[i].lifespan ||
+                rule.relations[i].referenceModelId !== this.relations[i].referenceModel?.toString()
             ) {
                 return "UPDATED";
             }
